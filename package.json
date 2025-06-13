@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://joanne-portfolio.github.io/Joanne-web/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -10,7 +11,7 @@
     "preview": "vite preview",
 
     "deploy": "gh-pages -d dist",
-    "deploy:pre": "npm run build && npm run deploy"
+    "predeploy": "npm run build"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
