@@ -1,0 +1,611 @@
+.Home {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    font-family: 'Source Sans Pro', sans-serif;
+    line-height: 1.6;
+    color: var(--text);
+    background-color: #f5f7fa; /* A light grey background for the whole page */
+}
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #2980b9; /* Darker accent on hover */
+}
+
+/* Header and Navigation */
+header {
+    background-color: var(--background);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.logo {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--primary);
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.nav-links li {
+    margin-left: 30px;
+}
+
+.nav-links a {
+    font-size: 1em;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.nav-links a:hover {
+    color: var(--accent);
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center content horizontally */
+    text-align: center; /* Center text within hero-content */
+    background-color: var(--background); /* Or a specific hero background */
+    padding-top: 60px; /* Account for fixed header */
+}
+
+.hero-content {
+    max-width: 800px; /* Limit width for better readability */
+}
+
+.hero h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 48px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--primary);
+}
+
+.hero h3 {
+    font-size: 24px;
+    font-weight: 300;
+    margin-bottom: 30px;
+    color: var(--subtext);
+}
+
+.hero p { /* If you add a paragraph to hero */
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: var(--text);
+}
+
+.btn {
+    display: inline-block;
+    background-color: var(--accent);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #2980b9; /* Darker accent */
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    color: white; /* Ensure text remains white on hover */
+}
+
+
+/* Section Styling */
+section {
+    width: 100%;
+    padding: 80px 0;
+}
+
+section:nth-child(even) { /* Alternating background for sections if desired */
+    background-color: var(--background); /* Or var(--light) for subtle difference */
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-title h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 36px;
+    color: var(--primary);
+    margin-bottom: 15px;
+}
+
+.section-title .line {
+    height: 3px;
+    width: 80px;
+    background-color: var(--accent);
+    margin: 0 auto;
+}
+
+/* About Section */
+.about-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+}
+
+.about-text {
+    flex: 1;
+}
+
+.about-image {
+    flex: 1;
+    text-align: center;
+}
+
+.profile-placeholder {
+    width: 300px;
+    height: 300px;
+    background-color: var(--light); /* Placeholder color */
+    border-radius: 50%;
+    display: inline-block; /* To allow text-align: center to work */
+    background-image: url('/images/profile.jpg'); /* Path relative to public folder */
+    background-position: center;
+    background-size: cover;
+    border: 5px solid var(--border);
+}
+
+
+/* Education Section */
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    width: 4px;
+    background-color: var(--accent);
+    top: 0;
+    bottom: 0;
+    left: 30px; /* Adjust based on dot size and desired spacing */
+    opacity: 0.3;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 50px; /* Space between items */
+    padding-left: 80px; /* Space for dot and date */
+}
+
+.timeline-dot {
+    position: absolute;
+    width: 24px; /* Increased size */
+    height: 24px; /* Increased size */
+    left: 20px; /* ( (padding-left of item) - (width of dot) ) / 2 for centering, adjust as needed */
+    background-color: var(--accent);
+    border-radius: 50%;
+    z-index: 1; /* Ensure dot is above the line */
+}
+
+.timeline-date {
+    position: absolute;
+    left: 80px; /* Align with content start */
+    top: 0; /* Position at the top of the content box */
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 16px;
+    margin-bottom: 10px; /* Spacing if content is directly below */
+    margin-left: 10px; /* Added margin to separate from the dot line */
+}
+
+.timeline-content {
+    padding: 30px; /* Increased padding */
+    background: var(--background);
+    border-radius: 10px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+    margin-top: 30px; /* Ensure content starts below the date */
+}
+
+.timeline-content h3 {
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.timeline-degree {
+    font-size: 17px;
+    color: var(--secondary);
+    margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+    .timeline::before {
+        left: 20px; /* Adjust for smaller screens */
+    }
+    .timeline-dot {
+        left: 10px; /* Adjust for smaller screens */
+    }
+    .timeline-item {
+        padding-left: 50px; /* Adjust for smaller screens */
+    }
+    .timeline-date {
+        left: 50px; /* Adjust for smaller screens */
+    }
+}
+
+/* Activities Section */
+.activities-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    max-width: 800px; /* Or adjust as needed */
+    margin: 0 auto;
+}
+
+.activity-card {
+    display: flex;
+    background-color: var(--background); /* Card background */
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.activity-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.activity-icon {
+    width: 80px; /* Fixed width for icon area */
+    background-color: var(--accent);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px; /* Icon size */
+}
+
+.activity-content {
+    flex: 1; /* Take remaining space */
+    padding: 25px;
+}
+
+.activity-content h3 {
+    font-size: 20px;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.activity-period {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.activity-role {
+    color: var(--secondary);
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+.activity-description {
+    color: var(--subtext);
+    margin-bottom: 15px; /* If you have achievements below */
+}
+
+.activity-achievements { /* If you add achievements/tags */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.achievement-tag { /* Style for achievement tags */
+    background-color: var(--light);
+    color: var(--secondary);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .activity-card {
+        flex-direction: column; /* Stack icon and content */
+    }
+    .activity-icon {
+        width: 100%; /* Full width for icon bar */
+        height: 60px; /* Fixed height for icon bar */
+    }
+}
+
+/* Skills Section */
+.skills-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.skill-category h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: var(--primary);
+}
+
+.skill-item {
+    background-color: var(--light); /* Light background for each skill item */
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px; /* Space between skill items */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.skill-name {
+    font-weight: 500;
+}
+
+.skill-level {
+    display: flex;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #dee2e6; /* Unfilled dot color */
+    margin-left: 5px; /* Space between dots */
+}
+
+.dot.filled {
+    background-color: var(--accent); /* Filled dot color */
+}
+
+/* Pagination Controls */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    gap: 10px;
+}
+
+.pagination-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--light);
+    color: var(--text);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pagination-btn:hover {
+    background-color: var(--accent);
+    color: white;
+}
+
+.pagination-btn.active {
+    background-color: var(--accent);
+    color: white;
+}
+
+.pagination-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Project Pages - ensure only active page is displayed as grid */
+.project-page {
+    display: none; /* Hide inactive pages */
+}
+
+.project-page.active {
+    display: grid; /* Use grid for the active page */
+    grid-template-columns: repeat(3, 1fr); /* Default to 3 columns */
+    gap: 30px;
+}
+
+/* Responsive grid for project pages */
+@media (max-width: 992px) {
+    .project-page.active {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .project-page.active {
+        grid-template-columns: 1fr; /* 1 column on small screens */
+    }
+}
+
+
+/* Projects Section */
+.project-card {
+    background-color: var(--background); /* Card background */
+    border-radius: 10px;
+    overflow: hidden; /* Ensures image corners are rounded */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-10px); /* Lift effect on hover */
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15); /* Enhanced shadow on hover */
+}
+
+.project-image {
+    height: 200px; /* Fixed height for image container */
+    background-color: var(--light); /* Placeholder if image fails to load */
+    background-size: cover; /* Ensure image covers the area */
+    background-position: center; /* Center the image */
+    flex-shrink: 0; /* Prevent image from shrinking if content is too long */
+}
+
+.project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the area without distortion */
+}
+
+.project-content {
+    padding: 25px;
+}
+
+.project-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--primary);
+}
+
+.project-type {
+    display: inline-block;
+    background-color: var(--accent);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 15px; /* Pill shape */
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.project-description {
+    margin-bottom: 15px;
+    color: var(--subtext);
+}
+
+.project-tech {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tech-tag {
+    background-color: var(--light);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: var(--text); /* Ensure text is readable */
+}
+
+/* Contact Section */
+.contact-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
+    gap: 50px;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between contact items */
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+}
+
+.contact-item i {
+    width: 40px;
+    height: 40px;
+    background-color: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px; /* Space between icon and text */
+}
+
+.contact-text h4 {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: var(--primary);
+}
+
+/* Form Styles */
+.contact-form input, .contact-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+}
+
+.contact-form textarea {
+    height: 150px; /* Default height for textarea */
+}
+
+.contact-form button {
+    border: none; /* Remove default button border if .btn class doesn't handle it */
+    cursor: pointer;
+    /* .btn class styles will apply here */
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-links {
+        /* Basic mobile menu: hide links, show a burger icon (not implemented here) */
+        /* For simplicity, we'll let them wrap or reduce margin */
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+    .nav-links li {
+        margin-left: 0;
+    }
+    .nav-container {
+        flex-direction: column;
+    }
+    .hero h1 {
+        font-size: 36px;
+    }
+    .hero h3 {
+        font-size: 20px;
+    }
+    .about-content {
+        flex-direction: column-reverse; /* Image above text on mobile */
+    }
+    /* .projects-grid is handled by .project-page.active media queries */
+}

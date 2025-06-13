@@ -1,0 +1,23 @@
+@import './variables.css';
+
+html {
+  overflow-y: scroll; /* Always show scrollbar to make width consistent and account for its space */
+  box-sizing: border-box; /* Apply border-box globally */
+}
+
+*, *::before, *::after {
+  box-sizing: inherit; /* All elements inherit box-sizing from html */
+}
+
+body {
+  margin: 0; /* Remove default browser margin */
+  padding: 0; /* Remove default browser padding */
+  width: 100%; /* Body takes full available width (viewport minus scrollbar) */
+  overflow-x: hidden; /* Prevent accidental horizontal scrolling on the body */
+}
+
+.App {
+  width: 100%; /* App div takes full width of its parent (body) */
+  min-height: 100vh; /* Ensure app fills at least the viewport height */
+  overflow-x: hidden; /* Prevent horizontal scrolling within the .App container itself */
+}
