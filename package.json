@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://joanne-portfolio.github.io/Joanne-web/",
+  "homepage": "https://joanne-09.github.io/Joanne-web/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
