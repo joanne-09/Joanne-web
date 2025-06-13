@@ -49,7 +49,7 @@ function App() {
 
   return (
     <div className="App">
-      <Router>
+      <Router basename='/Joanne-web'>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/article" element={<Article />} />
