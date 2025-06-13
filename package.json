@@ -10,7 +10,7 @@
     "dev:backend": "npm run dev --workspace=backend",
     "build:frontend": "npm run build --workspace=frontend",
     "start:backend": "npm start --workspace=backend",
-    "deploy:frontend": "npm run predeploy --workspace=frontend && npm run deploy --workspace=frontend",
+    "deploy:frontend": "npm run predeploy --workspace=frontend && npm run deploy --workspace=frontend"
   },
   "devDependencies": {
   }
