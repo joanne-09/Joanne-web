@@ -10,7 +10,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: joanne-blog
+  IMAGE_NAME: joanne-web
 
 jobs:
   build-and-push:
@@ -30,7 +30,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and Push Docker Image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v6 && docker/bake-action@v5
         with:
           context: ./backend
           push: true
