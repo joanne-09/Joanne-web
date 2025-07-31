@@ -10,7 +10,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ joanne-blog }}
+  IMAGE_NAME: joanne-blog
 
 jobs:
   build-push-and-deploy:
