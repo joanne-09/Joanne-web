@@ -6,7 +6,7 @@ COPY package*.json ./
 COPY backend/package*.json ./backend/
 COPY shared/package*.json ./shared/
 
-RUN npm ci --omit=dev
+RUN cd backend && npm ci --omit=dev
 
 # --- Stage 1: The Builder ---
 FROM node:20-alpine AS builder
@@ -16,7 +16,7 @@ WORKDIR /app
 # Copy package.json and package-lock.json (if available) to the working directory.
 COPY package*.json ./
 # Install production dependencies. 'ci' is cleaner and faster for CI/CD.
-RUN npm ci --omit=dev
+RUN cd backend && npm ci
 
 # Copy the rest of your application source code.
 COPY . .
@@ -32,7 +32,7 @@ FROM node:20-alpine
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN cd backend && npm ci --omit=dev
 
 # Copy the compiled JavaScript files from the builder stage.
 COPY --from=builder /app/dist ./dist
