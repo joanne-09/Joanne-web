@@ -38,4 +38,4 @@ EXPOSE 3000
 
 # The command that will be run when the container starts.
 # This format is preferred as it's more explicit.
-CMD [ "node", "src/server.js" ]
+CMD [ "node", "src/server.ts" ]

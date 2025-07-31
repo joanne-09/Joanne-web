@@ -13,7 +13,7 @@ env:
   IMAGE_NAME: joanne-blog
 
 jobs:
-  build-push-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -33,11 +33,15 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6
         with:
-          context: ./backend
+          context: ./backend/DockerFile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
-      # This is the new step to trigger the deployment on Render
-      - name: Trigger Render Deploy Hook
-        if: success() # Only run if the build and push succeeded
-        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+    deploy:
+      name: Deploy to Render
+      needs: build-and-push
+      runs-on: ubuntu-latest
+      steps:
+        - name: Trigger Render Deployment
+          if: success() # Only run if the build and push succeeded
+          run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
