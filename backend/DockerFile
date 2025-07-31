@@ -1,21 +1,18 @@
 # --- Stage 1: The Builder ---
-# Use an official Node.js image as the base.
-# The 'alpine' version is very lightweight.
 FROM node:20-alpine AS builder
 
-# Set the working directory inside the container.
 WORKDIR /app
 
-# Copy the package.json and package-lock.json files.
-# We copy these first to take advantage of Docker's layer caching.
-# If these files don't change, Docker won't re-run 'npm ci'.
+# Copy package.json and package-lock.json (if available) to the working directory.
 COPY package*.json ./
-
 # Install production dependencies. 'ci' is cleaner and faster for CI/CD.
-RUN npm ci --only=production
+RUN npm ci
 
 # Copy the rest of your application source code.
 COPY . .
+
+# Compile TypeScript files to JavaScript.
+RUN npx tsc
 
 # --- Stage 2: The Final Image ---
 # Start from a fresh, clean base image.
@@ -24,18 +21,15 @@ FROM node:20-alpine
 # Set the working directory.
 WORKDIR /app
 
-# Copy the installed dependencies from the 'builder' stage.
-COPY --from=builder /app/node_modules ./node_modules
+COPY package*.json ./
+RUN npm ci --omit=dev
 
-# Copy the application code from the 'builder' stage.
-COPY --from=builder /app/src ./src
-COPY --from=builder /app/package.json ./package.json
+# Copy the compiled JavaScript files from the builder stage.
+COPY --from=builder /app/dist ./dist
 
-
-# Let Docker know that the app will listen on port 3000.
+# Let Docker know that the app will listen on port 3001.
 # You'll map this to a host port when you run the container.
-EXPOSE 3000
+EXPOSE 3001
 
 # The command that will be run when the container starts.
-# This format is preferred as it's more explicit.
-CMD [ "node", "src/server.ts" ]
+CMD [ "node", "dist/server.js" ]
