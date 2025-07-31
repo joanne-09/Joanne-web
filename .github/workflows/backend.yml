@@ -10,7 +10,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository | tolower }}
+  IMAGE_NAME: ${{ fromJSON(toJSON(github.repository)) }}
 
 jobs:
   build-push-and-deploy:
