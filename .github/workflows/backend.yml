@@ -9,7 +9,6 @@ on:
       - 'backend/**'
 
 env:
-  REGISTRY: ghcr.io
   IMAGE_NAME: joanne-web
 
 jobs:
