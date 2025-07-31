@@ -30,7 +30,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and Push Docker Image
-        uses: docker/build-push-action@v6 && docker/bake-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./backend
           push: true
@@ -41,5 +41,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Render Deployment
-        if: success() # Only run if the build and push succeeded
+        if: success()
         run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
