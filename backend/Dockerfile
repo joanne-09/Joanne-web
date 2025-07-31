@@ -1,3 +1,13 @@
+# --- Stage 0: Dependencies ---
+FROM node:20-alpine AS dependencies
+WORKDIR /app
+
+COPY package*.json ./
+COPY backend/package*.json ./backend/
+COPY shared/package*.json ./shared/
+
+RUN cd backend && npm ci --omit=dev
+
 # --- Stage 1: The Builder ---
 FROM node:20-alpine AS builder
 
