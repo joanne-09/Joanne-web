@@ -6,7 +6,7 @@ COPY package*.json ./
 COPY backend/package*.json ./backend/
 COPY shared/package*.json ./shared/
 
-RUN cd backend && npm ci --omit=dev
+RUN npm ci --omit=dev
 
 # --- Stage 1: The Builder ---
 FROM node:20-alpine AS builder
