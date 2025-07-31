@@ -358,7 +358,7 @@ section:nth-child(even) { /* Alternating background for sections if desired */
     align-items: start;
     justify-content: space-around;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 30px;
+    /* gap: 30px; */
 }
 
 .skill-category h3 {

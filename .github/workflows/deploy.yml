@@ -1,65 +1,47 @@
-name: Deploy
+name: Deploy Applications
 
 on:
   push:
     branches:
-      - master
+      - main
     paths:
+      - 'backend/**'
       - 'frontend/**'
-      - '.github/workflows/deploy.yml'
-
-# Add permissions for the job
-permissions:
-  contents: write
+  workflow_dispatch:
 
 jobs:
-  build:
-    name: Build
+  deploy-backend:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repo
+      - name: Trigger Render Deployment
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: 'npm'
-          # Use the root package-lock.json for caching
-          cache-dependency-path: package-lock.json
+          node-version: '20'
+      
+      - name: Install Dependencies
+        run: npm install --prefix frontend
+        
+      - name: Build
+        run: npm run build --prefix frontend
 
-      - name: Install dependencies
-        # Run npm install from the root directory
-        run: npm install
-
-      - name: Build project
-        # Run the build script for the frontend workspace from the root
-        run: npm run build --workspace=frontend
-
-      - name: Upload production-ready build files
-        uses: actions/upload-artifact@v4
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3.0
         with:
-          name: production-files
-          path: frontend/dist
-
-  deploy:
-    name: Deploy
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: production-files
-          # Download to a dist folder in the root
-          path: dist
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # Publish from the root dist folder
-          publish_dir: ./dist
+          publish-dir: 'frontend/dist'
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

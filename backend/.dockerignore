@@ -1,0 +1,6 @@
+# Ignore the local dependencies, we install them in the container
+node_modules
+
+# Ignore logs and environment files
+npm-debug.log
+.env
