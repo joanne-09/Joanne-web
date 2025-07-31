@@ -33,12 +33,11 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6
         with:
-          context: ./backend/DockerFile
+          context: backend/DockerFile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
   deploy:
-    name: Deploy to Render
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
