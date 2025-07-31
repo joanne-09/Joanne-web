@@ -1,0 +1,5 @@
+{
+  "name": "@joanne-web/shared",
+  "version": "1.0.0",
+  "main": "src/interfaces.ts"
+}

@@ -1,20 +1,16 @@
 import express, { Request, Response } from 'express';
-import db from './db'; // Imports work the same way
+import db from './db';
+import cors from 'cors';
+
+import type { Post } from '@joanne-web/shared';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+app.use(cors());
 app.use(express.json());
 
 // --- API ENDPOINTS ---
-
-// Define a type for what a Post should look like
-interface Post {
-  id: number;
-  title: string;
-  content: string;
-  created_at: string;
-}
 
 // GET /api/posts - Fetch all posts
 app.get('/api/posts', async (req: Request, res: Response) => {
