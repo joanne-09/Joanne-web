@@ -1,11 +1,12 @@
-name: Deploy Frontend to GitHub Pages
+name: Frontend Workflow
 
 on:
   push:
     branches:
       - master # Or your default branch
     paths:
-      - 'frontend/**' # 🎯 Only run this workflow for changes in the frontend folder
+      - .github/workflows/frontend.yml
+      - 'frontend/**'
 
 jobs:
   build-and-deploy:

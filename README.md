@@ -9,8 +9,18 @@ Primary development language is TypeScript, using Express.js for the server and 
 - Node.js
 - Express.js
 - MySQL
+- GitHub Actions
 - Docker
 - Render
+
+#### MySQL Database Setup
+1. Create .env file in the backend directory with the following content:
+   ```
+   DB_HOST=your_database_host
+   DB_USER=your_database_user
+   DB_PASSWORD=your_database_password
+   DB_NAME=your_database_table_name
+   ```
 
 #### Docker Usage
 1. Create a repository on Docker Hub with name identical to the one on Github.
@@ -22,5 +32,5 @@ Primary development language is TypeScript, using Express.js for the server and 
 #### Render Deployment
 1. Add new Render Web Service.
 2. Select the repository and branch. The service should automatically select Docker as the deployment method.
-3. Set the root to `./backend` while using monorepo.
+3. Set the root to `.` and configure the path of the Dockerfile to `./backend/Dockerfile`.
 4. Set up the environment variables for database connection.
