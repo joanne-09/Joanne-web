@@ -34,10 +34,9 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Copy only the production dependencies manifest and install them
-COPY --from=dependencies /app/backend/package.json ./backend/
-COPY --from=dependencies /app/backend/package-lock.json ./backend/
-COPY --from=dependencies /app/shared/package.json ./shared/
-COPY --from=dependencies /app/backend/node_modules ./backend/node_modules
+COPY --from=dependencies /app/backend/package*.json ./backend/
+COPY --from=dependencies /app/shared/package*.json ./shared/
+COPY --from=dependencies /app/backend/node_modules ./node_modules
 
 # Copy the compiled JavaScript files from the builder stage.
 COPY --from=builder /app/backend/dist ./dist
