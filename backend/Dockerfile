@@ -28,7 +28,6 @@ RUN npm ci --omit=dev
 COPY --from=builder /app/dist ./dist
 
 # Let Docker know that the app will listen on port 3001.
-# You'll map this to a host port when you run the container.
 EXPOSE 3001
 
 # The command that will be run when the container starts.
