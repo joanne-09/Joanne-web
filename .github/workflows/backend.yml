@@ -37,11 +37,11 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
-    deploy:
-      name: Deploy to Render
-      needs: build-and-push
-      runs-on: ubuntu-latest
-      steps:
-        - name: Trigger Render Deployment
-          if: success() # Only run if the build and push succeeded
-          run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+  deploy:
+    name: Deploy to Render
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render Deployment
+        if: success() # Only run if the build and push succeeded
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
