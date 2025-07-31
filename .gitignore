@@ -7,17 +7,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# frontend build artifacts
-node_modules/
-frontend/node_modules
-frontend/dist
-frontend/dist-ssr
-*.local
-
-# backend build artifacts
-backend/node_modules
-backend/dist
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -28,3 +17,15 @@ backend/dist
 *.njsproj
 *.sln
 *.sw?
+
+# frontend build artifacts
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+# backend build artifacts
+backend/node_modules/
+backend/dist/
+# Environment variables
+backend/.env
