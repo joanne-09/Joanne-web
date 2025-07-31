@@ -16,7 +16,7 @@ WORKDIR /app
 # Copy package.json and package-lock.json (if available) to the working directory.
 COPY package*.json ./
 # Install production dependencies. 'ci' is cleaner and faster for CI/CD.
-RUN npm ci
+RUN npm ci --omit=dev
 
 # Copy the rest of your application source code.
 COPY . .
