@@ -1,19 +1,15 @@
 // src/db.ts
-import mysql from 'mysql2/promise';
+import { Pool } from '@neondatabase/serverless';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
+if (!process.env.DB_URL) {
+  throw new Error("DB_URL environment variable is not set");
+}
 
-console.log("MySQL Connection Pool created successfully.");
+const pool = new Pool({ connectionString: process.env.DB_URL });
+
+console.log("Neon Database Connection Pool created successfully.");
 
 export default pool;
