@@ -36,32 +36,34 @@ const ArticleLists: React.FC = () => {
   };
 
   return (
-    <div className="container">
-      <h1>Articles</h1>
-      {loading && <p>Loading posts...</p>}
-      {error && <p>Error fetching posts: {error}</p>}
-      {!loading && !error && (
-        <div>
-          {posts.length > 0 ? (
-            posts.map(post => (
-              <div key={post.id} className="post">
-                <h2 onClick={() => handleTitleClick(post.id)} style={{ cursor: 'pointer' }}>
-                  {post.title}
-                </h2>
-                {expandedPostId === post.id && (
-                  <>
-                    <p>{post.content}</p>
-                    <small>Posted on: {new Date(post.created_at).toLocaleDateString()}</small>
-                  </>
-                )}
-              </div>
-            ))
-          ) : (
-            <p>No posts found.</p>
-          )}
-        </div>
-      )}
-    </div>
+    <section className="article-lists">
+      <div className="container">
+        <h1>Articles</h1>
+        {loading && <p>Loading posts...</p>}
+        {error && <p>Error fetching posts: {error}</p>}
+        {!loading && !error && (
+          <div>
+            {posts.length > 0 ? (
+              posts.map(post => (
+                <div key={post.id} className="post">
+                  <h2 onClick={() => handleTitleClick(post.id)} style={{ cursor: 'pointer' }}>
+                    {post.title}
+                  </h2>
+                  {expandedPostId === post.id && (
+                    <>
+                      <p>{post.content}</p>
+                      <small>Posted on: {new Date(post.created_at).toLocaleDateString()}</small>
+                    </>
+                  )}
+                </div>
+              ))
+            ) : (
+              <p>No posts found.</p>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
   )
 };
 

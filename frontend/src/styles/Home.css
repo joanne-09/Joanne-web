@@ -10,22 +10,6 @@
     background-color: #f5f7fa; /* A light grey background for the whole page */
 }
 
-.container {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-a {
-    color: var(--accent);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-a:hover {
-    color: #2980b9; /* Darker accent on hover */
-}
-
 /* Hero Section */
 .hero {
     height: 100vh;
@@ -38,7 +22,7 @@ a:hover {
 }
 
 .hero-content {
-    max-width: 800px; /* Limit width for better readability */
+    max-width: 100vw;
 }
 
 .hero h1 {
@@ -82,11 +66,11 @@ a:hover {
 
 /* Section Styling */
 section {
-    width: 100%;
+    width: 100vw;
     padding: 80px 0;
 }
 
-section:nth-child(even) { /* Alternating background for sections if desired */
+section:nth-child(odd) { /* Alternating background for sections if desired */
     background-color: var(--background); /* Or var(--light) for subtle difference */
 }
 
@@ -312,10 +296,8 @@ section:nth-child(even) { /* Alternating background for sections if desired */
 /* Skills Section */
 .skills-container {
     display: grid;
-    align-items: start;
-    justify-content: space-around;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    /* gap: 30px; */
+    gap: 30px;
 }
 
 .skill-category h3 {
@@ -325,10 +307,10 @@ section:nth-child(even) { /* Alternating background for sections if desired */
 }
 
 .skill-item {
-    background-color: var(--light); /* Light background for each skill item */
+    background-color: var(--light);
     padding: 15px;
     border-radius: 5px;
-    margin-bottom: 10px; /* Space between skill items */
+    margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -346,12 +328,12 @@ section:nth-child(even) { /* Alternating background for sections if desired */
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background-color: #dee2e6; /* Unfilled dot color */
-    margin-left: 5px; /* Space between dots */
+    background-color: #dee2e6;
+    margin-left: 5px;
 }
 
 .dot.filled {
-    background-color: var(--accent); /* Filled dot color */
+    background-color: var(--accent);
 }
 
 /* Pagination Controls */

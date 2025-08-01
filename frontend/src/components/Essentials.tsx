@@ -11,10 +11,10 @@ export const Navbar: React.FC = () => {
         <div className="nav-container container">
           <div className="logo">JC</div>
           <ul className="nav-links">
-            <Link onClick={() => navigate('/')}>Home</Link>
-            <Link onClick={() => navigate('/article')}>Article</Link>
-            <Link onClick={() => navigate('/projects')}>Projects</Link>
-            <Link onClick={() => navigate('/travel')}>Travel</Link>
+            <Link onClick={() => navigate('/')} underline='none'>Home</Link>
+            <Link onClick={() => navigate('/article')} underline='none'>Article</Link>
+            <Link onClick={() => navigate('/projects')} underline='none'>Projects</Link>
+            <Link onClick={() => navigate('/travel')} underline='none'>Travel</Link>
           </ul>
         </div>
       </header>

@@ -10,13 +10,16 @@
     background-color: #f5f7fa; /* A light grey background for the whole page */
 }
 
-.container {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
 /* Main Part */
+.article-lists {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: var(--background); /* Or a specific hero background */
+    padding-top: 60px; /* Account for fixed header */
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {

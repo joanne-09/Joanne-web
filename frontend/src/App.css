@@ -2,6 +2,7 @@
 
 html {
   overflow-y: scroll; /* Always show scrollbar to make width consistent and account for its space */
+  overflow-x: hidden;
   box-sizing: border-box; /* Apply border-box globally */
 }
 
@@ -12,12 +13,42 @@ html {
 body {
   margin: 0; /* Remove default browser margin */
   padding: 0; /* Remove default browser padding */
-  width: 100%; /* Body takes full available width (viewport minus scrollbar) */
+  width: 100vw; /* Body takes full available width (viewport minus scrollbar) */
   overflow-x: hidden; /* Prevent accidental horizontal scrolling on the body */
 }
 
 .App {
-  width: 100%; /* App div takes full width of its parent (body) */
+  width: 100vw; /* App div takes full width of its parent (body) */
   min-height: 100vh; /* Ensure app fills at least the viewport height */
   overflow-x: hidden; /* Prevent horizontal scrolling within the .App container itself */
+}
+
+/* Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  line-height: 1.6;
+  color: var(--text);
+  background-color: #f5f7fa;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #2980b9;
 }

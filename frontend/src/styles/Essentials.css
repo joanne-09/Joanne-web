@@ -9,6 +9,7 @@ header {
 }
 
 .nav-container {
+    height: 80px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -25,29 +26,23 @@ header {
 .nav-links {
     display: flex;
     list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 25px;
 }
 
-.nav-links li {
-    margin-left: 30px;
-}
-
-.nav-links a {
+.nav-links .MuiLink-root {
     font-size: 1em;
     font-weight: 500;
     color: var(--text);
+    border-bottom: transparent;
 }
 
-.nav-links a:hover {
+.nav-links .MuiLink-root:hover {
     color: var(--accent);
 }
 
 /* Footer */
-.container {
-    width: 100vw;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
 footer {
     background-color: var(--dark);
     color: white;
