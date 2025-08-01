@@ -28,12 +28,14 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install Dependencies
+        working-directory: frontend
         run: npm ci
 
       - name: Build Static Site
+        working-directory: frontend
         env:
           VITE_BACKEND_URL: ${{ secrets.RENDER_BACKEND_URL }}
-        run: npm run build --workspace=frontend
+        run: npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -41,7 +43,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './packages/frontend/dist'
+          path: './frontend/dist'
 
       - name: Deploy to GitHub Pages
         id: deployment
