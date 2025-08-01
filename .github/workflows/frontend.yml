@@ -15,10 +15,6 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    
-    defaults:
-      run:
-        working-directory: ./frontend # Run all commands inside the frontend folder
 
     steps:
       - name: Checkout Repository
@@ -37,7 +33,7 @@ jobs:
       - name: Build Static Site
         env:
           VITE_BACKEND_URL: ${{ secrets.RENDER_BACKEND_URL }}
-        run: npm run build
+        run: npm run build --workspace=frontend
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -45,7 +41,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './frontend/dist'
+          path: './packages/frontend/dist'
 
       - name: Deploy to GitHub Pages
         id: deployment
