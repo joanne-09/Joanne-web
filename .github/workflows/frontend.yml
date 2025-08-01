@@ -13,8 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pages: write      # Give permission to deploy to GitHub Pages
-      id-token: write   # Give permission for OIDC token
+      pages: write
+      id-token: write
     
     defaults:
       run:
@@ -32,10 +32,12 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install Dependencies
-        run: npm ci # 'ci' is faster and safer for CI environments
+        run: npm ci
 
       - name: Build Static Site
-        run: npm run build # Assumes your build script is 'build' in package.json
+        env:
+          VITE_BACKEND_URL: ${{ secrets.RENDER_BACKEND_URL }}
+        run: npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -43,7 +45,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './frontend/dist' # Path to your built static files
+          path: './frontend/dist'
 
       - name: Deploy to GitHub Pages
         id: deployment

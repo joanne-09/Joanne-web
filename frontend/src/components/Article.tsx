@@ -4,6 +4,8 @@ import type { Post } from '@joanne-web/shared';
 
 import { Navigation, Footer } from './Essentials';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+
 const Header: React.FC = () => {
   return (
     <header>
@@ -25,8 +27,7 @@ const Article: React.FC = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        // The backend runs on port 3001
-        const response = await fetch('http://localhost:3001/api/posts');
+        const response = await fetch(`${BACKEND_URL}/api/posts`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
