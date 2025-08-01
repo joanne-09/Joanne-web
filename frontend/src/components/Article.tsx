@@ -2,27 +2,15 @@ import React, { useState, useEffect } from 'react';
 import '../styles/Article.css';
 import type { Post } from '@joanne-web/shared';
 
-import { Navigation, Footer } from './Essentials';
+import { Navbar, Footer } from './Essentials';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
-const Header: React.FC = () => {
-  return (
-    <header>
-      <div className="nav-container container">
-        <div className="logo">JC</div>
-        <ul className="nav-links">
-          <li><Navigation /></li>
-        </ul>
-      </div>
-    </header>
-  );
-};
-
-const Article: React.FC = () => {
+const ArticleLists: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [expandedPostId, setExpandedPostId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -43,30 +31,46 @@ const Article: React.FC = () => {
     fetchPosts();
   }, []);
 
+  const handleTitleClick = (postId: number) => {
+    setExpandedPostId(prevId => (prevId === postId ? null : postId));
+  };
+
   return (
-    <div className="Article">
-      <Header />
-      <main>
-        <div className="container">
-          <h1>Articles</h1>
-          {loading && <p>Loading posts...</p>}
-          {error && <p>Error fetching posts: {error}</p>}
-          {!loading && !error && (
-            <div>
-              {posts.length > 0 ? (
-                posts.map(post => (
-                  <div key={post.id} className="post">
-                    <h2>{post.title}</h2>
+    <div className="container">
+      <h1>Articles</h1>
+      {loading && <p>Loading posts...</p>}
+      {error && <p>Error fetching posts: {error}</p>}
+      {!loading && !error && (
+        <div>
+          {posts.length > 0 ? (
+            posts.map(post => (
+              <div key={post.id} className="post">
+                <h2 onClick={() => handleTitleClick(post.id)} style={{ cursor: 'pointer' }}>
+                  {post.title}
+                </h2>
+                {expandedPostId === post.id && (
+                  <>
                     <p>{post.content}</p>
                     <small>Posted on: {new Date(post.created_at).toLocaleDateString()}</small>
-                  </div>
-                ))
-              ) : (
-                <p>No posts found.</p>
-              )}
-            </div>
+                  </>
+                )}
+              </div>
+            ))
+          ) : (
+            <p>No posts found.</p>
           )}
         </div>
+      )}
+    </div>
+  )
+};
+
+const Article: React.FC = () => {
+  return (
+    <div className="Article">
+      <Navbar />
+      <main>
+        <ArticleLists />
       </main>
       <Footer />
     </div>

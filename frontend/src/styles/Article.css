@@ -16,54 +16,7 @@
     padding: 0 20px;
 }
 
-/* Header */
-/* Header and Navigation */
-header {
-    background-color: var(--background);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 1000;
-}
-
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-}
-
-.logo {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 24px;
-    font-weight: 500;
-    color: var(--primary);
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-}
-
-.nav-links li {
-    margin-left: 30px;
-}
-
-.nav-links a {
-    font-size: 1em;
-    font-weight: 500;
-    color: var(--text);
-}
-
-.nav-links a:hover {
-    color: var(--accent);
-}
-
 /* Main Part */
-main {
-    padding-top: 30px; /* Space for the fixed header */
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {

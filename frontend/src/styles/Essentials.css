@@ -1,21 +1,44 @@
-/* Navigation Menu */
-#nav-button {
-    font-weight: 500;
-    text-decoration: none;
-    text-transform: none;
-    color: var(--text);
-    background-color: transparent;
+/* Navbar */
+header {
+    background-color: var(--background);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
 }
 
-#nav-button:hover, #nav-button:active {
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.logo {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--primary);
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.nav-links li {
+    margin-left: 30px;
+}
+
+.nav-links a {
+    font-size: 1em;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.nav-links a:hover {
     color: var(--accent);
-    background-color: transparent;
-}
-
-#nav-menu {
-    font-weight: 500;
-    text-transform: none;
-    color: var(--text);
 }
 
 /* Footer */

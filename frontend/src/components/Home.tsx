@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import type { FormEvent } from 'react';
 import '../styles/Home.css';
 
-import { Navigation, Footer } from './Essentials';
+import { Navbar, Footer } from './Essentials';
 
 // Data Interfaces
 interface EducationItem {
@@ -44,25 +44,6 @@ interface Project {
 }
 
 // --- Components ---
-const Header: React.FC = () => {
-  return (
-    <header>
-      <div className="nav-container container">
-        <div className="logo">JC</div>
-        <ul className="nav-links">
-          <li><a href="#about">About</a></li>
-          <li><a href="#education">Education</a></li>
-          <li><a href="#activities">Experiences</a></li>
-          <li><a href="#skills">Skills</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><Navigation /></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </div>
-    </header>
-  );
-};
-
 const Hero: React.FC = () => {
   return (
     <section className="hero">
@@ -490,7 +471,7 @@ const Contact: React.FC = () => {
 const Home = () => {
   return (
     <div className='Home'>
-      <Header />
+      <Navbar />
       <main>
         <Hero />
         <About />

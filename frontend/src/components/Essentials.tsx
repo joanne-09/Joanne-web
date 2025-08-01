@@ -1,49 +1,24 @@
-import React, { useState } from 'react';
-import { Link, Menu, MenuItem } from '@mui/material';
+import React from 'react';
+import { Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Essentials.css';
 
-export const Navigation: React.FC = () => {
+export const Navbar: React.FC = () => {
   const navigate = useNavigate();
 
-  const [anchor, setAnchor] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchor);
-
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchor(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchor(null);
-  };
-
   return (
-    <>
-      <Link
-        id="nav-button"
-        aria-controls={open ? 'nav-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-      >
-        Pages
-      </Link>
-      <Menu
-        id="nav-menu"
-        anchorEl={anchor}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'nav-button',
-        }}
-      >
-        <MenuItem onClick={() => navigate('/')}>Home</MenuItem>
-        <MenuItem onClick={() => navigate('/article')}>Article</MenuItem>
-        <MenuItem onClick={() => navigate('/projects')}>Projects</MenuItem>
-        <MenuItem onClick={() => navigate('/travel')}>Travel</MenuItem>
-      </Menu>
-    </>
-  );
+      <header>
+        <div className="nav-container container">
+          <div className="logo">JC</div>
+          <ul className="nav-links">
+            <Link onClick={() => navigate('/')}>Home</Link>
+            <Link onClick={() => navigate('/article')}>Article</Link>
+            <Link onClick={() => navigate('/projects')}>Projects</Link>
+            <Link onClick={() => navigate('/travel')}>Travel</Link>
+          </ul>
+        </div>
+      </header>
+    );
 };
 
 export const Footer: React.FC = () => {
