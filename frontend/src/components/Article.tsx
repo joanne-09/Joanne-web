@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Article.css';
 import type { Post } from '@joanne-web/shared';
 
@@ -10,7 +11,7 @@ const ArticleLists: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [expandedPostId, setExpandedPostId] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -32,29 +33,27 @@ const ArticleLists: React.FC = () => {
   }, []);
 
   const handleTitleClick = (postId: number) => {
-    setExpandedPostId(prevId => (prevId === postId ? null : postId));
+    navigate(`/article/${postId}`);
   };
 
   return (
     <section className="article-lists">
       <div className="container">
-        <h1>Articles</h1>
+        <h1 className="page-title">Articles</h1>
         {loading && <p>Loading posts...</p>}
         {error && <p>Error fetching posts: {error}</p>}
         {!loading && !error && (
-          <div>
+          <div className="posts-container">
             {posts.length > 0 ? (
               posts.map(post => (
-                <div key={post.id} className="post">
-                  <h2 onClick={() => handleTitleClick(post.id)} style={{ cursor: 'pointer' }}>
-                    {post.title}
-                  </h2>
-                  {expandedPostId === post.id && (
-                    <>
-                      <p>{post.content}</p>
-                      <small>Posted on: {new Date(post.created_at).toLocaleDateString()}</small>
-                    </>
-                  )}
+                <div key={post.id} className="post-entry" onClick={() => handleTitleClick(post.id)}>
+                  <div className="post-entry-content">
+                    <h2>{post.title}</h2>
+                    <p>{post.content.substring(0, 150)}...</p>
+                  </div>
+                  <div className="post-entry-meta">
+                    <span>{new Date(post.created_at).toLocaleDateString()}</span>
+                  </div>
                 </div>
               ))
             ) : (
