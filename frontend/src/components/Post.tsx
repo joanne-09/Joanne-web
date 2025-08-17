@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Navbar, Footer } from './Essentials';
 import type { Post } from '@joanne-web/shared';
+import Loading from './Loading';
 import '../styles/Post.css';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
@@ -38,9 +39,9 @@ const ArticleDetail: React.FC = () => {
       <Navbar />
       <main className="article-detail-main">
         <div className="container">
-          {loading && <p>Loading post...</p>}
           {error && <p>Error fetching post: {error}</p>}
-          {post && (
+          {loading && <Loading />}
+          {!loading && !error && post && (
             <article className="article-content">
               <h1>{post.title}</h1>
               <small className="article-meta">

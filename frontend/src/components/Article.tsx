@@ -4,6 +4,7 @@ import '../styles/Article.css';
 import type { Post } from '@joanne-web/shared';
 
 import { Navbar, Footer } from './Essentials';
+import Loading from './Loading';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
@@ -40,7 +41,7 @@ const ArticleLists: React.FC = () => {
     <section className="article-lists">
       <div className="container">
         <h1 className="page-title">Articles</h1>
-        {loading && <p>Loading posts...</p>}
+        {loading && <Loading />}
         {error && <p>Error fetching posts: {error}</p>}
         {!loading && !error && (
           <div className="posts-container">
