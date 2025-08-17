@@ -10,23 +10,24 @@
     font-family: 'Source Sans Pro', sans-serif;
     line-height: 1.6;
     color: var(--text);
-    background-color: #f5f7fa; /* A light grey background for the whole page */
 }
 
 .Article main {
+    min-height: 100vh;
     flex-grow: 1;
     padding-top: 80px; /* Space for fixed navbar */
+    background-color: #f5f7fa;
 }
 
 /* Main Part */
 .article-lists {
-    padding: 60px 0 0 0;
+    min-height: calc(100vh - 80px);
+    width: 100%;
+    padding: 10px 0 30px 0;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    /* text-align: center; */
-    background-color: var(--background); /* Or a specific hero background */
-    padding-top: 60px; /* Account for fixed header */
+    background-color: #f5f7fa;
 }
 
 /* Article List Page */
@@ -47,7 +48,6 @@
 }
 
 .post-entry {
-    background-color: var(--background);
     border-radius: 8px;
     padding: 25px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.05);
@@ -79,75 +79,4 @@
     font-size: 14px;
     white-space: nowrap;
     margin-left: 20px;
-}
-
-
-/* Article Detail Page */
-.article-detail-main {
-    padding: 60px 0 0 0;
-    align-items: center;
-}
-
-.article-content {
-    min-width: 320px;
-    max-width: 800px;
-    margin: 30px auto;
-    background-color: var(--background);
-    padding: 40px;
-    border-radius: 8px;
-}
-
-.article-content h1 {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 32px;
-    color: var(--primary);
-    margin-bottom: 15px;
-}
-
-.article-meta {
-    display: block;
-    font-size: 14px;
-    color: var(--subtext);
-    margin-bottom: 30px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 15px;
-}
-
-.article-body {
-    font-size: 17px;
-    line-height: 1.8;
-    color: var(--text);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .nav-links {
-        /* Basic mobile menu: hide links, show a burger icon (not implemented here) */
-        /* For simplicity, we'll let them wrap or reduce margin */
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        margin-top: 10px;
-    }
-    .nav-links li {
-        margin-left: 0;
-    }
-    .nav-container {
-        flex-direction: column;
-    }
-    .post-entry {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-    .post-entry-meta {
-        margin-left: 0;
-        align-self: flex-end;
-    }
-    .article-content {
-        padding: 25px;
-    }
-    .article-content h1 {
-        font-size: 28px;
-    }
 }

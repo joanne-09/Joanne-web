@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Navbar, Footer } from './Essentials';
 import type { Post } from '@joanne-web/shared';
-import '../styles/Article.css';
+import '../styles/Post.css';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
