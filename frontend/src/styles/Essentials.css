@@ -31,6 +31,11 @@ header {
     gap: 25px;
 }
 
+.nav-links li {
+    padding: 0;
+    margin: 0;
+}
+
 .nav-links .MuiLink-root {
     font-size: 1em;
     font-weight: 500;
@@ -40,6 +45,16 @@ header {
 
 .nav-links .MuiLink-root:hover {
     color: var(--accent);
+}
+
+.menu-toggle {
+    display: none; /* Hidden by default on larger screens */
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1100; /* Ensure it's above other content */
 }
 
 /* Footer */
@@ -72,4 +87,42 @@ footer {
 .social-links a:hover {
     background-color: var(--accent);
     transform: translateY(-3px); /* Slight lift on hover */
+}
+
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: row; /* Keep logo and button in a row */
+        justify-content: space-between;
+        align-items: center;
+        height: 60px; /* Adjust height for mobile */
+    }
+
+    .menu-toggle {
+        display: block; /* Show the hamburger button */
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(5px);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+        padding: 0;
+    }
+
+    .nav-links.active {
+        transform: translateX(0);
+    }
+
+    .nav-links .MuiLink-root {
+        font-size: 1.5rem; /* Larger text for mobile menu */
+    }
 }

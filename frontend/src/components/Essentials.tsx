@@ -1,20 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Essentials.css';
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    setIsMenuOpen(false);
+  };
 
   return (
       <header>
         <div className="nav-container container">
-          <div className="logo">JC</div>
-          <ul className="nav-links">
-            <Link onClick={() => navigate('/')} underline='none'>Home</Link>
-            <Link onClick={() => navigate('/article')} underline='none'>Article</Link>
-            <Link onClick={() => navigate('/projects')} underline='none'>Projects</Link>
-            <Link onClick={() => navigate('/travel')} underline='none'>Travel</Link>
+          <div className="logo" onClick={() => handleNavigate('/')} style={{ cursor: 'pointer' }}>JC</div>
+          <button className="menu-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
+            <i className={isMenuOpen ? 'fas fa-times' : 'fas fa-bars'}></i>
+          </button>
+          <ul className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
+            <li><Link onClick={() => handleNavigate('/')} underline='none'>Home</Link></li>
+            <li><Link onClick={() => handleNavigate('/article')} underline='none'>Article</Link></li>
+            <li><Link onClick={() => handleNavigate('/projects')} underline='none'>Projects</Link></li>
+            <li><Link onClick={() => handleNavigate('/travel')} underline='none'>Travel</Link></li>
           </ul>
         </div>
       </header>
