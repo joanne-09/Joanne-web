@@ -6,6 +6,7 @@ import './App.css'; // Import your stylesheet
 import Home from './components/Home';
 import Article from './components/Article';
 import ArticleDetail from './components/Post';
+import Projects from './components/Projects';
 
 // Declare EmailJS at the window level
 declare global {
@@ -55,6 +56,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/article" element={<Article />} />
           <Route path="/article/:id" element={<ArticleDetail />} />
+          <Route path="/projects" element={<Projects />} />
         </Routes>
       </Router>
     </div>

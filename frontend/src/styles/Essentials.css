@@ -69,6 +69,11 @@ header.dark .menu-toggle {
     color: var(--background);
 }
 
+header.dark .nav-links {
+    background-color: var(--primary);
+    opacity: 0.95;
+}
+
 header.dark .nav-links .MuiLink-root:hover {
     color: var(--accent);
 }
@@ -123,7 +128,8 @@ footer {
         right: 0;
         width: 100%;
         height: 100vh;
-        background-color: rgba(255, 255, 255, 0.95);
+        background-color: var(--background);
+        opacity: 0.95;
         backdrop-filter: blur(5px);
         flex-direction: column;
         align-items: center;
