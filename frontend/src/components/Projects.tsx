@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+// import { useNavigate } from 'react-router-dom';
 import '../styles/Projects.css';
-import type { Post } from '@joanne-web/shared';
+// import type { Post } from '@joanne-web/shared';
 
 import { Navbar, Footer } from './Essentials';
-import Loading from './Loading';
+// import Loading from './Loading';
 
 const Projects: React.FC = () => {
     return (
