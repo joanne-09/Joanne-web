@@ -70,7 +70,7 @@ section {
     padding: 80px 0;
 }
 
-section:nth-child(odd) { /* Alternating background for sections if desired */
+.Home section:nth-child(odd) { /* Alternating background for sections if desired */
     background-color: var(--background); /* Or var(--light) for subtle difference */
 }
 

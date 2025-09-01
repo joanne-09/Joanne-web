@@ -1,12 +1,13 @@
 .Projects {
     width: 100vw;
     height: 100vh;
-    background-color: var(--primary);
-    color: var(--background);
 }
 
 .Projects main {
+    min-height: 100vh;
     padding-top: 80px; 
+    background-color: var(--primary);
+    color: var(--background);
 }
 
 .Projects .section-title h2 {

@@ -75,7 +75,7 @@ const Projects: React.FC = () => {
             <section id="projects">
               <div className="container">
                 <div className="section-title">
-                  <h2 style={{ color: 'var(--light)' }}>Projects</h2>
+                  <h2>Projects</h2>
                   <div className="line"></div>
                 </div>
 
