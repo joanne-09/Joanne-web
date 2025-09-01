@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import '../styles/Projects.css';
 import type { Project } from '@joanne-web/shared';
 
@@ -66,7 +66,7 @@ const projectsData: Project[] = [
 
 
 const Projects: React.FC = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     return (
       <div className="Projects">
