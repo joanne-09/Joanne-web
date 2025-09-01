@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import db from './db';
+import cloudinary from './cloudinary';
 import cors from 'cors';
 
 import type { Post } from '@joanne-web/shared';
@@ -35,6 +36,28 @@ app.get('/api/posts/:id', async (req: Request, res: Response) => {
   } catch (err) {
     console.error(`Error fetching post ${req.params.id}:`, err);
     res.status(500).json({ error: 'Failed to fetch post' });
+  }
+});
+
+// GET /api/images/:folder - Fetch images from a specific folder
+app.get('/api/images/:folder', async (req: Request, res: Response) => {
+  const { folder } = req.params;
+  try {
+    const result = await cloudinary.search
+      .expression(`folder:${folder}`)
+      .sort_by('public_id', 'desc')
+      .max_results(50) // Adjust as needed
+      .execute();
+
+    const images = result.resources.map((file: { secure_url: string; public_id: string }) => ({
+      url: file.secure_url,
+      public_id: file.public_id,
+    }));
+
+    res.json(images);
+  } catch (err) {
+    console.error(`Error fetching images from folder ${folder}:`, err);
+    res.status(500).json({ error: 'Failed to fetch images' });
   }
 });
 
