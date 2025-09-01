@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import '../styles/Home.css';
 
 import { Navbar, Footer } from './Essentials';
+import type { Project } from '@joanne-web/shared';
 
 // Data Interfaces
 interface EducationItem {
@@ -28,19 +29,6 @@ interface Skill {
 interface SkillCategory {
   categoryName: string;
   skills: Skill[];
-}
-
-interface Project {
-  id: string;
-  ghLink: string;
-  imgSrc: string;
-  imgAlt: string;
-  imgStyle?: React.CSSProperties;
-  title: string;
-  type: string;
-  description: string;
-  role: string;
-  tech: string[];
 }
 
 // --- Components ---

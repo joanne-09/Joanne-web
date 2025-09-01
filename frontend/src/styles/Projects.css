@@ -2,4 +2,13 @@
     width: 100vw;
     height: 100vh;
     background-color: var(--primary);
+    color: var(--background);
+}
+
+.Projects main {
+    padding-top: 80px; 
+}
+
+.Projects .section-title h2 {
+    color: var(--light);
 }
