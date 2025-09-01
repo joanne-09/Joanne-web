@@ -3,7 +3,11 @@ import { Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Essentials.css';
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  theme?: 'light' | 'dark';
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ theme = 'light' }) => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -13,7 +17,7 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-      <header>
+      <header className={theme}>
         <div className="nav-container container">
           <div className="logo" onClick={() => handleNavigate('/')} style={{ cursor: 'pointer' }}>JC</div>
           <button className="menu-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
