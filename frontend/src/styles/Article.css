@@ -10,13 +10,14 @@
     font-family: 'Source Sans Pro', sans-serif;
     line-height: 1.6;
     color: var(--text);
+    background-color: var(--background);
 }
 
 .Article main {
     min-height: 100vh;
     flex-grow: 1;
     padding-top: 80px; /* Space for fixed navbar */
-    background-color: #f5f7fa;
+    background-color: var(--background);
 }
 
 /* Main Part */
@@ -27,7 +28,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    background-color: #f5f7fa;
+    background-color: var(--background);
 }
 
 /* Article List Page */
@@ -50,6 +51,7 @@
 .post-entry {
     border-radius: 8px;
     padding: 25px;
+    background-color: var(--background-dark);
     box-shadow: 0 3px 10px rgba(0,0,0,0.05);
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;

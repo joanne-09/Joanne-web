@@ -35,7 +35,7 @@ const ArticleDetail: React.FC = () => {
   }, [id]);
 
   return (
-    <div className="Article">
+    <div className="Post">
       <Navbar />
       <main className="article-detail-main">
         <div className="container">
