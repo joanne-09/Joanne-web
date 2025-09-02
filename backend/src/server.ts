@@ -3,7 +3,7 @@ import db from './db';
 import cloudinary from './cloudinary';
 import cors from 'cors';
 
-import type { Post } from '@joanne-web/shared';
+import type { Post, Project } from '@joanne-web/shared';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -58,6 +58,32 @@ app.get('/api/images/:folder', async (req: Request, res: Response) => {
   } catch (err) {
     console.error(`Error fetching images from folder ${folder}:`, err);
     res.status(500).json({ error: 'Failed to fetch images' });
+  }
+});
+
+// GET /api/projects - Sample endpoint to fetch projects (static data for now)
+app.get('/api/projects', async (req: Request, res: Response) => {
+  try{
+    const { rows } = await db.query('SELECT * FROM projects');
+    res.json(rows);
+  } catch (err) {
+    console.error("Error fetching projects:", err);
+    res.status(500).json({ error: 'Failed to fetch projects' });
+  }
+});
+
+// GET /api/projects/:id - Fetch a single project by ID
+app.get('/api/projects/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { rows } = await db.query('SELECT * FROM projects WHERE id = $1', [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+    res.json(rows[0]);
+  } catch (err) {
+    console.error(`Error fetching project ${req.params.id}:`, err);
+    res.status(500).json({ error: 'Failed to fetch project' });
   }
 });
 

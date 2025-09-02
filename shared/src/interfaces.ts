@@ -15,5 +15,5 @@ export interface Project {
   type: string;
   description: string;
   role: string;
-  tech: string[];
+  tech: JSON;
 }

@@ -230,7 +230,7 @@ const projectsData: Project[] = [
     type: 'Personal Project',
     description: 'Developed a real-time chat application using Firebase and Typescript.',
     role: 'Full Stack Developer - implemented both front-end and back-end functionalities.',
-    tech: ['Typescript', 'React', 'HTML, CSS', 'Firebase'],
+    tech: JSON.parse('["Typescript", "React", "HTML, CSS", "Firebase"]'),
   },
   {
     id: 'fpga',
@@ -242,7 +242,7 @@ const projectsData: Project[] = [
     type: 'Group Project',
     description: 'Implemented a fully functional two-player Slapjack card game on dual FPGA boards with VGA display output, featuring real-time gameplay and interactive controls.',
     role: 'Lead Game Developer - Architected core game logic in Verilog, designed multi-level gameplay mechanics, developed UI elements through VGA, and engineered board-to-board communication protocols for multiplayer functionality.',
-    tech: ['Verilog HDL', 'FPGA', 'VGA Interface', 'Digital Logic'],
+    tech: JSON.parse('["Verilog HDL", "FPGA", "VGA Interface", "Digital Logic"]'),
   },
   {
     id: 'bird',
@@ -253,7 +253,7 @@ const projectsData: Project[] = [
     type: 'Group Project',
     description: 'Generate bird vocalizations using a diffusion model to simulate bird calls.',
     role: 'Innovative Idea Contributor - proposed the project idea and collaborated on the implementation.',
-    tech: ['Python', 'PyTorch', 'Streamlit', 'Audio Processing'],
+    tech: JSON.parse('["Python", "PyTorch", "Streamlit", "Audio Processing"]'),
   },
   {
     id: 'mahjong',
@@ -264,7 +264,7 @@ const projectsData: Project[] = [
     type: 'Personal Project',
     description: 'Train a customized YOLO model to recognize and analyze the winning hand of Mahjong tiles in real-time.',
     role: 'Sole Developer - designed, trained, and implemented the entire system.',
-    tech: ['Python', 'NumPy', 'YOLO', 'Computer Vision'],
+    tech: JSON.parse('["Python", "NumPy", "YOLO", "Computer Vision"]'),
   },
   {
     id: 'greenfoot',
@@ -275,7 +275,7 @@ const projectsData: Project[] = [
     type: 'Group Project',
     description: 'Develop an action-adventure game using Greenfoot and allows players to explore and to find out the story behind the game.',
     role: 'Game Developer - designed and implemented game mechanics and crucial story elements.',
-    tech: ['Java', 'Greenfoot', 'Game Design', 'Puzzle Design'],
+    tech: JSON.parse('["Java", "Greenfoot", "Game Design", "Puzzle Design"]'),
   },
 ];
 
@@ -316,7 +316,7 @@ const Projects: React.FC = () => {
                     <p className="project-description">{project.description}</p>
                     <p><strong>Role:</strong> {project.role}</p>
                     <div className="project-tech">
-                      {project.tech.map((tag) => (
+                      {(project.tech as unknown as string[]).map((tag) => (
                         <span className="tech-tag" key={tag}>{tag}</span>
                       ))}
                     </div>
