@@ -6,7 +6,7 @@ import { Navbar, Footer } from './Essentials';
 const Travel: React.FC = () => {
     return (
       <div className="Travel">
-        <Navbar theme='dark' />
+        <Navbar />
           <main>
             Nothing here yet!
           </main>
