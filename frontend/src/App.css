@@ -34,7 +34,7 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
   line-height: 1.6;
   color: var(--text);
-  background-color: #f5f7fa;
+  background-color: var(--background);
 }
 
 .container {
@@ -50,5 +50,5 @@ a {
 }
 
 a:hover {
-  color: #2980b9;
+  color: var(--accent-dark);
 }

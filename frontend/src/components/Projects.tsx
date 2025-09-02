@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // import { useNavigate } from 'react-router-dom';
 import '../styles/Projects.css';
 import type { Project } from '@joanne-web/shared';
@@ -68,9 +68,18 @@ const projectsData: Project[] = [
 const Projects: React.FC = () => {
     // const navigate = useNavigate();
 
+    useEffect(() => {
+      document.documentElement.setAttribute('data-theme', 'dark');
+
+      // Clean up the attribute when the component unmounts
+      return () => {
+        document.documentElement.removeAttribute('data-theme');
+      };
+    }, []);
+
     return (
       <div className="Projects">
-        <Navbar theme='dark' />
+        <Navbar />
           <main>
             <section id="projects">
               <div className="container">

@@ -7,7 +7,7 @@
     font-family: 'Source Sans Pro', sans-serif;
     line-height: 1.6;
     color: var(--text);
-    background-color: #f5f7fa; /* A light grey background for the whole page */
+    background-color: var(--background); /* A light grey background for the whole page */
 }
 
 /* Hero Section */
@@ -57,7 +57,7 @@
 }
 
 .btn:hover {
-    background-color: #2980b9; /* Darker accent */
+    background-color: var(--accent-dark); /* Darker accent */
     transform: translateY(-3px);
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     color: white; /* Ensure text remains white on hover */
@@ -70,8 +70,8 @@ section {
     padding: 80px 0;
 }
 
-.Home section:nth-child(odd) { /* Alternating background for sections if desired */
-    background-color: var(--background); /* Or var(--light) for subtle difference */
+.Home section:nth-child(even) { /* Alternating background for sections if desired */
+    background-color: var(--background-dark); /* Or var(--light) for subtle difference */
 }
 
 .section-title {
@@ -522,23 +522,8 @@ section {
     /* .btn class styles will apply here */
 }
 
-
 /* Responsive Design */
 @media (max-width: 768px) {
-    .nav-links {
-        /* Basic mobile menu: hide links, show a burger icon (not implemented here) */
-        /* For simplicity, we'll let them wrap or reduce margin */
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        margin-top: 10px;
-    }
-    .nav-links li {
-        margin-left: 0;
-    }
-    .nav-container {
-        flex-direction: column;
-    }
     .hero h1 {
         font-size: 36px;
     }
