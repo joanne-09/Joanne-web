@@ -10,7 +10,7 @@ export interface Project {
   ghLink: string;
   imgSrc: string;
   imgAlt: string;
-  imgStyle?: React.CSSProperties;
+  imgStyle?: { [key: string]: any };
   title: string;
   type: string;
   description: string;

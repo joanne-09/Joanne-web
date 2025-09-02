@@ -1,5 +1,8 @@
 {
   "name": "@joanne-web/shared",
   "version": "1.0.0",
-  "main": "src/interfaces.ts"
+  "main": "src/interfaces.ts",
+  "devDependencies": {
+    "@types/react": "^18.0.0"
+  }
 }
