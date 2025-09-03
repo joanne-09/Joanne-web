@@ -3,7 +3,6 @@ import type { FormEvent } from 'react';
 import '../styles/Home.css';
 
 import { Navbar, Footer } from './Essentials';
-import type { Project } from '@joanne-web/shared';
 
 // Data Interfaces
 interface EducationItem {
@@ -190,175 +189,6 @@ const skillsData: SkillCategory[] = [
   },
 ];
 
-const Skills: React.FC = () => {
-  return (
-    <section id="skills">
-      <div className="container">
-        <div className="section-title">
-          <h2>Technical Skills</h2>
-          <div className="line"></div>
-        </div>
-        <div className="skills-container">
-          {skillsData.map((category) => (
-            <div className="skill-category" key={category.categoryName}>
-              <h3>{category.categoryName}</h3>
-              {category.skills.map((skill) => (
-                <div className="skill-item" key={skill.name}>
-                  <span className="skill-name">{skill.name}</span>
-                  <div className="skill-level">
-                    {[...Array(5)].map((_, i) => (
-                      <span className={`dot ${i < skill.level ? 'filled' : ''}`} key={i}></span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const projectsData: Project[] = [
-  {
-    id: 'chatroom',
-    ghLink: 'https://github.com/joanne-09/SD_Chatroom',
-    imgsrc: '/images/chatroom_project.png',
-    imgalt: 'Chatroom Project',
-    title: 'Chatroom Project',
-    type: 'Personal Project',
-    description: 'Developed a real-time chat application using Firebase and Typescript.',
-    role: 'Full Stack Developer - implemented both front-end and back-end functionalities.',
-    tech: JSON.parse('["Typescript", "React", "HTML, CSS", "Firebase"]'),
-  },
-  {
-    id: 'fpga',
-    ghLink: 'https://github.com/joanne-09/Slapjack-Project',
-    imgsrc: '/images/FPGA_implementation.jpg',
-    imgalt: 'Slapjack FPGA Implementation',
-    imgstyle: { objectPosition: '0 90%' },
-    title: 'Slapjack FPGA Implementation',
-    type: 'Group Project',
-    description: 'Implemented a fully functional two-player Slapjack card game on dual FPGA boards with VGA display output, featuring real-time gameplay and interactive controls.',
-    role: 'Lead Game Developer - Architected core game logic in Verilog, designed multi-level gameplay mechanics, developed UI elements through VGA, and engineered board-to-board communication protocols for multiplayer functionality.',
-    tech: JSON.parse('["Verilog HDL", "FPGA", "VGA Interface", "Digital Logic"]'),
-  },
-  {
-    id: 'bird',
-    ghLink: 'https://github.com/joanne-09/ML_diffusion',
-    imgsrc: '/images/bird_sound.jpg',
-    imgalt: 'Bird Vocalization Generation',
-    title: 'Bird Vocalization Generation',
-    type: 'Group Project',
-    description: 'Generate bird vocalizations using a diffusion model to simulate bird calls.',
-    role: 'Innovative Idea Contributor - proposed the project idea and collaborated on the implementation.',
-    tech: JSON.parse('["Python", "PyTorch", "Streamlit", "Audio Processing"]'),
-  },
-  {
-    id: 'mahjong',
-    ghLink: 'https://github.com/joanne-09/Mahjong-Winner',
-    imgsrc: '/images/mahjong_project.jpg',
-    imgalt: 'Mahjong Recognition and Analysis System',
-    title: 'Mahjong Recognition and Analysis System',
-    type: 'Personal Project',
-    description: 'Train a customized YOLO model to recognize and analyze the winning hand of Mahjong tiles in real-time.',
-    role: 'Sole Developer - designed, trained, and implemented the entire system.',
-    tech: JSON.parse('["Python", "NumPy", "YOLO", "Computer Vision"]'),
-  },
-  {
-    id: 'greenfoot',
-    ghLink: 'https://github.com/joanne-09/greenfootGameProject',
-    imgsrc: '/images/greenfoot-project.png',
-    imgalt: 'Greenfoot Action-Adventure Game',
-    title: 'Greenfoot Action-Adventure Game',
-    type: 'Group Project',
-    description: 'Develop an action-adventure game using Greenfoot and allows players to explore and to find out the story behind the game.',
-    role: 'Game Developer - designed and implemented game mechanics and crucial story elements.',
-    tech: JSON.parse('["Java", "Greenfoot", "Game Design", "Puzzle Design"]'),
-  },
-];
-
-const Projects: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const projectsPerPage = 3; // Number of projects per page
-  const totalPages = Math.ceil(projectsData.length / projectsPerPage);
-
-  const showPage = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const currentProjects = projectsData.slice(
-    (currentPage - 1) * projectsPerPage,
-    currentPage * projectsPerPage
-  );
-
-  return (
-    <section id="projects">
-      <div className="container">
-        <div className="section-title">
-          <h2>Projects</h2>
-          <div className="line"></div>
-        </div>
-
-        <div className="projects-container">
-          {/* The .project-page div will act as the grid container for current projects */}
-          <div className={`project-page ${currentProjects.length > 0 ? 'active' : ''}`}>
-            {currentProjects.map((project) => (
-              <a href={project.ghLink} target="_blank" rel="noopener noreferrer" key={project.id}>
-                <div className="project-card">
-                  <div className="project-image">
-                    <img src={project.imgsrc} alt={project.imgalt} style={project.imgstyle} />
-                  </div>
-                  <div className="project-content">
-                    <h3 className="project-title">{project.title}</h3>
-                    <span className="project-type">{project.type}</span>
-                    <p className="project-description">{project.description}</p>
-                    <p><strong>Role:</strong> {project.role}</p>
-                    <div className="project-tech">
-                      {(project.tech as unknown as string[]).map((tag) => (
-                        <span className="tech-tag" key={tag}>{tag}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {totalPages > 1 && (
-          <div className="pagination-controls">
-            <button
-              className="pagination-btn prev-btn"
-              onClick={() => showPage(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              <i className="fas fa-chevron-left"></i>
-            </button>
-            {[...Array(totalPages)].map((_, i) => (
-              <button
-                key={i + 1}
-                className={`pagination-btn page-btn ${currentPage === i + 1 ? 'active' : ''}`}
-                onClick={() => showPage(i + 1)}
-              >
-                {i + 1}
-              </button>
-            ))}
-            <button
-              className="pagination-btn next-btn"
-              onClick={() => showPage(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
-              <i className="fas fa-chevron-right"></i>
-            </button>
-          </div>
-        )}
-      </div>
-    </section>
-  );
-};
-
 const Contact: React.FC = () => {
   const form = useRef<HTMLFormElement>(null);
   const [submitStatus, setSubmitStatus] = useState('Send Message');
@@ -465,8 +295,6 @@ const Home = () => {
         <About />
         <Education />
         <Activities />
-        <Skills />
-        <Projects />
         <Contact />
       </main>
       <Footer />
