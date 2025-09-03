@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import path from 'path';
 import db from './db';
 import cloudinary from './cloudinary';
 import cors from 'cors';
@@ -60,6 +61,8 @@ app.get('/api/images/:folder', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Failed to fetch images' });
   }
 });
+
+app.use('/images', express.static(path.join(__dirname, '../../frontend/public/images')));
 
 // GET /api/projects - Sample endpoint to fetch projects (static data for now)
 app.get('/api/projects', async (req: Request, res: Response) => {

@@ -8,9 +8,9 @@ export interface Post {
 export interface Project {
   id: string;
   ghLink: string;
-  imgSrc: string;
-  imgAlt: string;
-  imgStyle?: { [key: string]: any };
+  imgsrc: string;
+  imgalt: string;
+  imgstyle?: { [key: string]: any };
   title: string;
   type: string;
   description: string;

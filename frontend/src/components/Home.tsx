@@ -224,8 +224,8 @@ const projectsData: Project[] = [
   {
     id: 'chatroom',
     ghLink: 'https://github.com/joanne-09/SD_Chatroom',
-    imgSrc: '/images/chatroom_project.png',
-    imgAlt: 'Chatroom Project',
+    imgsrc: '/images/chatroom_project.png',
+    imgalt: 'Chatroom Project',
     title: 'Chatroom Project',
     type: 'Personal Project',
     description: 'Developed a real-time chat application using Firebase and Typescript.',
@@ -235,9 +235,9 @@ const projectsData: Project[] = [
   {
     id: 'fpga',
     ghLink: 'https://github.com/joanne-09/Slapjack-Project',
-    imgSrc: '/images/FPGA_implementation.jpg',
-    imgAlt: 'Slapjack FPGA Implementation',
-    imgStyle: { objectPosition: '0 90%' },
+    imgsrc: '/images/FPGA_implementation.jpg',
+    imgalt: 'Slapjack FPGA Implementation',
+    imgstyle: { objectPosition: '0 90%' },
     title: 'Slapjack FPGA Implementation',
     type: 'Group Project',
     description: 'Implemented a fully functional two-player Slapjack card game on dual FPGA boards with VGA display output, featuring real-time gameplay and interactive controls.',
@@ -247,8 +247,8 @@ const projectsData: Project[] = [
   {
     id: 'bird',
     ghLink: 'https://github.com/joanne-09/ML_diffusion',
-    imgSrc: '/images/bird_sound.jpg',
-    imgAlt: 'Bird Vocalization Generation',
+    imgsrc: '/images/bird_sound.jpg',
+    imgalt: 'Bird Vocalization Generation',
     title: 'Bird Vocalization Generation',
     type: 'Group Project',
     description: 'Generate bird vocalizations using a diffusion model to simulate bird calls.',
@@ -258,8 +258,8 @@ const projectsData: Project[] = [
   {
     id: 'mahjong',
     ghLink: 'https://github.com/joanne-09/Mahjong-Winner',
-    imgSrc: '/images/mahjong_project.jpg',
-    imgAlt: 'Mahjong Recognition and Analysis System',
+    imgsrc: '/images/mahjong_project.jpg',
+    imgalt: 'Mahjong Recognition and Analysis System',
     title: 'Mahjong Recognition and Analysis System',
     type: 'Personal Project',
     description: 'Train a customized YOLO model to recognize and analyze the winning hand of Mahjong tiles in real-time.',
@@ -269,8 +269,8 @@ const projectsData: Project[] = [
   {
     id: 'greenfoot',
     ghLink: 'https://github.com/joanne-09/greenfootGameProject',
-    imgSrc: '/images/greenfoot-project.png',
-    imgAlt: 'Greenfoot Action-Adventure Game',
+    imgsrc: '/images/greenfoot-project.png',
+    imgalt: 'Greenfoot Action-Adventure Game',
     title: 'Greenfoot Action-Adventure Game',
     type: 'Group Project',
     description: 'Develop an action-adventure game using Greenfoot and allows players to explore and to find out the story behind the game.',
@@ -308,7 +308,7 @@ const Projects: React.FC = () => {
               <a href={project.ghLink} target="_blank" rel="noopener noreferrer" key={project.id}>
                 <div className="project-card">
                   <div className="project-image">
-                    <img src={project.imgSrc} alt={project.imgAlt} style={project.imgStyle} />
+                    <img src={project.imgsrc} alt={project.imgalt} style={project.imgstyle} />
                   </div>
                   <div className="project-content">
                     <h3 className="project-title">{project.title}</h3>

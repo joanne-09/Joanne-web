@@ -16,15 +16,6 @@ const Projects: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-      document.documentElement.setAttribute('data-theme', 'dark');
-
-      // Clean up the attribute when the component unmounts
-      return () => {
-        document.documentElement.removeAttribute('data-theme');
-      };
-    }, []);
-
-    useEffect(() => {
       const fetchProjects = async () => {
         try {
           const response = await fetch(`${BACKEND_URL}/api/projects`);
@@ -69,7 +60,16 @@ const Projects: React.FC = () => {
                         <a href={project.ghLink} target="_blank" rel="noopener noreferrer" key={project.id}>
                           <div className="project-card">
                             <div className="project-image">
-                              <img src={project.imgSrc} alt={project.imgAlt} style={project.imgStyle} />
+                              <img 
+                                src={project.imgsrc} 
+                                alt={project.imgalt} 
+                                style={project.imgstyle} 
+                                onError={(e) => {
+                                  console.error('Image failed to load:', project.imgsrc);
+                                  e.currentTarget.style.display = 'none';
+                                }}
+                                onLoad={() => console.log('Image loaded successfully:', project.imgsrc)}
+                              />
                             </div>
                             <div className="project-content">
                               <h3 className="project-title">{project.title}</h3>
