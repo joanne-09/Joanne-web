@@ -52,7 +52,7 @@ const ArticleLists: React.FC = () => {
                     <h2>{post.title}</h2>
                     <p>{post.content.substring(0, 150)}...</p>
                   </div>
-                  <div className="post-entry-meta">
+                  <div className="post-entry-date">
                     <span>{new Date(post.created_at).toLocaleDateString()}</span>
                   </div>
                 </div>

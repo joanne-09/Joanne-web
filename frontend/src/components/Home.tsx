@@ -20,16 +20,6 @@ interface ActivityItem {
   description: string;
 }
 
-interface Skill {
-  name: string;
-  level: number; // 0-5
-}
-
-interface SkillCategory {
-  categoryName: string;
-  skills: Skill[];
-}
-
 // --- Components ---
 const Hero: React.FC = () => {
   return (
@@ -161,33 +151,6 @@ const Activities: React.FC = () => {
     </section>
   );
 };
-
-const skillsData: SkillCategory[] = [
-  {
-    categoryName: 'Programming Languages',
-    skills: [
-      { name: 'C/C++', level: 5 },
-      { name: 'Python', level: 5 },
-      { name: 'Verilog', level: 4 },
-      { name: 'TypeScript', level: 4 },
-      { name: 'JavaScript', level: 3 },
-    ],
-  },
-  {
-    categoryName: 'Web Development',
-    skills: [
-      { name: 'HTML', level: 4 },
-      { name: 'CSS', level: 4 },
-    ],
-  },
-  {
-    categoryName: 'Tools & Platforms',
-    skills: [
-      { name: 'Git', level: 5 },
-      { name: 'VS Code', level: 5 },
-    ],
-  },
-];
 
 const Contact: React.FC = () => {
   const form = useRef<HTMLFormElement>(null);

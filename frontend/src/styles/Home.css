@@ -37,12 +37,6 @@
     font-size: 24px;
     font-weight: 300;
     margin-bottom: 30px;
-    color: var(--subtext);
-}
-
-.hero p { /* If you add a paragraph to hero */
-    font-size: 18px;
-    margin-bottom: 30px;
     color: var(--text);
 }
 
@@ -135,7 +129,7 @@ section {
     content: '';
     position: absolute;
     width: 4px;
-    background-color: var(--accent);
+    background-color: var(--thirdary);
     top: 0;
     bottom: 0;
     left: 30px; /* Adjust based on dot size and desired spacing */
@@ -153,7 +147,7 @@ section {
     width: 24px; /* Increased size */
     height: 24px; /* Increased size */
     left: 20px; /* ( (padding-left of item) - (width of dot) ) / 2 for centering, adjust as needed */
-    background-color: var(--accent);
+    background-color: var(--secondary);
     border-radius: 50%;
     z-index: 1; /* Ensure dot is above the line */
 }
@@ -264,7 +258,7 @@ section {
 }
 
 .activity-description {
-    color: var(--subtext);
+    color: var(--text);
     margin-bottom: 15px; /* If you have achievements below */
 }
 

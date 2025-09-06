@@ -17,7 +17,10 @@ const Travel: React.FC = () => {
     <div className="Travel">
       <Navbar />
       <main>
-        Nothing here yet!
+        <div className="container">
+          <h1 className="page-title">Travel</h1>
+          <p>This page is under construction. Please check back later!</p>
+        </div>
       </main>
       <Footer />
     </div>

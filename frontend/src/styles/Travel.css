@@ -3,3 +3,19 @@
     height: 100vh;
     background-color: var(--primary);
 }
+
+.Travel main {
+    min-height: 100vh;
+    padding-top: 80px; 
+    padding-bottom: 40px;
+    background-color: var(--background);
+    color: var(--text);
+}
+
+.Travel .page-title {
+    text-align: center;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 36px;
+    color: var(--primary);
+    margin-bottom: 40px;
+}

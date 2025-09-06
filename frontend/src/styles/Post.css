@@ -31,6 +31,7 @@
     background-color: var(--background-dark);
     padding: 40px;
     border-radius: 8px;
+    box-shadow: 0 3px 10px var(--shadow-color);
 }
 
 .article-content h1 {
@@ -40,10 +41,10 @@
     margin-bottom: 15px;
 }
 
-.article-meta {
+.article-date {
     display: block;
     font-size: 14px;
-    color: var(--subtext);
+    color: var(--secondary);
     margin-bottom: 30px;
     border-bottom: 1px solid var(--border);
     padding-bottom: 15px;

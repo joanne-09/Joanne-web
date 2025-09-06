@@ -72,12 +72,12 @@
 }
 
 .post-entry-content p {
-    color: var(--subtext);
+    color: var(--text);
     line-height: 1.5;
 }
 
-.post-entry-meta {
-    color: var(--subtext);
+.post-entry-date {
+    color: var(--secondary);
     font-size: 14px;
     white-space: nowrap;
     margin-left: 20px;

@@ -6,27 +6,17 @@
 .Projects main {
     min-height: 100vh;
     padding-top: 80px; 
+    padding-bottom: 40px;
     background-color: var(--background);
     color: var(--text);
 }
 
-.Projects .section-title {
+.Projects .page-title {
     text-align: center;
-    margin-bottom: 60px;
-}
-
-.Projects .section-title h2 {
     font-family: 'Noto Serif TC', serif;
     font-size: 36px;
     color: var(--primary);
-    margin-bottom: 15px;
-}
-
-.Projects .section-title .line {
-    height: 3px;
-    width: 80px;
-    background-color: var(--accent);
-    margin: 0 auto;
+    margin-bottom: 40px;
 }
 
 .Projects #projects {
@@ -96,8 +86,14 @@
 
 .project-description {
     margin-bottom: 15px;
-    color: var(--subtext);
+    color: var(--text);
     flex-grow: 1;
+}
+
+.project-role {
+    font-size: 14px;
+    color: var(--accent-dark);
+    margin-bottom: 10px;
 }
 
 .project-tech {
@@ -112,7 +108,7 @@
     padding: 5px 10px;
     border-radius: 5px;
     font-size: 12px;
-    color: var(--text);
+    color: var(--thirdary);
 }
 
 @media (max-width: 992px) {

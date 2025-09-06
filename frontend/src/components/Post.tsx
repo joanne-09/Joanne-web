@@ -44,7 +44,7 @@ const ArticleDetail: React.FC = () => {
           {!loading && !error && post && (
             <article className="article-content">
               <h1>{post.title}</h1>
-              <small className="article-meta">
+              <small className="article-date">
                 Posted on: {new Date(post.created_at).toLocaleDateString()}
               </small>
               <div className="article-body">
