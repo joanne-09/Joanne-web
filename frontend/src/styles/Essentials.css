@@ -29,11 +29,30 @@ header {
     margin: 0;
     padding: 0;
     gap: 25px;
+    align-items: center;
 }
 
 .nav-links li {
     padding: 0;
     margin: 0;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 1.2rem;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.theme-toggle:hover {
+    color: var(--accent);
+    transform: rotate(15deg);
 }
 
 .nav-links .MuiLink-root {

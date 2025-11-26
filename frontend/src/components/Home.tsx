@@ -65,7 +65,6 @@ const educationData: EducationItem[] = [
     year: '2023 - Present',
     institution: 'National Tsing Hua University (NTHU)',
     degree: 'B.S. in Computer Science',
-    gpa: 'GPA: 4.08/4.30 (Top 10%)',
   },
   {
     year: '2020 - 2023',

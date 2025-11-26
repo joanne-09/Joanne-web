@@ -41,3 +41,17 @@
     --shadow-color: rgba(255, 255, 255, 0.5);
     --light: #f8f9fa;
 }
+
+:root[data-theme='light'] {
+    --primary: #4a5a6a;
+    --secondary: #6e7f91;
+    --thirdary: #9da9b5;
+    --accent: #bfa88c;
+    --accent-dark: #725d40;
+    --text: #090a11;
+    --background: #fffcfa;
+    --background-dark: #ffffff;
+    --border: #ecf0f1;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --light: #f8f9fa;
+}

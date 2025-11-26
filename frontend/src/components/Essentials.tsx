@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Essentials.css';
@@ -6,6 +6,20 @@ import '../styles/Essentials.css';
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [theme, setTheme] = useState(() => {
+    const stored = localStorage.getItem('theme');
+    if (stored) return stored;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
 
   const handleNavigate = (path: string) => {
     navigate(path);
@@ -20,6 +34,11 @@ export const Navbar: React.FC = () => {
             <i className={isMenuOpen ? 'fas fa-times' : 'fas fa-bars'}></i>
           </button>
           <ul className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
+            <li>
+              <button onClick={toggleTheme} className="theme-toggle" aria-label="Toggle theme">
+                <i className={theme === 'light' ? 'fa-solid fa-moon' : 'fa-regular fa-sun'}></i>
+              </button>
+            </li>
             <li><Link onClick={() => handleNavigate('/')} underline='none'>Home</Link></li>
             <li><Link onClick={() => handleNavigate('/article')} underline='none'>Article</Link></li>
             <li><Link onClick={() => handleNavigate('/projects')} underline='none'>Projects</Link></li>
