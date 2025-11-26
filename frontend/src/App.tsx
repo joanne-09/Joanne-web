@@ -8,6 +8,8 @@ import Article from './components/Article';
 import ArticleDetail from './components/Post';
 import Projects from './components/Projects';
 import Travel from './components/Travel';
+import { DataProvider, useData } from './contexts/DataContext';
+import LoadingPage from './components/LoadingPage';
 
 // Declare EmailJS at the window level
 declare global {
@@ -45,10 +47,13 @@ const useSmoothScroll = () => {
   }, []);
 };
 
-
-// --- Main App Component ---
-function App() {
+const AppContent = () => {
   useSmoothScroll(); // Initialize smooth scrolling
+  const { loading } = useData();
+
+  if (loading) {
+    return <LoadingPage />;
+  }
 
   return (
     <div className="App">
@@ -62,6 +67,15 @@ function App() {
         </Routes>
       </Router>
     </div>
+  );
+};
+
+// --- Main App Component ---
+function App() {
+  return (
+    <DataProvider>
+      <AppContent />
+    </DataProvider>
   );
 }
 

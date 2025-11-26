@@ -1,37 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Article.css';
-import type { Post } from '@joanne-web/shared';
 
 import { Navbar, Footer } from './Essentials';
-import Loading from './Loading';
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+import { useData } from '../contexts/DataContext';
 
 const ArticleLists: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { articles: posts, error } = useData();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await fetch(`${BACKEND_URL}/api/posts`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setPosts(data);
-      } catch (e: any) {
-        setError(e.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPosts();
-  }, []);
 
   const handleTitleClick = (postId: number) => {
     navigate(`/article/${postId}`);
@@ -41,9 +17,8 @@ const ArticleLists: React.FC = () => {
     <section className="article-lists">
       <div className="container">
         <h1 className="page-title">Articles</h1>
-        {loading && <Loading />}
         {error && <p>Error fetching posts: {error}</p>}
-        {!loading && !error && (
+        {!error && (
           <div className="posts-container">
             {posts.length > 0 ? (
               posts.map(post => (
