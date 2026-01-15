@@ -1,27 +1,202 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../styles/Travel.css';
-
 import { Navbar, Footer } from './Essentials';
 
+// temp images
+const row1Images = [
+    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600",
+    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600",
+    "https://images.unsplash.com/photo-1534067783941-51c9c23ecefd?w=600",
+    "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=600"
+];
+
+const row2Images = [
+    "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600",
+    "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600",
+    "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600",
+    "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=600"
+];
+
+const row3Images = [
+    "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=600",
+    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600",
+    "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600",
+    "https://images.unsplash.com/photo-1533105079780-92b9be482077?w=600"
+];
+
 const Travel: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [showNavbar, setShowNavbar] = useState(false);
+
   useEffect(() => {
+    const handleScroll = () => {
+        // Show navbar after scrolling down slightly (e.g., 100px)
+        if (window.scrollY > 100) {
+            setShowNavbar(true);
+        } else {
+            setShowNavbar(false);
+        }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    // Basic theme setup
     document.documentElement.setAttribute('data-theme', 'dark');
 
-    // Clean up the attribute when the component unmounts
+    // Canvas setup
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let stars: Star[] = [];
+    let width = 0;
+    let height = 0;
+    let animationFrameId: number;
+
+    class Star {
+        x: number = 0;
+        y: number = 0;
+        size: number = 0;
+        alpha: number = 0;
+        twinkleSpeed: number = 0;
+        direction: number = 0;
+
+        constructor() { 
+            this.init(); 
+        }
+        
+        init() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.size = Math.random() * 1.5;
+            this.alpha = Math.random();
+            this.twinkleSpeed = 0.003 + Math.random() * 0.008;
+            this.direction = Math.random() > 0.5 ? 1 : -1;
+        }
+        
+        update() {
+            this.alpha += this.twinkleSpeed * this.direction;
+            if (this.alpha >= 1 || this.alpha <= 0.1) this.direction *= -1;
+        }
+        
+        draw(context: CanvasRenderingContext2D) {
+            context.beginPath();
+            context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            context.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+            context.fill();
+        }
+    }
+
+    const resize = () => {
+        if (!canvas) return;
+        width = canvas.width = window.innerWidth;
+        // Use the maximum of window height or document height to cover full scrollable area
+        height = canvas.height = Math.max(
+          window.innerHeight,
+          document.documentElement.scrollHeight,
+          document.body.scrollHeight
+        );
+        stars = [];
+        const count = Math.floor((width * height) / 5000); 
+        for (let i = 0; i < count; i++) stars.push(new Star());
+    }
+
+    const animate = () => {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, width, height);
+        stars.forEach(star => {
+            star.update();
+            star.draw(ctx);
+        });
+        animationFrameId = requestAnimationFrame(animate);
+    }
+
+    resize();
+    animate();
+
+    window.addEventListener('resize', resize);
+
+    // Clean up
     return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationFrameId);
       document.documentElement.removeAttribute('data-theme');
     };
   }, []);
 
+  // Helper to duplicate images for marquee effect
+  const renderMarqueeRow = (images: string[]) => {
+      return (
+          <div className="marquee-inner"> 
+            {[...Array(4)].map((_, i) => (
+                <React.Fragment key={i}>
+                    {images.map((src, index) => (
+                        <div key={`${i}-${index}`} className="marquee-card">
+                            <img src={src} className="marquee-image" alt="travel location" />
+                        </div>
+                    ))}
+                </React.Fragment>
+            ))}
+          </div>
+      );
+  };
+
   return (
     <div className="Travel">
-      <Navbar />
-      <main>
-        <div className="container">
-          <h1 className="page-title">Travel</h1>
-          <p>This page is under construction. Please check back later!</p>
-        </div>
-      </main>
+      {/* Navbar */}
+      <div style={{
+          position: 'fixed', 
+          top: 0, 
+          width: '100vw', 
+          zIndex: 100,
+          opacity: showNavbar ? 1 : 0,
+          visibility: showNavbar ? 'visible' : 'hidden',
+          transition: 'all 0.3s ease-in-out'
+      }}>
+           <Navbar />
+      </div>
+
+      {/* Background Stars */}
+      <canvas ref={canvasRef} id="starCanvas"></canvas>
+
+      {/* Hero Section */}
+      <section className="hero">
+          <div className="hero-title-container">
+              <p className="hero-title">
+                  Travel
+              </p>
+          </div>
+
+          <div className="background-gallery">
+              {/* Row 1 */}
+              <div className="marquee-wrapper">
+                  <div className="marquee-content row-slow">
+                       {renderMarqueeRow(row1Images)}
+                  </div>
+              </div>
+              {/* Row 2 */}
+              <div className="marquee-wrapper">
+                  <div className="marquee-content row-reverse">
+                       {renderMarqueeRow(row2Images)}
+                  </div>
+              </div>
+              {/* Row 3 */}
+              <div className="marquee-wrapper">
+                  <div className="marquee-content row-fast">
+                       {renderMarqueeRow(row3Images)}
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      {/* Gallery Section */}
+
+      {/* Footer */}
       <Footer />
     </div>
   );
