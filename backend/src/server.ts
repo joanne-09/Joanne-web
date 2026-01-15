@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import NodeCache from 'node-cache';
 import path from 'path';
 import db from './db';
 import cloudinary from './cloudinary';
@@ -8,6 +9,8 @@ import type { Post, Project } from '@joanne-web/shared';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+const galleryCache = new NodeCache({ stdTTL: 3600 }); // Cache gallery data for 1 hour
 
 app.use(cors());
 app.use(express.json());
@@ -44,6 +47,14 @@ app.get('/api/posts/:id', async (req: Request, res: Response) => {
 app.get('/api/images', async (req: Request, res: Response) => {
   // path: /api/images?folder=travel
   const folder = req.query.folder as string;
+  const cacheKey = `gallery_${folder}`;
+
+  const cachedData = galleryCache.get(cacheKey);
+  if (cachedData) {
+    console.log(`Serving ${folder} from cache`);
+    return res.json(cachedData);
+  }
+
   try {
     const result = await cloudinary.api.resources({
       type: 'upload',
@@ -52,7 +63,7 @@ app.get('/api/images', async (req: Request, res: Response) => {
       next_cursor: req.query.cursor as string | undefined,
     });
 
-    res.json({
+    const responseData = {
       images: result.resources.map((img: any) => ({
         public_id: img.public_id,
         url: img.secure_url,
@@ -60,7 +71,10 @@ app.get('/api/images', async (req: Request, res: Response) => {
         height: img.height,
       })),
       next_cursor: result.next_cursor,
-    });
+    };
+
+    galleryCache.set(cacheKey, responseData); // cache the response
+    res.json(responseData);
   } catch (err) {
     console.error(`Error fetching images from folder ${folder}:`, err);
     res.status(500).json({ error: 'Failed to fetch images' });
