@@ -56,12 +56,10 @@ app.get('/api/images', async (req: Request, res: Response) => {
   }
 
   try {
-    const result = await cloudinary.api.resources({
-      type: 'upload',
-      prefix: folder ? `Joanne-web/${folder}/` : 'Joanne-web/',
-      max_results: 100,
-      next_cursor: req.query.cursor as string | undefined,
-    });
+    const result = await cloudinary.search
+      .expression(`folder:Joanne-web/${folder}/`)
+      .max_results(50)
+      .execute();
 
     const responseData = {
       images: result.resources.map((img: any) => ({
@@ -73,7 +71,7 @@ app.get('/api/images', async (req: Request, res: Response) => {
       next_cursor: result.next_cursor,
     };
 
-    galleryCache.set(cacheKey, responseData); // cache the response
+    galleryCache.set(cacheKey, responseData, 3600); // cache the response
     res.json(responseData);
   } catch (err) {
     console.error(`Error fetching images from folder ${folder}:`, err);
@@ -85,6 +83,14 @@ app.use('/images', express.static(path.join(__dirname, '../../frontend/public/im
 
 // GET /api/images/random - Fetch random images for travel page
 app.get('/api/images/random', async (req: Request, res: Response) => {
+  const cacheKey = 'random_images_cache';
+  
+  const cachedData = galleryCache.get(cacheKey);
+  if (cachedData) {
+    console.log("Serving random images from cache");
+    return res.json(cachedData);
+  }
+
   try {
     const rootFolder = 'Joanne-web';
     
@@ -151,6 +157,8 @@ app.get('/api/images/random', async (req: Request, res: Response) => {
     }
 
     console.log(`Total images returning: ${allImages.length}`);
+
+    galleryCache.set(cacheKey, { images: allImages }, 3600);
     res.json({ images: allImages });
   } catch (err: any) {
     console.error("Error fetching random images:", err);
