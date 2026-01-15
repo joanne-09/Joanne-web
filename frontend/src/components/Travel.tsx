@@ -44,7 +44,7 @@ const Travel: React.FC = () => {
                     }
 
                     // Distribute to rows
-                    if (urls.length >= 4) {
+                    if (urls.length > 0) {
                         const chunkSize = Math.ceil(urls.length / 3);
                         setRow1Images(urls.slice(0, chunkSize));
                         setRow2Images(urls.slice(chunkSize, chunkSize * 2));
