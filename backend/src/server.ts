@@ -130,11 +130,10 @@ app.get('/api/images/random', async (req: Request, res: Response) => {
         const folderPath = `${rootFolder}/${folder.name}/`;
         console.log(`Fetching from: ${folderPath}`);
         
-        const result = await cloudinary.api.resources({
-          type: 'upload',
-          prefix: folderPath,
-          max_results: 6
-        });
+        const result = await cloudinary.search
+          .expression(`folder:${folderPath}`)
+          .max_results(20)
+          .execute();
 
         const folderImages = result.resources.map((img: any) => ({
           public_id: img.public_id,
