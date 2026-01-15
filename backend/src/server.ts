@@ -12,8 +12,7 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// --- API ENDPOINTS ---
-
+// ====== POSTS API ======
 // GET /api/posts - Fetch all posts
 app.get('/api/posts', async (req: Request, res: Response) => {
   try {
@@ -40,22 +39,28 @@ app.get('/api/posts/:id', async (req: Request, res: Response) => {
   }
 });
 
+// ====== TRAVEL IMAGES API ======
 // GET /api/images/:folder - Fetch images from a specific folder
-app.get('/api/images/:folder', async (req: Request, res: Response) => {
-  const { folder } = req.params;
+app.get('/api/images', async (req: Request, res: Response) => {
+  // path: /api/images?folder=travel
+  const folder = req.query.folder as string;
   try {
-    const result = await cloudinary.search
-      .expression(`folder:${folder}`)
-      .sort_by('public_id', 'desc')
-      .max_results(50) // Adjust as needed
-      .execute();
+    const result = await cloudinary.api.resources({
+      type: 'upload',
+      prefix: folder ? `Joanne-web/${folder}/` : '',
+      max_results: 100,
+      next_cursor: req.query.cursor as string | undefined,
+    });
 
-    const images = result.resources.map((file: { secure_url: string; public_id: string }) => ({
-      url: file.secure_url,
-      public_id: file.public_id,
-    }));
-
-    res.json(images);
+    res.json({
+      images: result.resources.map((img: any) => ({
+        public_id: img.public_id,
+        url: img.secure_url,
+        width: img.width,
+        height: img.height,
+      })),
+      next_cursor: result.next_cursor,
+    });
   } catch (err) {
     console.error(`Error fetching images from folder ${folder}:`, err);
     res.status(500).json({ error: 'Failed to fetch images' });
@@ -64,6 +69,7 @@ app.get('/api/images/:folder', async (req: Request, res: Response) => {
 
 app.use('/images', express.static(path.join(__dirname, '../../frontend/public/images')));
 
+// ====== PROJECTS API =====
 // GET /api/projects - Sample endpoint to fetch projects (static data for now)
 app.get('/api/projects', async (req: Request, res: Response) => {
   try{
