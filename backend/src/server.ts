@@ -58,7 +58,7 @@ app.get('/api/images', async (req: Request, res: Response) => {
   try {
     const result = await cloudinary.api.resources({
       type: 'upload',
-      prefix: folder ? `Joanne-web/${folder}/` : '',
+      prefix: folder ? `Joanne-web/${folder}/` : 'Joanne-web/',
       max_results: 100,
       next_cursor: req.query.cursor as string | undefined,
     });
@@ -82,6 +82,46 @@ app.get('/api/images', async (req: Request, res: Response) => {
 });
 
 app.use('/images', express.static(path.join(__dirname, '../../frontend/public/images')));
+
+// GET /api/images/random - Fetch random images for travel page
+app.get('/api/images/random', async (req: Request, res: Response) => {
+  try {
+    const rootFolder = 'Joanne-web';
+    
+    // Get subfolders within Joanne-web
+    const subFoldersResponse = await cloudinary.api.sub_folders(rootFolder);
+    const folders = subFoldersResponse.folders;
+
+    if (!folders || folders.length === 0) {
+      return res.json({ images: [] });
+    }
+
+    // Fetch 6 images from each folder
+    const imagePromises = folders.map(async (folder: any) => {
+      const result = await cloudinary.api.resources({
+        type: 'upload',
+        prefix: `${rootFolder}/${folder.name}/`, 
+        max_results: 6
+      });
+      
+      return result.resources.map((img: any) => ({
+        public_id: img.public_id,
+        url: img.secure_url,
+        width: img.width,
+        height: img.height,
+        folder: folder.name
+      }));
+    });
+
+    const results = await Promise.all(imagePromises);
+    const allImages = results.flat();
+
+    res.json({ images: allImages });
+  } catch (err) {
+    console.error("Error fetching random images:", err);
+    res.status(500).json({ error: 'Failed to fetch random images' });
+  }
+});
 
 // ====== PROJECTS API =====
 // GET /api/projects - Sample endpoint to fetch projects (static data for now)
