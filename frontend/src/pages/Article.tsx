@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Article.css';
 
-import { Navbar, Footer } from './Essentials';
+import { Navbar, Footer } from '../components/Essentials';
 import { useData } from '../contexts/DataContext';
 
 const ArticleLists: React.FC = () => {

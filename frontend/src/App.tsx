@@ -4,12 +4,12 @@ import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import './App.css'; // Import your stylesheet
 
 import Home from './components/Home';
-import Article from './components/Article';
+import Article from './pages/Article';
 import ArticleDetail from './components/Post';
-import Projects from './components/Projects';
-import Travel from './components/Travel';
+import Projects from './pages/Projects';
+import Travel from './pages/Travel';
 import { DataProvider, useData } from './contexts/DataContext';
-import LoadingPage from './components/LoadingPage';
+import LoadingPage from './pages/LoadingPage';
 
 // Declare EmailJS at the window level
 declare global {

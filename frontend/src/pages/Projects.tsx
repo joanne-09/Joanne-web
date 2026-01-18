@@ -3,7 +3,7 @@ import React from 'react';
 import '../styles/Projects.css';
 import { useData } from '../contexts/DataContext';
 
-import { Navbar, Footer } from './Essentials';
+import { Navbar, Footer } from '../components/Essentials';
 
 const Projects: React.FC = () => {
     // const navigate = useNavigate();
