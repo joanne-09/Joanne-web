@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../styles/Travel.css';
 import { Navbar, Footer } from './Essentials';
+import LoadingPage from './LoadingPage';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
@@ -26,6 +27,7 @@ const Travel: React.FC = () => {
   const [row1Images, setRow1Images] = useState<string[]>(fallbackImages.slice(0, 4));
   const [row2Images, setRow2Images] = useState<string[]>(fallbackImages.slice(4, 8));
   const [row3Images, setRow3Images] = useState<string[]>(fallbackImages.slice(8, 12));
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Fetch images from server
@@ -54,6 +56,8 @@ const Travel: React.FC = () => {
             }
         } catch (error) {
             console.error("Failed to fetch travel images, using fallback", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -177,6 +181,10 @@ const Travel: React.FC = () => {
           </div>
       );
   };
+
+  if (loading) {
+    return <LoadingPage />;
+  }
 
   return (
     <div className="Travel">
