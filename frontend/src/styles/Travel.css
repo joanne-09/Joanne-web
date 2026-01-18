@@ -116,6 +116,93 @@
     display: block;
 }
 
-/* .Travel nav {
-    z-index: 100;
-} */
+/* Gallery Section */
+.gallery-section {
+    padding: 6rem 2rem;
+    position: relative;
+    z-index: 20;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 300;
+    margin-bottom: 4rem;
+    text-align: left; /* Changed from center to align with a more editorial look or keep center? */
+    text-align: center;
+    letter-spacing: 0.05em;
+    color: var(--primary);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-auto-rows: 250px;
+    grid-auto-flow: dense;
+    gap: 1.0rem; /* tighter gap for mosaic feel */
+    width: 100%;
+}
+
+.gallery-item {
+    position: relative;
+    border-radius: 4px; /* clean corners */
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Create a "random" mosaic look using nth-child patterns on larger screens */
+@media (min-width: 600px) {
+    .gallery-item:nth-child(11n + 1) {
+        grid-column: span 2;
+        grid-row: span 2;
+    }
+
+    .gallery-item:nth-child(7n + 2) {
+        grid-column: span 2;
+    }
+
+    .gallery-item:nth-child(5n + 4) {
+        grid-row: span 2;
+    }
+    
+    .gallery-grid {
+        gap: 1.5rem;
+    }
+}
+
+.gallery-item:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    z-index: 2;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: brightness(0.85);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+    filter: brightness(1);
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(circle, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%);
+}
+
+.gallery-item:hover .overlay {
+    opacity: 1;
+}

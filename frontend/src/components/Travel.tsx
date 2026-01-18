@@ -27,6 +27,7 @@ const Travel: React.FC = () => {
   const [row1Images, setRow1Images] = useState<string[]>(fallbackImages.slice(0, 4));
   const [row2Images, setRow2Images] = useState<string[]>(fallbackImages.slice(4, 8));
   const [row3Images, setRow3Images] = useState<string[]>(fallbackImages.slice(8, 12));
+  const [galleryImages, setGalleryImages] = useState<string[]>(fallbackImages);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -45,6 +46,8 @@ const Travel: React.FC = () => {
                         [urls[i], urls[j]] = [urls[j], urls[i]];
                     }
 
+                    setGalleryImages(urls);
+
                     // Distribute to rows
                     if (urls.length > 0) {
                         const chunkSize = Math.ceil(urls.length / 3);
@@ -55,7 +58,7 @@ const Travel: React.FC = () => {
                 }
             }
         } catch (error) {
-            console.error("Failed to fetch travel images, using fallback", error);
+            console.error("Failed to fetch travel images", error);
         } finally {
             setLoading(false);
         }
@@ -235,6 +238,23 @@ const Travel: React.FC = () => {
       </section>
 
       {/* Gallery Section */}
+      <section className="gallery-section">
+        <div className="gallery-container">
+          <h2 className="section-title">Visual Layout</h2>
+          <div className="gallery-grid">
+            {galleryImages.map((src, index) => (
+                <div key={index} className="gallery-item">
+                    <img 
+                        src={src} 
+                        alt={`Memories ${index + 1}`} 
+                        loading="lazy"
+                    />
+                      <div className="overlay"></div>
+                </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
       <Footer />
