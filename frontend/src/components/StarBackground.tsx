@@ -15,8 +15,7 @@ const StarBackground: React.FC = () => {
     checkTheme();
   
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleSystemChange = (e: MediaQueryListEvent) => {
-        // We can just call checkTheme, but e.matches is the new system value
+    const handleSystemChange = () => {
         checkTheme();
     };
     mediaQuery.addEventListener('change', handleSystemChange);
