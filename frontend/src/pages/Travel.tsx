@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/Travel.css';
 import { Navbar, Footer } from '../components/Essentials';
 import LoadingPage from './LoadingPage';
+
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
@@ -22,9 +23,8 @@ const fallbackImages = [
 ];
 
 const Travel: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [showNavbar, setShowNavbar] = useState(false);
-  const [row1Images, setRow1Images] = useState<string[]>(fallbackImages.slice(0, 4));
+  const [row1Images, setRow1Images] = useState<string[]>([]);
   const [row2Images, setRow2Images] = useState<string[]>(fallbackImages.slice(4, 8));
   const [row3Images, setRow3Images] = useState<string[]>(fallbackImages.slice(8, 12));
   const [galleryImages, setGalleryImages] = useState<string[]>(fallbackImages);
@@ -85,85 +85,8 @@ const Travel: React.FC = () => {
     // Basic theme setup
     document.documentElement.setAttribute('data-theme', 'dark');
 
-    // Canvas setup
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let stars: Star[] = [];
-    let width = 0;
-    let height = 0;
-    let animationFrameId: number;
-
-    class Star {
-        x: number = 0;
-        y: number = 0;
-        size: number = 0;
-        alpha: number = 0;
-        twinkleSpeed: number = 0;
-        direction: number = 0;
-
-        constructor() { 
-            this.init(); 
-        }
-        
-        init() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.size = Math.random() * 1.5;
-            this.alpha = Math.random();
-            this.twinkleSpeed = 0.003 + Math.random() * 0.008;
-            this.direction = Math.random() > 0.5 ? 1 : -1;
-        }
-        
-        update() {
-            this.alpha += this.twinkleSpeed * this.direction;
-            if (this.alpha >= 1 || this.alpha <= 0.1) this.direction *= -1;
-        }
-        
-        draw(context: CanvasRenderingContext2D) {
-            context.beginPath();
-            context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            context.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
-            context.fill();
-        }
-    }
-
-    const resize = () => {
-        if (!canvas) return;
-        width = canvas.width = window.innerWidth;
-        // Use the maximum of window height or document height to cover full scrollable area
-        height = canvas.height = Math.max(
-          window.innerHeight,
-          document.documentElement.scrollHeight,
-          document.body.scrollHeight
-        );
-        stars = [];
-        const count = Math.floor((width * height) / 5000); 
-        for (let i = 0; i < count; i++) stars.push(new Star());
-    }
-
-    const animate = () => {
-        if (!ctx) return;
-        ctx.clearRect(0, 0, width, height);
-        stars.forEach(star => {
-            star.update();
-            star.draw(ctx);
-        });
-        animationFrameId = requestAnimationFrame(animate);
-    }
-
-    resize();
-    animate();
-
-    window.addEventListener('resize', resize);
-
     // Clean up
     return () => {
-      window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animationFrameId);
       document.documentElement.removeAttribute('data-theme');
     };
   }, []);
@@ -203,9 +126,6 @@ const Travel: React.FC = () => {
       }}>
            <Navbar />
       </div>
-
-      {/* Background Stars */}
-      <canvas ref={canvasRef} id="starCanvas"></canvas>
 
       {/* Hero Section */}
       <section className="hero">

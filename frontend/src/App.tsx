@@ -3,13 +3,14 @@ import { useEffect } from 'react';
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import './App.css'; // Import your stylesheet
 
-import Home from './components/Home';
+import Home from './pages/Home';
 import Article from './pages/Article';
 import ArticleDetail from './components/Post';
 import Projects from './pages/Projects';
 import Travel from './pages/Travel';
 import { DataProvider, useData } from './contexts/DataContext';
 import LoadingPage from './pages/LoadingPage';
+import StarBackground from './components/StarBackground';
 
 // Declare EmailJS at the window level
 declare global {
@@ -57,6 +58,7 @@ const AppContent = () => {
 
   return (
     <div className="App">
+      <StarBackground />
       <Router basename='/Joanne-web'>
         <Routes>
           <Route path="/" element={<Home />} />

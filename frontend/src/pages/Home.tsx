@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import type { FormEvent } from 'react';
 import '../styles/Home.css';
 
-import { Navbar, Footer } from './Essentials';
+import { Navbar, Footer } from '../components/Essentials';
 
 // Data Interfaces
 interface EducationItem {
