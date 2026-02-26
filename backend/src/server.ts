@@ -47,10 +47,15 @@ app.get('/api/posts/:id', async (req: Request, res: Response) => {
 });
 
 // ====== TRAVEL IMAGES API ======
-// GET /api/images/:folder - Fetch images from a specific folder
+// GET /api/images - Fetch images from a specific folder
 app.get('/api/images', async (req: Request, res: Response) => {
   // path: /api/images?folder=travel
   const folder = req.query.folder as string;
+  
+  if (!folder) {
+    return res.status(400).json({ error: 'Folder parameter is required' });
+  }
+
   const cacheKey = `gallery_${folder}`;
 
   const cachedData = galleryCache.get(cacheKey);
