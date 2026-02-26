@@ -9,7 +9,12 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "backend/src/server.ts"
+      "dest": "backend/src/server.ts",
+      "headers": {
+        "Access-Control-Allow-Origin": "https://joanne-09.github.io",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization"
+      }
     }
   ]
 }

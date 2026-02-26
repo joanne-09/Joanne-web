@@ -5,7 +5,7 @@ import type { Post } from '@joanne-web/shared';
 import Loading from './Loading';
 import '../styles/Post.css';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL?.replace(/\/$/, '') || 'http://localhost:3001';
 
 const ArticleDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();

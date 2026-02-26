@@ -4,7 +4,7 @@ import { Navbar, Footer } from '../components/Essentials';
 import LoadingPage from './LoadingPage';
 
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL?.replace(/\/$/, '') || 'http://localhost:3001';
 
 // fallback temp images
 const fallbackImages = [

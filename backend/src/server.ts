@@ -12,7 +12,11 @@ const PORT = process.env.PORT || 3001;
 
 const galleryCache = new NodeCache({ stdTTL: 3600 }); // Cache gallery data for 1 hour
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://joanne-09.github.io', 'http://localhost:5173'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // ====== POSTS API ======
