@@ -50,6 +50,11 @@ const skillData: SkillGroup[] = [
     name: 'Hardware',
     confidence: 40,
     skills: ['CUDA', 'Verilog'],
+  },
+  {
+    name: 'Game Dev',
+    confidence: 40,
+    skills: ['Unity', 'C#', 'Cocos Creator'],
   }
 ];
 
