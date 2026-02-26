@@ -2,12 +2,17 @@ import React from 'react';
 // import { useNavigate } from 'react-router-dom';
 import '../styles/Projects.css';
 import { useData } from '../contexts/DataContext';
+import LoadingPage from './LoadingPage';
 
 import { Navbar, Footer } from '../components/Essentials';
 
 const Projects: React.FC = () => {
     // const navigate = useNavigate();
-    const { projects, error } = useData();
+    const { projects, error, loading } = useData();
+
+    if (loading) {
+      return <LoadingPage />;
+    }
 
     // const handleProjectClick = (postId: string) => {
     //   navigate(`/projects/${postId}`);

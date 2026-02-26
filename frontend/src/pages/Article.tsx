@@ -4,6 +4,7 @@ import '../styles/Article.css';
 
 import { Navbar, Footer } from '../components/Essentials';
 import { useData } from '../contexts/DataContext';
+import LoadingPage from './LoadingPage';
 
 const ArticleLists: React.FC = () => {
   const { articles: posts, error } = useData();
@@ -43,6 +44,12 @@ const ArticleLists: React.FC = () => {
 };
 
 const Article: React.FC = () => {
+  const { loading } = useData();
+
+  if (loading) {
+    return <LoadingPage />;
+  }
+
   return (
     <div className="Article">
       <Navbar />

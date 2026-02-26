@@ -8,8 +8,7 @@ import Article from './pages/Article';
 import ArticleDetail from './components/Post';
 import Projects from './pages/Projects';
 import Travel from './pages/Travel';
-import { DataProvider, useData } from './contexts/DataContext';
-import LoadingPage from './pages/LoadingPage';
+import { DataProvider } from './contexts/DataContext';
 import StarBackground from './components/StarBackground';
 
 // Declare EmailJS at the window level
@@ -50,11 +49,6 @@ const useSmoothScroll = () => {
 
 const AppContent = () => {
   useSmoothScroll(); // Initialize smooth scrolling
-  const { loading } = useData();
-
-  if (loading) {
-    return <LoadingPage />;
-  }
 
   return (
     <div className="App">
