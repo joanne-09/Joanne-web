@@ -18,6 +18,13 @@ const Projects: React.FC = () => {
     //   navigate(`/projects/${postId}`);
     // }; 
 
+    const getImageUrl = (path: string) => {
+      if (!path) return '';
+      if (path.startsWith('http')) return path;
+      const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+      return `${import.meta.env.BASE_URL}${cleanPath}`;
+    };
+
     return (
       <div className="Projects">
         <Navbar />
@@ -35,14 +42,14 @@ const Projects: React.FC = () => {
                         <div className="project-card">
                           <div className="project-image">
                             <img 
-                              src={project.imgsrc} 
+                              src={getImageUrl(project.imgsrc)} 
                               alt={project.imgalt} 
                               style={project.imgstyle} 
                               onError={(e) => {
-                                console.error('Image failed to load:', project.imgsrc);
+                                console.error('Image failed to load:', getImageUrl(project.imgsrc));
                                 e.currentTarget.style.display = 'none';
                               }}
-                              onLoad={() => console.log('Image loaded successfully:', project.imgsrc)}
+                              onLoad={() => console.log('Image loaded successfully:', getImageUrl(project.imgsrc))}
                             />
                           </div>
                           <div className="project-content">

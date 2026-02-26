@@ -52,7 +52,7 @@ const About: React.FC = () => {
             <p>In my free time, I enjoy listening to music , watching thought-provoking films, and exploring the storytelling art of Japanese animation. I find these creative outlets provide fresh perspectives that often inspire my technical work in unexpected ways.</p>
           </div>
           <div className="about-image">
-            <div className="profile-placeholder" style={{ backgroundImage: "url('/images/profile.jpg')" }}></div>
+            <div className="profile-placeholder" style={{ backgroundImage: `url('${import.meta.env.BASE_URL}images/profile.jpg')` }}></div>
           </div>
         </div>
       </div>

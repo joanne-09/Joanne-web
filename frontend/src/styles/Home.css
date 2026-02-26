@@ -110,7 +110,6 @@ section {
     background-color: var(--light); /* Placeholder color */
     border-radius: 50%;
     display: inline-block; /* To allow text-align: center to work */
-    background-image: url('/images/profile.jpg'); /* Path relative to public folder */
     background-position: center;
     background-size: cover;
     border: 5px solid var(--border);
