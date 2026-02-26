@@ -16,7 +16,7 @@ const Projects: React.FC = () => {
 
     // const handleProjectClick = (postId: string) => {
     //   navigate(`/projects/${postId}`);
-    // };
+    // }; 
 
     return (
       <div className="Projects">
