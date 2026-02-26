@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Travel.css';
 import { Navbar, Footer } from '../components/Essentials';
 import LoadingPage from './LoadingPage';
@@ -6,28 +7,34 @@ import LoadingPage from './LoadingPage';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL?.replace(/\/$/, '') || 'http://localhost:3001';
 
+interface TravelImage {
+  url: string;
+  folder: string;
+}
+
 // fallback temp images
-const fallbackImages = [
-    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600",
-    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600",
-    "https://images.unsplash.com/photo-1534067783941-51c9c23ecefd?w=600",
-    "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=600",
-    "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600",
-    "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600",
-    "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600",
-    "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=600",
-    "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=600",
-    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600",
-    "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600",
-    "https://images.unsplash.com/photo-1533105079780-92b9be482077?w=600"
+const fallbackImages: TravelImage[] = [
+    { url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600", folder: "Unknown" },
+    { url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600", folder: "Unknown" },
+    { url: "https://images.unsplash.com/photo-1534067783941-51c9c23ecefd?w=600", folder: "Unknown" },
+    { url: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=600", folder: "Unknown" },
+    { url: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600", folder: "Unknown" },
+    { url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600", folder: "Unknown" },
+    { url: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600", folder: "Unknown" },
+    { url: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=600", folder: "Unknown" },
+    { url: "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=600", folder: "Unknown" },
+    { url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600", folder: "Unknown" },
+    { url: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600", folder: "Unknown" },
+    { url: "https://images.unsplash.com/photo-1533105079780-92b9be482077?w=600", folder: "Unknown" }
 ];
 
 const Travel: React.FC = () => {
+  const navigate = useNavigate();
   const [showNavbar, setShowNavbar] = useState(false);
   const [row1Images, setRow1Images] = useState<string[]>([]);
-  const [row2Images, setRow2Images] = useState<string[]>(fallbackImages.slice(4, 8));
-  const [row3Images, setRow3Images] = useState<string[]>(fallbackImages.slice(8, 12));
-  const [galleryImages, setGalleryImages] = useState<string[]>(fallbackImages);
+  const [row2Images, setRow2Images] = useState<string[]>(fallbackImages.slice(4, 8).map(img => img.url));
+  const [row3Images, setRow3Images] = useState<string[]>(fallbackImages.slice(8, 12).map(img => img.url));
+  const [galleryImages, setGalleryImages] = useState<TravelImage[]>(fallbackImages);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -38,18 +45,22 @@ const Travel: React.FC = () => {
             if (res.ok) {
                 const data = await res.json();
                 if (data.images && data.images.length > 0) {
-                    const urls: string[] = data.images.map((img: any) => img.url);
+                    const images: TravelImage[] = data.images.map((img: any) => ({
+                        url: img.url,
+                        folder: img.folder || 'Unknown'
+                    }));
                     
                     // Shuffle array
-                    for (let i = urls.length - 1; i > 0; i--) {
+                    for (let i = images.length - 1; i > 0; i--) {
                         const j = Math.floor(Math.random() * (i + 1));
-                        [urls[i], urls[j]] = [urls[j], urls[i]];
+                        [images[i], images[j]] = [images[j], images[i]];
                     }
 
-                    setGalleryImages(urls);
+                    setGalleryImages(images);
 
                     // Distribute to rows
-                    if (urls.length > 0) {
+                    if (images.length > 0) {
+                        const urls = images.map(img => img.url);
                         const chunkSize = Math.ceil(urls.length / 3);
                         setRow1Images(urls.slice(0, chunkSize));
                         setRow2Images(urls.slice(chunkSize, chunkSize * 2));
@@ -162,14 +173,20 @@ const Travel: React.FC = () => {
         <div className="gallery-container">
           <h2 className="section-title">Visual Layout</h2>
           <div className="gallery-grid">
-            {galleryImages.map((src, index) => (
-                <div key={index} className="gallery-item">
+            {galleryImages.map((img, index) => (
+                <div 
+                    key={index} 
+                    className="gallery-item"
+                    onClick={() => navigate(`/travel/${img.folder}`)}
+                >
                     <img 
-                        src={src} 
+                        src={img.url} 
                         alt={`Memories ${index + 1}`} 
                         loading="lazy"
                     />
-                      <div className="overlay"></div>
+                      <div className="overlay">
+                          <span className="folder-name">{img.folder}</span>
+                      </div>
                 </div>
             ))}
           </div>

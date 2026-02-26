@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+.TravelFolder {
+    margin: 0;
+    color: var(--primary);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    background-color: var(--background);
+}
+
+.navbar-container {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    z-index: 100;
+}
+
+.folder-header {
+    padding: 8rem 2rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+}
+
+.back-button {
+    position: absolute;
+    left: 2rem;
+    top: 8rem;
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    opacity: 0.7;
+}
+
+.back-button:hover {
+    opacity: 1;
+}
+
+.folder-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    color: var(--primary);
+    text-transform: capitalize;
+    margin: 0;
+}
+
+.folder-gallery {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 50vh;
+}
+
+.no-images {
+    text-align: center;
+    font-size: 1.2rem;
+    opacity: 0.7;
+}
+
+.folder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-auto-rows: 250px;
+    grid-auto-flow: dense;
+    gap: 1.0rem;
+    width: 100%;
+}
+
+.folder-item {
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Create a "random" mosaic look using nth-child patterns on larger screens */
+@media (min-width: 600px) {
+    .folder-item:nth-child(11n + 1) {
+        grid-column: span 2;
+        grid-row: span 2;
+    }
+
+    .folder-item:nth-child(7n + 2) {
+        grid-column: span 2;
+    }
+
+    .folder-item:nth-child(5n + 4) {
+        grid-row: span 2;
+    }
+    
+    .folder-grid {
+        gap: 1.5rem;
+    }
+}
+
+.folder-item:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    z-index: 2;
+}
+
+.folder-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: brightness(0.85);
+}
+
+.folder-item:hover img {
+    transform: scale(1.1);
+    filter: brightness(1);
+}
+
+@media (max-width: 768px) {
+    .folder-title {
+        font-size: 2.5rem;
+    }
+    
+    .back-button {
+        position: static;
+        display: block;
+        margin-bottom: 1rem;
+        text-align: left;
+    }
+    
+    .folder-header {
+        padding-top: 6rem;
+    }
+}

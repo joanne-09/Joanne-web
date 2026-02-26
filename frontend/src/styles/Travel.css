@@ -190,9 +190,25 @@
     justify-content: center;
     opacity: 0;
     transition: opacity 0.3s ease;
-    background: radial-gradient(circle, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%);
+    background: radial-gradient(circle, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%);
+}
+
+.folder-name {
+    color: var(--thirdary);
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: capitalize;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
 }
 
 .gallery-item:hover .overlay {
     opacity: 1;
+}
+
+.gallery-item:hover .folder-name {
+    transform: translateY(0);
 }
