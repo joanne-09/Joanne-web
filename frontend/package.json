@@ -9,21 +9,28 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-
     "deploy": "gh-pages -d dist",
     "predeploy": "npm run build"
   },
   "dependencies": {
-    "@joanne-web/shared": "file:../shared",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@joanne-web/shared": "file:../shared",
     "@mui/material": "^7.1.1",
+    "d3-drag": "^3.0.0",
+    "d3-force": "^3.0.0",
+    "d3-selection": "^3.0.0",
+    "matter-js": "^0.20.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@types/d3-drag": "^3.0.7",
+    "@types/d3-force": "^3.0.10",
+    "@types/d3-selection": "^3.0.11",
+    "@types/matter-js": "^0.20.2",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",

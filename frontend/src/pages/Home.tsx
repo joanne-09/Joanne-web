@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import '../styles/Home.css';
 
 import { Navbar, Footer } from '../components/Essentials';
+import SkillMap from '../components/SkillMap';
 
 // Data Interfaces
 interface EducationItem {
@@ -255,6 +256,7 @@ const Home = () => {
       <main>
         <Hero />
         <About />
+        <SkillMap />
         <Education />
         <Activities />
         <Contact />
