@@ -34,7 +34,7 @@ jobs:
       - name: Build Static Site
         working-directory: frontend
         env:
-          VITE_BACKEND_URL: ${{ secrets.RENDER_BACKEND_URL }}
+          VITE_BACKEND_URL: ${{ secrets.VERCEL_BACKEND_URL }}
         run: npm run build
 
       - name: Setup Pages

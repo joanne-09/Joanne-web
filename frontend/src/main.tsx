@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 
-/// Render backend URL: https://joanne-web.onrender.com
+/// Vercel backend URL: https://your-vercel-project-url.vercel.app
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
