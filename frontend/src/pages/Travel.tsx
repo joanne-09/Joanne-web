@@ -40,6 +40,7 @@ const Travel: React.FC = () => {
   useEffect(() => {
     // Fetch images from server
     const fetchImages = async () => {
+        let imagesToPreload = fallbackImages;
         try {
             const res = await fetch(`${BACKEND_URL}/api/images/random`);
             if (res.ok) {
@@ -66,11 +67,22 @@ const Travel: React.FC = () => {
                         setRow2Images(urls.slice(chunkSize, chunkSize * 2));
                         setRow3Images(urls.slice(chunkSize * 2));
                     }
+                    imagesToPreload = images;
                 }
             }
         } catch (error) {
             console.error("Failed to fetch travel images", error);
         } finally {
+            // Preload images to ensure they are ready before hiding the loading page
+            const imagePromises = imagesToPreload.map(img => {
+                return new Promise((resolve) => {
+                    const image = new Image();
+                    image.src = img.url;
+                    image.onload = resolve;
+                    image.onerror = resolve;
+                });
+            });
+            await Promise.all(imagePromises);
             setLoading(false);
         }
     };

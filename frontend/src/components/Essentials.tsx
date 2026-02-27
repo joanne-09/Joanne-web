@@ -40,8 +40,8 @@ export const Navbar: React.FC = () => {
               </button>
             </li>
             <li><Link onClick={() => handleNavigate('/')} underline='none'>Home</Link></li>
-            <li><Link onClick={() => handleNavigate('/article')} underline='none'>Article</Link></li>
             <li><Link onClick={() => handleNavigate('/projects')} underline='none'>Projects</Link></li>
+            <li><Link onClick={() => handleNavigate('/article')} underline='none'>Article</Link></li>
             <li><Link onClick={() => handleNavigate('/travel')} underline='none'>Travel</Link></li>
           </ul>
         </div>
