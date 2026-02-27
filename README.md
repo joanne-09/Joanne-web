@@ -6,7 +6,7 @@
 [Webpage URL](https://joanne-09.github.io/Joanne-web)
 
 ## Backend Development
-Primary development language is TypeScript, using Express.js for the server and MySQL for the database. Docker is used for containerization, and Render is used for deployment.
+Primary development language is TypeScript, using Express.js for the server and PostgreSQL for the database. Docker is used for containerization, and Vercel is used for deployment.
 
 ### Tools
 - Node.js
@@ -14,7 +14,7 @@ Primary development language is TypeScript, using Express.js for the server and 
 - PostgreSQL (Neon Database)
 - GitHub Actions
 - Docker
-- Render
+- Vercel
 
 #### Docker Usage
 1. Create a repository on Docker Hub with name identical to the one on Github.
@@ -23,12 +23,12 @@ Primary development language is TypeScript, using Express.js for the server and 
 4. Add Docker Hub credentials to GitHub secrets.
 5. Push changes to the repository to trigger the workflow and deploy the backend.
 
-#### Render Deployment
-1. Add new Render Web Service.
-2. Select the repository and branch. The service should automatically select Docker as the deployment method.
-3. Set the root to `.` and configure the path of the Dockerfile to `./backend/Dockerfile`.
-4. Set up the environment variables for database connection.
-5. Copy the backend URL from Render after deployment and add it to GitHub secrets as `RENDER_BACKEND_URL`.
+#### Vercel Deployment
+1. Add a new project on Vercel and import the GitHub repository.
+2. The `vercel.json` file in the root directory will automatically configure the backend deployment as a serverless function.
+3. Set up the environment variables for the database connection (e.g., `DB_URL`) in the Vercel project settings.
+4. Deploy the project.
+5. Copy the backend URL from Vercel after deployment and add it to GitHub secrets as `VERCEL_BACKEND_URL`.
 
 #### Database
 I use Neon Database because it provides a free tier for PostgreSQL databases.
@@ -53,5 +53,5 @@ I use Neon Database because it provides a free tier for PostgreSQL databases.
 
 #### Connect to Frontend
 Handle the connection in `Article.tsx`:
-1. In the frontend, use the `RENDER_BACKEND_URL` environment variable to connect to the backend.
+1. In the frontend, use the `VERCEL_BACKEND_URL` environment variable to connect to the backend.
 2. Use Fetch API to make requests to the backend endpoints.
