@@ -20,10 +20,63 @@ app.use(cors({
 app.use(express.json());
 
 // ====== POSTS API ======
+// GET /api/posts/tags - Fetch all unique tags
+app.get('/api/posts/tags', async (req: Request, res: Response) => {
+  try {
+    const { rows } = await db.query('SELECT name FROM tags ORDER BY name ASC');
+    res.json(rows.map(row => row.name));
+  } catch (err) {
+    console.error("Error fetching tags:", err);
+    res.status(500).json({ error: 'Failed to fetch tags' });
+  }
+});
+
 // GET /api/posts - Fetch all posts
 app.get('/api/posts', async (req: Request, res: Response) => {
   try {
-    const { rows } = await db.query('SELECT * FROM posts ORDER BY created_at DESC');
+    const { search, tag } = req.query;
+    
+    // Base query with JOINs to get tags as an array
+    let query = `
+      SELECT 
+        p.*,
+        COALESCE(
+          array_agg(t.name) FILTER (WHERE t.name IS NOT NULL), 
+          '{}'
+        ) as tags
+      FROM posts p
+      LEFT JOIN post_tags pt ON p.id = pt.post_id
+      LEFT JOIN tags t ON pt.tag_id = t.id
+    `;
+    
+    const params: any[] = [];
+    const conditions: string[] = [];
+
+    if (search) {
+      params.push(`%${search}%`);
+      conditions.push(`p.title ILIKE $${params.length}`);
+    }
+
+    if (tag) {
+      params.push(tag);
+      // We need to filter posts that have this specific tag
+      conditions.push(`
+        EXISTS (
+          SELECT 1 FROM post_tags pt2 
+          JOIN tags t2 ON pt2.tag_id = t2.id 
+          WHERE pt2.post_id = p.id AND t2.name = $${params.length}
+        )
+      `);
+    }
+
+    if (conditions.length > 0) {
+      query += ' WHERE ' + conditions.join(' AND ');
+    }
+
+    // Group by post ID to aggregate the tags
+    query += ' GROUP BY p.id ORDER BY p.created_at DESC';
+
+    const { rows } = await db.query(query, params);
     res.json(rows);
   } catch (err) {
     console.error("Error fetching posts:", err);
@@ -35,7 +88,20 @@ app.get('/api/posts', async (req: Request, res: Response) => {
 app.get('/api/posts/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { rows } = await db.query('SELECT * FROM posts WHERE id = $1', [id]);
+    const { rows } = await db.query(`
+      SELECT 
+        p.*,
+        COALESCE(
+          array_agg(t.name) FILTER (WHERE t.name IS NOT NULL), 
+          '{}'
+        ) as tags
+      FROM posts p
+      LEFT JOIN post_tags pt ON p.id = pt.post_id
+      LEFT JOIN tags t ON pt.tag_id = t.id
+      WHERE p.id = $1
+      GROUP BY p.id
+    `, [id]);
+    
     if (rows.length === 0) {
       return res.status(404).json({ error: 'Post not found' });
     }
