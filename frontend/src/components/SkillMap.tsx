@@ -69,6 +69,7 @@ const decorations = Array.from({ length: decorationCount }).map((_, i) => ({
 interface Node extends d3Force.SimulationNodeDatum {
   id: string;
   radius: number;
+  originalRadius: number;
   isSkill: boolean;
   group?: SkillGroup;
 }
@@ -83,20 +84,26 @@ const SkillMap: React.FC = () => {
 
     const width = containerRef.current.clientWidth;
     const height = Math.max(containerRef.current.clientHeight, 500);
+    const initialScaleFactor = Math.min(1, Math.max(0.5, width / 1000));
 
     // init nodes
-    const skillNodes: Node[] = skillData.map((group, index) => ({
-      id: `skill-${index}`,
-      radius: group.confidence * 1.5,
-      isSkill: true,
-      group,
-      x: Math.random() * width,
-      y: Math.random() * height,
-    }));
+    const skillNodes: Node[] = skillData.map((group, index) => {
+      const baseRadius = group.confidence * 1.5;
+      return {
+        id: `skill-${index}`,
+        radius: baseRadius * initialScaleFactor,
+        originalRadius: baseRadius,
+        isSkill: true,
+        group,
+        x: Math.random() * width,
+        y: Math.random() * height,
+      };
+    });
 
     const decNodes: Node[] = decorations.map((dec) => ({
       id: dec.id,
-      radius: dec.radius,
+      radius: dec.radius * initialScaleFactor,
+      originalRadius: dec.radius,
       isSkill: false,
       x: Math.random() * width,
       y: Math.random() * height,
@@ -113,12 +120,15 @@ const SkillMap: React.FC = () => {
       .force('charge', d3Force.forceManyBody().strength(d => (d as Node).isSkill ? -30 : -10))
       .on('tick', () => {
         const currentNodes = simulation.nodes();
+        const currentWidth = containerRef.current ? containerRef.current.clientWidth : width;
+        const currentHeight = containerRef.current ? Math.max(containerRef.current.clientHeight, 500) : height;
+        
         currentNodes.forEach(node => {
           if (node.x !== undefined && node.y !== undefined && node.vx !== undefined && node.vy !== undefined) {
             if (node.x < node.radius) { node.x = node.radius; node.vx *= -0.5; }
-            if (node.x > width - node.radius) { node.x = width - node.radius; node.vx *= -0.5; }
+            if (node.x > currentWidth - node.radius) { node.x = currentWidth - node.radius; node.vx *= -0.5; }
             if (node.y < node.radius) { node.y = node.radius; node.vy *= -0.5; }
-            if (node.y > height - node.radius) { node.y = height - node.radius; node.vy *= -0.5; }
+            if (node.y > currentHeight - node.radius) { node.y = currentHeight - node.radius; node.vy *= -0.5; }
           }
         });
         // update state to re-render
@@ -133,6 +143,14 @@ const SkillMap: React.FC = () => {
       const newWidth = containerRef.current.clientWidth;
       const newHeight = Math.max(containerRef.current.clientHeight, 500);
       
+      const scaleFactor = Math.min(1, Math.max(0.5, newWidth / 1000));
+
+      const currentNodes = simulationRef.current.nodes();
+      currentNodes.forEach(node => {
+        node.radius = node.originalRadius * scaleFactor;
+      });
+
+      simulationRef.current.force('collide', d3Force.forceCollide<Node>().radius(d => d.radius + 2).iterations(3));
       simulationRef.current.force('y', d3Force.forceY(newHeight).strength(0.05));
       simulationRef.current.force('x', d3Force.forceX(newWidth / 2).strength(0.01));
       simulationRef.current.alpha(0.3).restart(); // Re-heat simulation slightly on resize
@@ -192,7 +210,7 @@ const SkillMap: React.FC = () => {
           className="skill-physics-container" 
           ref={containerRef}
           style={{ 
-            height: '100vh', 
+            height: '100%', 
             minHeight: '500px',
             position: 'relative', 
             overflow: 'hidden', 
@@ -207,10 +225,13 @@ const SkillMap: React.FC = () => {
               const maxFontSize = 1.5;
               
               let fontSize = minFontSize;
-              if (node.radius > minRadius) {
-                const ratio = Math.min(1, (node.radius - minRadius) / (maxRadius - minRadius));
+              if (node.originalRadius > minRadius) {
+                const ratio = Math.min(1, (node.originalRadius - minRadius) / (maxRadius - minRadius));
                 fontSize = minFontSize + ratio * (maxFontSize - minFontSize);
               }
+              
+              const scaleFactor = node.radius / node.originalRadius;
+              fontSize = fontSize * scaleFactor;
 
               return (
                 <div 
@@ -227,7 +248,12 @@ const SkillMap: React.FC = () => {
                   }}
                 >
                   <div className="skill-circle-content">
-                    <h3 className="skill-group-name">{node.group.name}</h3>
+                    <h3 
+                      className="skill-group-name"
+                      style={{ fontSize: `${1.4 * scaleFactor}rem` }}
+                    >
+                      {node.group.name}
+                    </h3>
                     <div className="skill-list">
                       {node.group.skills.map((skill, idx) => (
                         <span 
