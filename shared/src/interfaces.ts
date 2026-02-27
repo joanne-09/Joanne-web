@@ -3,6 +3,7 @@ export interface Post {
   title: string;
   content: string;
   created_at: string;
+  tags: string[];
 }
 
 export interface Project {

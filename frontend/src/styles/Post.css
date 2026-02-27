@@ -71,3 +71,16 @@
         font-size: 15px;
     }
 }
+
+.article-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--secondary);
+}
+
+.detail-tags {
+    margin-bottom: 0;
+}

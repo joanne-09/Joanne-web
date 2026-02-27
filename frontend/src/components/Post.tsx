@@ -44,9 +44,18 @@ const ArticleDetail: React.FC = () => {
           {!loading && !error && post && (
             <article className="article-content">
               <h1>{post.title}</h1>
-              <small className="article-date">
-                Posted on: {new Date(post.created_at).toLocaleDateString()}
-              </small>
+              <div className="article-meta">
+                <small className="article-date">
+                  Posted on: {new Date(post.created_at).toLocaleDateString()}
+                </small>
+                {post.tags && post.tags.length > 0 && (
+                  <div className="post-tags detail-tags">
+                    {post.tags.map(tag => (
+                      <span key={tag} className="post-tag-pill">{tag}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
               <div className="article-body">
                 {/* Using dangerouslySetInnerHTML to render newlines, use with caution */}
                 <p dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }} />
