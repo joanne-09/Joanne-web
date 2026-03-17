@@ -1,6 +1,6 @@
 // filepath: c:\Users\User\Documents\school\CV\react-portfolio\src\App.tsx
 import { useEffect } from 'react';
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import {HashRouter as Router, Route, Routes} from "react-router-dom";
 import './App.css'; // Import your stylesheet
 
 import Home from './pages/Home';
@@ -55,7 +55,7 @@ const AppContent = () => {
   return (
     <div className="App">
       <StarBackground />
-      <Router basename='/Joanne-web'>
+      <Router>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/article" element={<Article />} />
