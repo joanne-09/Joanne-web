@@ -96,8 +96,8 @@ router.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
-// POST /api/projects/create - Create a new project
-router.post('/create', async (req: Request, res: Response) => {
+// POST /api/projects/ - Create a new project
+router.post('/', async (req: Request, res: Response) => {
   try {
     const { id, ghLink, imgsrc, imgalt, imgstyle, title, type, description, role, tech } = req.body;
 

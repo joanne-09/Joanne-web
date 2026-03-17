@@ -110,7 +110,7 @@ const Admin = () => {
       const parsedNewTags = newTagsInput.split(',').map(t => t.trim()).filter(Boolean);
       const allTagsForArticle = Array.from(new Set([...selectedTags, ...parsedNewTags]));
 
-      await fetch(`${BACKEND_URL}/api/posts/create`, {
+      await fetch(`${BACKEND_URL}/api/posts/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -190,7 +190,7 @@ const Admin = () => {
         }
       }
 
-      await fetch(`${BACKEND_URL}/api/projects/create`, {
+      await fetch(`${BACKEND_URL}/api/projects/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

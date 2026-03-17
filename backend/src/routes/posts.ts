@@ -156,8 +156,8 @@ router.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
-// POST /api/posts/create - Create a new post
-router.post('/create', async (req: Request, res: Response) => {
+// POST /api/posts/ - Create a new post
+router.post('/', async (req: Request, res: Response) => {
   try {
     const { title, content, tags } = req.body;
 
