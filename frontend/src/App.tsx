@@ -9,6 +9,7 @@ import ArticleDetail from './components/Post';
 import Projects from './pages/Projects';
 import Travel from './pages/Travel';
 import Traveled from './pages/Traveled';
+import Admin from './pages/Admin';
 import { DataProvider } from './contexts/DataContext';
 import StarBackground from './components/StarBackground';
 
@@ -62,6 +63,7 @@ const AppContent = () => {
           <Route path="/projects" element={<Projects />} />
           <Route path="/travel" element={<Travel />} />
           <Route path="/travel/:folder" element={<Traveled />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </Router>
     </div>
