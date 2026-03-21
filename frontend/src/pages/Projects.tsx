@@ -39,7 +39,7 @@ const Projects: React.FC = () => {
                   <div className="project-grid">
                     {projects.map((project) => (
                       <a href={project.ghLink} target="_blank" rel="noopener noreferrer" key={project.id}>
-                        <div className="project-card">
+                        <div className="project-card" onClick={() => window.open(project.ghLink, '_blank')}>
                           <div className="project-image">
                             <img 
                               src={getImageUrl(project.imgsrc)} 
