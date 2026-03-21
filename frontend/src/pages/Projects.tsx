@@ -38,8 +38,8 @@ const Projects: React.FC = () => {
                 {!error && projects.length > 0 && (
                   <div className="project-grid">
                     {projects.map((project) => (
-                      <a href={project.ghLink} target="_blank" rel="noopener noreferrer" key={project.id}>
-                        <div className="project-card" onClick={() => window.open(project.ghLink, '_blank')}>
+                      <a href={project.ghlink} target="_blank" rel="noopener noreferrer" key={project.id}>
+                        <div className="project-card" onClick={() => window.open(project.ghlink, '_blank')}>
                           <div className="project-image">
                             <img 
                               src={getImageUrl(project.imgsrc)} 

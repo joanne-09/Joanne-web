@@ -25,7 +25,7 @@ const Admin = () => {
 
   // Project State
   const [projectId, setProjectId] = useState('');
-  const [ghLink, setGhLink] = useState('');
+  const [ghlink, setGhLink] = useState('');
   const [imgsrc, setImgsrc] = useState('');
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [imgalt, setImgalt] = useState('');
@@ -197,7 +197,7 @@ const Admin = () => {
         },
         body: JSON.stringify({
           id: projectId,
-          ghLink,
+          ghlink: ghlink || '',
           imgsrc: finalImgSrc,
           imgalt,
           imgstyle: parsedImgStyle,
@@ -219,7 +219,7 @@ const Admin = () => {
         },
         body: JSON.stringify({
           id: projectId, // id is used manually so we keep it same when PUTTING
-          ghLink,
+          ghlink: ghlink || '',
           imgsrc: finalImgSrc,
           imgalt,
           imgstyle: parsedImgStyle,
@@ -287,7 +287,7 @@ const Admin = () => {
     setEditingProjectId(proj.id);
     setProjectId(proj.id);
     setProjectTitle(proj.title);
-    setGhLink(proj.ghLink || '');
+    setGhLink(proj.ghlink || '');
     setImgsrc(proj.imgsrc || '');
     setImgFile(null);
     setImgalt(proj.imgalt || '');
@@ -475,7 +475,7 @@ const Admin = () => {
           </div>
           <div className="form-group">
             <label>GitHub Link</label>
-            <input type="text" value={ghLink} onChange={(e) => setGhLink(e.target.value)} />
+            <input type="text" value={ghlink} onChange={(e) => setGhLink(e.target.value)} />
           </div>
           <div className="form-group">
             <label>Image Source (Manual Link)</label>
