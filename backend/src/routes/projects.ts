@@ -106,7 +106,7 @@ router.post('/', async (req: Request, res: Response) => {
     }
     
     const result = await db.query(
-      `INSERT INTO projects (id, "ghLink", imgsrc, imgalt, imgstyle, title, type, description, role, tech) 
+      `INSERT INTO projects (id, ghlink, imgsrc, imgalt, imgstyle, title, type, description, role, tech) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
       [id, ghlink, imgsrc, imgalt, imgstyle ? JSON.stringify(imgstyle) : null, title, type, description, role, tech ? JSON.stringify(tech) : null]
     );
