@@ -76,7 +76,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
 router.put('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { ghLink, imgsrc, imgalt, imgstyle, title, type, description, role, tech } = req.body;
+    const { ghlink, imgsrc, imgalt, imgstyle, title, type, description, role, tech } = req.body;
 
     if (!title) {
       return res.status(400).json({ error: 'Title is required' });
@@ -86,7 +86,7 @@ router.put('/:id', async (req: Request, res: Response) => {
       `UPDATE projects 
        SET "ghLink" = $1, imgsrc = $2, imgalt = $3, imgstyle = $4, title = $5, type = $6, description = $7, role = $8, tech = $9
        WHERE id = $10`,
-      [ghLink, imgsrc, imgalt, imgstyle ? JSON.stringify(imgstyle) : null, title, type, description, role, tech ? JSON.stringify(tech) : null, id]
+      [ghlink, imgsrc, imgalt, imgstyle ? JSON.stringify(imgstyle) : null, title, type, description, role, tech ? JSON.stringify(tech) : null, id]
     );
 
     res.json({ message: 'Project updated successfully' });
@@ -99,7 +99,7 @@ router.put('/:id', async (req: Request, res: Response) => {
 // POST /api/projects/ - Create a new project
 router.post('/', async (req: Request, res: Response) => {
   try {
-    const { id, ghLink, imgsrc, imgalt, imgstyle, title, type, description, role, tech } = req.body;
+    const { id, ghlink, imgsrc, imgalt, imgstyle, title, type, description, role, tech } = req.body;
 
     if (!id || !title) {
       return res.status(400).json({ error: 'ID and title are required' });
@@ -108,7 +108,7 @@ router.post('/', async (req: Request, res: Response) => {
     const result = await db.query(
       `INSERT INTO projects (id, "ghLink", imgsrc, imgalt, imgstyle, title, type, description, role, tech) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
-      [id, ghLink, imgsrc, imgalt, imgstyle ? JSON.stringify(imgstyle) : null, title, type, description, role, tech ? JSON.stringify(tech) : null]
+      [id, ghlink, imgsrc, imgalt, imgstyle ? JSON.stringify(imgstyle) : null, title, type, description, role, tech ? JSON.stringify(tech) : null]
     );
 
     res.status(201).json({
