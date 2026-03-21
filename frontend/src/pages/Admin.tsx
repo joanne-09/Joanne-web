@@ -337,12 +337,12 @@ const Admin = () => {
       <div className="admin-sidebar">
         <h2>Manage Articles</h2>
         {articles.length === 0 ? <p>No articles found.</p> : (
-          <ul style={{ listStyle: 'none', padding: 0 }}>
+          <ul className="admin-item-list">
             {articles.map((a) => (
-              <li key={a.id} style={{ margin: '10px 0', display: 'flex', gap: '15px', alignItems: 'center', background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '8px' }}>
-                <span style={{ fontSize: '16px', flex: 1 }}>{a.title}</span>
-                <button onClick={() => handleEditArticle(a.id)} style={{ background: '#f39c12', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>Edit</button>
-                <button onClick={() => handleDeleteArticle(a.id)} style={{ background: '#e74c3c', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>Delete</button>
+              <li key={a.id} className="admin-list-item">
+                <span className="admin-item-title">{a.title}</span>
+                <button onClick={() => handleEditArticle(a.id)} className="admin-btn-edit">Edit</button>
+                <button onClick={() => handleDeleteArticle(a.id)} className="admin-btn-delete">Delete</button>
               </li>
             ))}
           </ul>
@@ -350,12 +350,12 @@ const Admin = () => {
 
         <h2 style={{ marginTop: '30px' }}>Manage Projects</h2>
         {projects.length === 0 ? <p>No projects found.</p> : (
-          <ul style={{ listStyle: 'none', padding: 0 }}>
+          <ul className="admin-item-list">
             {projects.map((p) => (
-              <li key={p.id} style={{ margin: '10px 0', display: 'flex', gap: '15px', alignItems: 'center', background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '8px' }}>
-                <span style={{ fontSize: '16px', flex: 1 }}>{p.title}</span>
-                <button onClick={() => handleEditProject(p.id)} style={{ background: '#f39c12', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>Edit</button>
-                <button onClick={() => handleDeleteProject(p.id)} style={{ background: '#e74c3c', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>Delete</button>
+              <li key={p.id} className="admin-list-item">
+                <span className="admin-item-title">{p.title}</span>
+                <button onClick={() => handleEditProject(p.id)} className="admin-btn-edit">Edit</button>
+                <button onClick={() => handleDeleteProject(p.id)} className="admin-btn-delete">Delete</button>
               </li>
             ))}
           </ul>
@@ -391,13 +391,13 @@ const Admin = () => {
           {availableTags.length === 0 ? (
             <p>No tags exist yet.</p>
           ) : (
-            <ul style={{ listStyle: 'none', padding: 0 }}>
+            <ul className="admin-item-list">
               {availableTags.map(tag => (
-                <li key={tag} style={{ margin: '10px 0', display: 'flex', gap: '15px', alignItems: 'center' }}>
-                  <span style={{ fontSize: '18px' }}>{tag}</span>
+                <li key={tag} className="admin-list-item">
+                  <span className="admin-item-title" style={{ fontSize: '18px' }}>{tag}</span>
                   <button 
                     onClick={() => handleDeleteTag(tag)}
-                    style={{ background: '#e74c3c', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}
+                    className="admin-btn-delete"
                   >
                     Delete Tag
                   </button>

@@ -3,11 +3,12 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  color: #fff;
+  color: var(--text);
 }
 
 .admin-login-form {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--background-dark);
+  border: 1px solid var(--border);
   padding: 40px;
   border-radius: 8px;
   display: flex;
@@ -24,9 +25,9 @@
 
 .admin-login-form input {
   padding: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: transparent;
-  color: #fff;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--text);
   border-radius: 4px;
 }
 
@@ -48,7 +49,7 @@
 .admin-dashboard-wrapper {
   max-width: 1200px;
   margin: 100px auto;
-  color: #fff;
+  color: var(--text);
   padding: 20px;
   display: flex;
   gap: 30px;
@@ -56,7 +57,8 @@
 
 .admin-sidebar {
   flex: 1;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--background-dark);
+  border: 1px solid var(--border);
   padding: 20px;
   border-radius: 12px;
   display: flex;
@@ -68,9 +70,10 @@
 
 .admin-dashboard {
   flex: 2;
-  color: #fff;
+  color: var(--text);
   padding: 20px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--background-dark);
+  border: 1px solid var(--border);
   border-radius: 12px;
 }
 
@@ -122,9 +125,9 @@
 .form-group input,
 .form-group textarea {
   padding: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
+  background: var(--background);
+  border: 1px solid var(--border);
+  color: var(--text);
   border-radius: 4px;
   font-family: inherit;
 }
@@ -147,4 +150,45 @@
 
 .admin-form > button:hover {
   background: #27ae60;
+}
+
+.admin-item-list {
+  list-style: none;
+  padding: 0;
+}
+
+/* Utility Classes for List Items */
+.admin-list-item {
+  margin: 10px 0;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  background: var(--background);
+  border: 1px solid var(--border);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.admin-item-title {
+  font-size: 16px;
+  flex: 1;
+  color: var(--text);
+}
+
+.admin-btn-edit {
+  background: #f39c12;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.admin-btn-delete {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
 }
