@@ -1,117 +1,117 @@
 import React, { useEffect, useRef, useState } from 'react';
-import '../styles/StarBackground.css';
+
+interface Star {
+  x: number;
+  y: number;
+  size: number;
+  alpha: number;
+  twinkleSpeed: number;
+  direction: 1 | -1;
+}
+
+const getShouldShowStars = () => {
+  const explicitTheme = document.documentElement.getAttribute('data-theme');
+  if (explicitTheme) return explicitTheme === 'dark';
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+};
 
 const StarBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isDark, setIsDark] = useState(false);
+  const [showStars, setShowStars] = useState(false);
 
   useEffect(() => {
-    const checkTheme = () => {
-       const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-       const isDataDark = document.documentElement.getAttribute('data-theme') === 'dark';
-       setIsDark(isSystemDark || isDataDark);
-    };
-  
-    checkTheme();
-  
+    const updateTheme = () => setShowStars(getShouldShowStars());
+    updateTheme();
+
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleSystemChange = () => {
-        checkTheme();
-    };
-    mediaQuery.addEventListener('change', handleSystemChange);
-  
-    const observer = new MutationObserver(checkTheme);
+    mediaQuery.addEventListener('change', updateTheme);
+
+    const observer = new MutationObserver(updateTheme);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-  
+
     return () => {
-      mediaQuery.removeEventListener('change', handleSystemChange);
+      mediaQuery.removeEventListener('change', updateTheme);
       observer.disconnect();
     };
   }, []);
 
   useEffect(() => {
-    if (!isDark) return;
+    if (!showStars) return;
 
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const context = canvas?.getContext('2d');
+    if (!canvas || !context) return;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let stars: Star[] = [];
     let width = 0;
     let height = 0;
-    let animationFrameId: number;
+    let animationFrameId = 0;
 
-    class Star {
-      x: number = 0;
-      y: number = 0;
-      size: number = 0;
-      alpha: number = 0;
-      twinkleSpeed: number = 0;
-      direction: number = 0;
-
-      constructor() {
-        this.init();
-      }
-
-      init() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.size = Math.random() * 1.5;
-        this.alpha = Math.random();
-        this.twinkleSpeed = 0.003 + Math.random() * 0.008;
-        this.direction = Math.random() > 0.5 ? 1 : -1;
-      }
-
-      update() {
-        this.alpha += this.twinkleSpeed * this.direction;
-        if (this.alpha >= 1 || this.alpha <= 0.1) this.direction *= -1;
-      }
-
-      draw(context: CanvasRenderingContext2D) {
-        context.beginPath();
-        context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        context.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
-        context.fill();
-      }
-    }
+    const createStar = (): Star => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 1.2 + 0.25,
+      alpha: Math.random() * 0.75 + 0.12,
+      twinkleSpeed: 0.002 + Math.random() * 0.006,
+      direction: Math.random() > 0.5 ? 1 : -1,
+    });
 
     const resize = () => {
-      if (!canvas) return;
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight; // Use viewport height for fixed background
-      stars = [];
-      const count = Math.floor((width * height) / 5000);
-      for (let i = 0; i < count; i++) stars.push(new Star());
-    }
+      const pixelRatio = window.devicePixelRatio || 1;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = Math.floor(width * pixelRatio);
+      canvas.height = Math.floor(height * pixelRatio);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 
-    const animate = () => {
-      if (!ctx || !canvas) return;
-      ctx.clearRect(0, 0, width, height);
-      stars.forEach(star => {
-        star.update();
-        star.draw(ctx);
+      const count = Math.floor((width * height) / 6800);
+      stars = Array.from({ length: count }, createStar);
+    };
+
+    const draw = () => {
+      const styles = getComputedStyle(document.documentElement);
+      const starRgb = styles.getPropertyValue('--star-rgb').trim() || '247, 243, 234';
+      const starOpacity = Number.parseFloat(styles.getPropertyValue('--star-opacity')) || 0.46;
+
+      context.clearRect(0, 0, width, height);
+      stars.forEach((star) => {
+        if (!reducedMotion) {
+          star.alpha += star.twinkleSpeed * star.direction;
+          if (star.alpha >= 0.95 || star.alpha <= 0.08) star.direction *= -1;
+        }
+
+        context.beginPath();
+        context.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        context.fillStyle = `rgba(${starRgb}, ${star.alpha * starOpacity})`;
+        context.fill();
       });
-      animationFrameId = requestAnimationFrame(animate);
-    }
+
+      if (!reducedMotion) animationFrameId = requestAnimationFrame(draw);
+    };
 
     resize();
-    animate();
+    draw();
 
     window.addEventListener('resize', resize);
 
-    // Clean up
     return () => {
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isDark]);
+  }, [showStars]);
 
-  if (!isDark) return null;
+  if (!showStars) return null;
 
-  return <canvas ref={canvasRef} id="starCanvas"></canvas>;
+  return (
+    <canvas
+      ref={canvasRef}
+      className="pointer-events-none fixed inset-0 z-[4] h-screen w-screen"
+      aria-hidden="true"
+    />
+  );
 };
 
 export default StarBackground;
-

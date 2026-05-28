@@ -17,12 +17,14 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
+.env
 
 # frontend build artifacts
 frontend/node_modules/
 frontend/dist/
 frontend/dist-ssr/
 *.local
+frontend/.env
 
 # backend build artifacts
 backend/node_modules/

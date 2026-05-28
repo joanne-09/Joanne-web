@@ -2,11 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3Force from 'd3-force';
 import * as d3Drag from 'd3-drag';
 import * as d3Selection from 'd3-selection';
-import '../styles/SkillMap.css';
 
 interface SkillGroup {
   name: string;
-  confidence: number; // 1 to 100
+  confidence: number;
   skills: string[];
 }
 
@@ -58,14 +57,11 @@ const skillData: SkillGroup[] = [
   }
 ];
 
-// some random sized circles
-const decorationCount = 25;
-const decorations = Array.from({ length: decorationCount }).map((_, i) => ({
+const decorations = Array.from({ length: 25 }).map((_, i) => ({
   id: `dec-${i}`,
-  radius: Math.random() * 30 + 10, // 10 to 40
+  radius: Math.random() * 30 + 10,
 }));
 
-// node type for d3-force
 interface Node extends d3Force.SimulationNodeDatum {
   id: string;
   radius: number;
@@ -77,7 +73,12 @@ interface Node extends d3Force.SimulationNodeDatum {
 const SkillMap: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [nodes, setNodes] = useState<Node[]>([]);
+  const nodesRef = useRef<Node[]>([]);
   const simulationRef = useRef<d3Force.Simulation<Node, undefined> | null>(null);
+
+  useEffect(() => {
+    nodesRef.current = nodes;
+  }, [nodes]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -86,7 +87,6 @@ const SkillMap: React.FC = () => {
     const height = Math.max(containerRef.current.clientHeight, 500);
     const initialScaleFactor = Math.min(1, Math.max(0.5, width / 1000));
 
-    // init nodes
     const skillNodes: Node[] = skillData.map((group, index) => {
       const baseRadius = group.confidence * 1.5;
       return {
@@ -112,7 +112,6 @@ const SkillMap: React.FC = () => {
     const allNodes = [...skillNodes, ...decNodes];
     setNodes(allNodes);
 
-    // setup d3-force simulation
     const simulation = d3Force.forceSimulation<Node>(allNodes)
       .force('collide', d3Force.forceCollide<Node>().radius(d => d.radius + 2).iterations(3))
       .force('y', d3Force.forceY(height).strength(0.05))
@@ -131,18 +130,15 @@ const SkillMap: React.FC = () => {
             if (node.y > currentHeight - node.radius) { node.y = currentHeight - node.radius; node.vy *= -0.5; }
           }
         });
-        // update state to re-render
         setNodes([...currentNodes]);
       });
 
     simulationRef.current = simulation;
 
-    // resize
     const handleResize = () => {
       if (!containerRef.current || !simulationRef.current) return;
       const newWidth = containerRef.current.clientWidth;
       const newHeight = Math.max(containerRef.current.clientHeight, 500);
-      
       const scaleFactor = Math.min(1, Math.max(0.5, newWidth / 1000));
 
       const currentNodes = simulationRef.current.nodes();
@@ -153,7 +149,7 @@ const SkillMap: React.FC = () => {
       simulationRef.current.force('collide', d3Force.forceCollide<Node>().radius(d => d.radius + 2).iterations(3));
       simulationRef.current.force('y', d3Force.forceY(newHeight).strength(0.05));
       simulationRef.current.force('x', d3Force.forceX(newWidth / 2).strength(0.01));
-      simulationRef.current.alpha(0.3).restart(); // Re-heat simulation slightly on resize
+      simulationRef.current.alpha(0.3).restart();
     };
 
     window.addEventListener('resize', handleResize);
@@ -164,21 +160,20 @@ const SkillMap: React.FC = () => {
     };
   }, []);
 
-  // drag behavior using d3-drag
   useEffect(() => {
     if (!containerRef.current || !simulationRef.current || nodes.length === 0) return;
 
     const simulation = simulationRef.current;
-    
-    // select all circle
-    const circles = d3Selection.select(containerRef.current).selectAll('.physics-circle');
+    const circles = d3Selection
+      .select(containerRef.current)
+      .selectAll<Element, Node>('.physics-circle')
+      .data(nodesRef.current);
 
     const drag = d3Drag.drag<Element, Node>()
       .on('start', (event, d) => {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         d.fx = d.x;
         d.fy = d.y;
-        // add grabbing class to container
         if (containerRef.current) containerRef.current.style.cursor = 'grabbing';
       })
       .on('drag', (event, d) => {
@@ -189,33 +184,23 @@ const SkillMap: React.FC = () => {
         if (!event.active) simulation.alphaTarget(0);
         d.fx = null;
         d.fy = null;
-        // remove grabbing class
         if (containerRef.current) containerRef.current.style.cursor = 'grab';
       });
 
-    // apply drag to circles
-    circles.data(nodes).call(drag as any);
-
+    circles.call(drag);
   }, [nodes.length]);
 
   return (
-    <section id="skills">
-      <div className="container">
-        <div className="section-title">
-          <h2>Skills</h2>
-          <div className="line"></div>
+    <section id="skills" className="w-full bg-[var(--background)] py-20">
+      <div className="mx-auto w-full max-w-[1200px] px-5">
+        <div className="mb-[60px] text-center">
+          <h2 className="mb-[15px] font-serif text-4xl font-semibold text-[var(--primary)]">Skills</h2>
+          <div className="mx-auto h-[3px] w-20 bg-[var(--accent)]"></div>
         </div>
         
         <div 
-          className="skill-physics-container" 
+          className="relative min-h-[500px] w-full cursor-grab overflow-hidden active:cursor-grabbing" 
           ref={containerRef}
-          style={{ 
-            height: '100%', 
-            minHeight: '500px',
-            position: 'relative', 
-            overflow: 'hidden', 
-            width: '100%', 
-          }}
         >
           {nodes.map((node) => {
             if (node.isSkill && node.group) {
@@ -237,28 +222,26 @@ const SkillMap: React.FC = () => {
                 <div 
                   key={node.id}
                   id={node.id}
-                  className="physics-circle skill-circle-interactive"
+                  className="physics-circle group absolute z-10 flex select-none items-center justify-center overflow-hidden rounded-full bg-[var(--primary)] text-[var(--background)] transition hover:z-20 hover:bg-[var(--accent)]"
                   style={{ 
                     width: `${node.radius * 2}px`, 
                     height: `${node.radius * 2}px`,
-                    position: 'absolute',
                     left: `${(node.x || 0) - node.radius}px`,
                     top: `${(node.y || 0) - node.radius}px`,
-                    zIndex: 10
                   }}
                 >
-                  <div className="skill-circle-content">
+                  <div className="pointer-events-none flex h-full w-full items-center justify-center p-4 text-center">
                     <h3 
-                      className="skill-group-name"
+                      className="absolute left-1/2 top-1/2 m-0 w-full -translate-x-1/2 -translate-y-1/2 font-bold transition group-hover:invisible group-hover:opacity-0"
                       style={{ fontSize: `${1.4 * scaleFactor}rem` }}
                     >
                       {node.group.name}
                     </h3>
-                    <div className="skill-list">
+                    <div className="invisible absolute left-1/2 top-1/2 flex w-4/5 -translate-x-1/2 -translate-y-1/2 flex-col gap-2 opacity-0 transition group-hover:visible group-hover:opacity-100">
                       {node.group.skills.map((skill, idx) => (
                         <span 
                           key={idx} 
-                          className="skill-item"
+                          className="truncate whitespace-nowrap font-medium"
                           style={{ fontSize: `${fontSize}rem` }}
                         >
                           {skill}
@@ -268,23 +251,21 @@ const SkillMap: React.FC = () => {
                   </div>
                 </div>
               );
-            } else {
-              return (
-                <div
-                  key={node.id}
-                  id={node.id}
-                  className="physics-circle dec-circle"
-                  style={{
-                    width: `${node.radius * 2}px`,
-                    height: `${node.radius * 2}px`,
-                    position: 'absolute',
-                    left: `${(node.x || 0) - node.radius}px`,
-                    top: `${(node.y || 0) - node.radius}px`,
-                    zIndex: 5
-                  }}
-                />
-              );
             }
+
+            return (
+              <div
+                key={node.id}
+                id={node.id}
+                className="physics-circle absolute z-[5] rounded-full bg-[var(--thirdary)] opacity-50"
+                style={{
+                  width: `${node.radius * 2}px`,
+                  height: `${node.radius * 2}px`,
+                  left: `${(node.x || 0) - node.radius}px`,
+                  top: `${(node.y || 0) - node.radius}px`,
+                }}
+              />
+            );
           })}
         </div>
       </div>

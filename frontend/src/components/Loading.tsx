@@ -1,10 +1,9 @@
 import React from 'react';
-import '../styles/Loading.css';
 
 const Loading: React.FC = () => {
   return (
-    <div className="loading-container">
-      <div className="spinner"></div>
+    <div className="flex min-h-[50vh] w-full items-center justify-center">
+      <div className="h-12 w-12 animate-spin rounded-full border-4 border-[var(--border)] border-t-[var(--accent)]"></div>
     </div>
   );
 };

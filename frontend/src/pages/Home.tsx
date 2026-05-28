@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import '../styles/Home.css';
 
 import { Navbar, Footer } from '../components/Essentials';
 import SkillMap from '../components/SkillMap';
 
-// Data Interfaces
 interface EducationItem {
   year: string;
   institution: string;
@@ -21,15 +19,24 @@ interface ActivityItem {
   description: string;
 }
 
-// --- Components ---
+const containerClass = 'mx-auto w-full max-w-[1200px] px-5';
+const buttonClass = 'inline-block rounded-[5px] border-0 bg-[var(--accent)] px-[30px] py-3 font-semibold text-white transition hover:-translate-y-1 hover:bg-[var(--accent-dark)] hover:text-white hover:shadow-[0_10px_20px_rgba(0,0,0,0.1)]';
+
+const SectionTitle: React.FC<{ title: string }> = ({ title }) => (
+  <div className="mb-[60px] text-center">
+    <h2 className="mb-[15px] font-serif text-4xl font-semibold text-[var(--primary)]">{title}</h2>
+    <div className="mx-auto h-[3px] w-20 bg-[var(--accent)]"></div>
+  </div>
+);
+
 const Hero: React.FC = () => {
   return (
-    <section className="hero">
-      <div className="container">
-        <div className="hero-content">
-          <h1>陳芷妍 Joanne Chen</h1>
-          <h3>Computer Science Student</h3>
-          <a href="#contact" className="btn">Get In Touch</a>
+    <section className="flex h-screen w-full items-center justify-center bg-[var(--background)] pt-[60px] text-center">
+      <div className={containerClass}>
+        <div className="max-w-full">
+          <h1 className="mb-5 font-serif text-4xl font-semibold text-[var(--primary)] sm:text-5xl">&#x9673;&#x82B7;&#x598D; Joanne Chen</h1>
+          <h3 className="mb-[30px] text-xl font-light text-[var(--text)] sm:text-2xl">Computer Science Student</h3>
+          <a href="#contact" className={buttonClass}>Get In Touch</a>
         </div>
       </div>
     </section>
@@ -38,22 +45,22 @@ const Hero: React.FC = () => {
 
 const About: React.FC = () => {
   return (
-    <section id="about">
-      <div className="container">
-        <div className="section-title">
-          <h2>About Me</h2>
-          <div className="line"></div>
-        </div>
-        <div className="about-content">
-          <div className="about-text">
+    <section id="about" className="w-full bg-[var(--background-dark)] py-20">
+      <div className={containerClass}>
+        <SectionTitle title="About Me" />
+        <div className="flex flex-col-reverse items-center justify-between gap-[50px] md:flex-row">
+          <div className="flex-1 text-[var(--text)]">
             <p>I am an undergraduated Computer Science student at National Tsing Hua University.</p>
             <br />
             <p>My technical interests span machine learning, computer vision, and software development. I enjoy building projects that push my boundaries and expand my skill set. Whether working independently or in collaborative teams, I bring creativity, dedication, and a growth mindset to every endeavor.</p>
             <br />
             <p>In my free time, I enjoy listening to music , watching thought-provoking films, and exploring the storytelling art of Japanese animation. I find these creative outlets provide fresh perspectives that often inspire my technical work in unexpected ways.</p>
           </div>
-          <div className="about-image">
-            <div className="profile-placeholder" style={{ backgroundImage: `url('${import.meta.env.BASE_URL}images/profile.jpg')` }}></div>
+          <div className="flex-1 text-center">
+            <div
+              className="inline-block h-[300px] w-[300px] rounded-full border-[5px] border-[var(--border)] bg-[var(--light)] bg-cover bg-center"
+              style={{ backgroundImage: `url('${import.meta.env.BASE_URL}images/profile.jpg')` }}
+            ></div>
           </div>
         </div>
       </div>
@@ -76,21 +83,18 @@ const educationData: EducationItem[] = [
 
 const Education: React.FC = () => {
   return (
-    <section id="education">
-      <div className="container">
-        <div className="section-title">
-          <h2>Education</h2>
-          <div className="line"></div>
-        </div>
-        <div className="timeline">
+    <section id="education" className="w-full bg-[var(--background-dark)] py-20">
+      <div className={containerClass}>
+        <SectionTitle title="Education" />
+        <div className="relative mx-auto max-w-[800px] py-5 before:absolute before:bottom-0 before:left-5 before:top-0 before:w-1 before:bg-[var(--thirdary)] before:opacity-30 md:before:left-[30px]">
           {educationData.map((edu, index) => (
-            <div className="timeline-item" key={index}>
-              <div className="timeline-dot"></div>
-              <div className="timeline-date">{edu.year}</div>
-              <div className="timeline-content">
-                <h3>{edu.institution}</h3>
-                {edu.gpa && <p className="timeline-degree">{edu.gpa}</p>}
-                <p className="timeline-degree">{edu.degree}</p>
+            <div className="relative mb-[50px] pl-[50px] md:pl-20" key={index}>
+              <div className="absolute left-2.5 top-0 z-[1] h-6 w-6 rounded-full bg-[var(--secondary)] md:left-5"></div>
+              <div className="absolute left-[50px] top-0 ml-2.5 text-base font-semibold text-[var(--accent)] md:left-20">{edu.year}</div>
+              <div className="mt-[30px] rounded-[10px] bg-[var(--background)] p-[30px] shadow-[0_3px_15px_rgba(0,0,0,0.05)]">
+                <h3 className="mb-2.5 text-xl font-semibold text-[var(--primary)]">{edu.institution}</h3>
+                {edu.gpa && <p className="mb-2 text-[17px] text-[var(--secondary)]">{edu.gpa}</p>}
+                <p className="mb-2 text-[17px] text-[var(--secondary)]">{edu.degree}</p>
               </div>
             </div>
           ))}
@@ -126,23 +130,20 @@ const activitiesData: ActivityItem[] = [
 
 const Activities: React.FC = () => {
   return (
-    <section id="activities">
-      <div className="container">
-        <div className="section-title">
-          <h2>Experience & Extracurricular</h2>
-          <div className="line"></div>
-        </div>
-        <div className="activities-container">
+    <section id="activities" className="w-full bg-[var(--background)] py-20">
+      <div className={containerClass}>
+        <SectionTitle title="Experience & Extracurricular" />
+        <div className="mx-auto flex max-w-[800px] flex-col gap-[30px]">
           {activitiesData.map((activity, index) => (
-            <div className="activity-card" key={index}>
-              <div className="activity-icon">
+            <div className="flex flex-col overflow-hidden rounded-[10px] bg-[var(--background)] shadow-[0_5px_15px_rgba(0,0,0,0.05)] transition hover:-translate-y-[5px] hover:shadow-[0_10px_20px_rgba(0,0,0,0.08)] md:flex-row" key={index}>
+              <div className="flex h-[60px] w-full items-center justify-center bg-[var(--accent)] text-[28px] text-white md:h-auto md:w-20">
                 <i className={activity.iconClass}></i>
               </div>
-              <div className="activity-content">
-                <h3>{activity.title}</h3>
-                <div className="activity-period">{activity.period}</div>
-                <div className="activity-role">{activity.role}</div>
-                <p className="activity-description">{activity.description}</p>
+              <div className="flex-1 p-[25px]">
+                <h3 className="mb-2.5 text-xl font-semibold text-[var(--primary)]">{activity.title}</h3>
+                <div className="mb-[5px] text-sm font-semibold text-[var(--accent)]">{activity.period}</div>
+                <div className="mb-3 text-base font-medium text-[var(--secondary)]">{activity.role}</div>
+                <p className="mb-[15px] text-[var(--text)]">{activity.description}</p>
               </div>
             </div>
           ))}
@@ -157,11 +158,9 @@ const Contact: React.FC = () => {
   const [submitStatus, setSubmitStatus] = useState('Send Message');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // EmailJS Public Key, Service ID, Template ID
   const EMAILJS_PUBLIC_KEY = "s2wBA3kCBZmht7nni";
   const EMAILJS_SERVICE_ID = "service_urorrpv";
   const EMAILJS_TEMPLATE_ID = "template_f4oweup";
-
 
   useEffect(() => {
     if (window.emailjs) {
@@ -193,7 +192,7 @@ const Contact: React.FC = () => {
           setSubmitStatus("Send Message");
           setIsSubmitting(false);
         }, 3000);
-      }, (error: any) => {
+      }, (error: unknown) => {
         console.error('Email failed to send:', error);
         setSubmitStatus("Failed to send");
         setTimeout(() => {
@@ -203,42 +202,39 @@ const Contact: React.FC = () => {
       });
   };
 
+  const inputClass = 'mb-[15px] w-full rounded-[5px] border border-[var(--border)] bg-[var(--background)] p-3 text-[var(--text)] outline-none focus:border-[var(--primary)]';
+
   return (
-    <section id="contact">
-      <div className="container">
-        <div className="section-title">
-          <h2>Get In Touch</h2>
-          <div className="line"></div>
-        </div>
-        <div className="contact-container">
-          <div className="contact-info">
-            <div className="contact-item">
-              <i className="fas fa-envelope"></i>
-              <div className="contact-text">
-                <h4>Email</h4>
-                <p><a href="mailto:joanne.zh2015@gmail.com">joanne.zh2015@gmail.com</a></p>
+    <section id="contact" className="w-full bg-[var(--background-dark)] py-20">
+      <div className={containerClass}>
+        <SectionTitle title="Get In Touch" />
+        <div className="grid gap-[50px] md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+          <div className="flex flex-col gap-5">
+            {[
+              ['fas fa-envelope', 'Email', 'joanne.zh2015@gmail.com'],
+              ['fas fa-phone', 'Phone', '+886 905-937-165'],
+              ['fas fa-map-marker-alt', 'Location', 'Hsinchu, Taiwan'],
+            ].map(([icon, label, value]) => (
+              <div className="flex items-center" key={label}>
+                <span className="mr-[15px] flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent)] text-white">
+                  <i className={icon}></i>
+                </span>
+                <div>
+                  <h4 className="mb-[5px] text-lg font-semibold text-[var(--primary)]">{label}</h4>
+                  {label === 'Email' ? (
+                    <p><a href={`mailto:${value}`} className="hover:text-[var(--accent)]">{value}</a></p>
+                  ) : (
+                    <p>{value}</p>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="contact-item">
-              <i className="fas fa-phone"></i>
-              <div className="contact-text">
-                <h4>Phone</h4>
-                <p>+886 905-937-165</p>
-              </div>
-            </div>
-            <div className="contact-item">
-              <i className="fas fa-map-marker-alt"></i>
-              <div className="contact-text">
-                <h4>Location</h4>
-                <p>Hsinchu, Taiwan</p>
-              </div>
-            </div>
+            ))}
           </div>
-          <form ref={form} id="contact-form" className="contact-form" onSubmit={sendEmail}>
-            <input type="text" name="contact-name" id="contact-name" placeholder="Your Name" required />
-            <input type="email" name="contact-email" id="contact-email" placeholder="Your Email" required />
-            <textarea name="contact-message" id="contact-message" placeholder="Your Message" required></textarea>
-            <button type="submit" className="btn" disabled={isSubmitting}>
+          <form ref={form} id="contact-form" onSubmit={sendEmail}>
+            <input className={inputClass} type="text" name="contact-name" id="contact-name" placeholder="Your Name" required />
+            <input className={inputClass} type="email" name="contact-email" id="contact-email" placeholder="Your Email" required />
+            <textarea className={`${inputClass} h-[150px] resize-y`} name="contact-message" id="contact-message" placeholder="Your Message" required></textarea>
+            <button type="submit" className={buttonClass} disabled={isSubmitting}>
               {submitStatus}
             </button>
           </form>
@@ -248,12 +244,11 @@ const Contact: React.FC = () => {
   );
 };
 
-// --- Main App Component ---
 const Home = () => {
   return (
-    <div className='Home'>
+    <div className="relative min-h-screen w-full bg-[#1a252f] font-sans text-[var(--text)]">
       <Navbar />
-      <main>
+      <main className="relative z-[3] bg-[var(--background)]">
         <Hero />
         <About />
         <SkillMap />
@@ -264,6 +259,6 @@ const Home = () => {
       <Footer />
     </div>
   );
-}
+};
 
 export default Home;

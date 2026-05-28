@@ -1,6 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import '../styles/Admin.css';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useData } from '../contexts/DataContext';
+
+const panelClass = "rounded-lg border border-[var(--border)] bg-[var(--background-dark)] p-6 shadow-sm";
+const inputClass = "w-full rounded border border-[var(--border)] bg-[var(--background)] px-3 py-2.5 text-[var(--text)] outline-none";
+const labelClass = "text-sm text-[var(--text)] opacity-90";
+const listItemClass = "flex items-center gap-4 rounded-lg border border-[var(--border)] bg-[var(--background)] p-2.5";
+const editButtonClass = "rounded bg-[#f39c12] px-2.5 py-1 text-sm text-white";
+const deleteButtonClass = "rounded bg-[#e74c3c] px-2.5 py-1 text-sm text-white";
 
 const Admin = () => {
   const { refreshData, articles, projects } = useData();
@@ -59,7 +65,7 @@ const Admin = () => {
   };
 
   // ===== Tag Management =====
-  const fetchTags = async () => {
+  const fetchTags = useCallback(async () => {
     try {
       const res = await fetch(`${BACKEND_URL}/api/posts/tags`);
       if (res.ok) {
@@ -69,13 +75,13 @@ const Admin = () => {
     } catch (e) {
       console.error(e);
     }
-  };
+  }, [BACKEND_URL]);
 
   useEffect(() => {
     if (isAuthenticated) {
       fetchTags();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, fetchTags]);
 
   const toggleTag = (tag: string) => {
     if (selectedTags.includes(tag)) {
@@ -164,7 +170,7 @@ const Admin = () => {
       try {
         parsedImgStyle = imgstyle ? JSON.parse(imgstyle) : {};
         parsedTech = tech ? JSON.parse(tech) : {};
-      } catch (e) {
+      } catch {
         alert('Invalid JSON in imgstyle or tech fields');
         return;
       }
@@ -317,68 +323,70 @@ const Admin = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="admin-login-container">
-        <form className="admin-login-form" onSubmit={handleLogin}>
-          <h2>Admin Login</h2>
+      <div className="flex min-h-screen items-center justify-center bg-[var(--background)] px-6 text-[var(--text)]">
+        <form className={`${panelClass} flex w-full max-w-[300px] flex-col gap-5 backdrop-blur`} onSubmit={handleLogin}>
+          <h2 className="m-0 text-center text-2xl font-semibold text-[var(--text)]">Admin Login</h2>
           <input
+            className={inputClass}
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Login</button>
+          <button className="rounded bg-[#3498db] px-3 py-2.5 font-bold text-white transition hover:bg-[#2980b9]" type="submit">Login</button>
         </form>
       </div>
     );
   }
 
   return (
-    <div className="admin-dashboard-wrapper">
-      <div className="admin-sidebar">
-        <h2>Manage Articles</h2>
+    <div className="min-h-screen bg-[var(--background)] px-5 py-[100px] text-[var(--text)]">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-[30px] lg:flex-row">
+      <aside className={`${panelClass} h-max max-h-[80vh] flex-1 overflow-y-auto`}>
+        <h2 className="mb-4 text-2xl font-semibold text-[var(--text)]">Manage Articles</h2>
         {articles.length === 0 ? <p>No articles found.</p> : (
-          <ul className="admin-item-list">
+          <ul className="space-y-3">
             {articles.map((a) => (
-              <li key={a.id} className="admin-list-item">
-                <span className="admin-item-title">{a.title}</span>
-                <button onClick={() => handleEditArticle(a.id)} className="admin-btn-edit">Edit</button>
-                <button onClick={() => handleDeleteArticle(a.id)} className="admin-btn-delete">Delete</button>
+              <li key={a.id} className={listItemClass}>
+                <span className="flex-1 text-[var(--text)]">{a.title}</span>
+                <button onClick={() => handleEditArticle(a.id)} className={editButtonClass}>Edit</button>
+                <button onClick={() => handleDeleteArticle(a.id)} className={deleteButtonClass}>Delete</button>
               </li>
             ))}
           </ul>
         )}
 
-        <h2 style={{ marginTop: '30px' }}>Manage Projects</h2>
+        <h2 className="mb-4 mt-[30px] text-2xl font-semibold text-[var(--text)]">Manage Projects</h2>
         {projects.length === 0 ? <p>No projects found.</p> : (
-          <ul className="admin-item-list">
+          <ul className="space-y-3">
             {projects.map((p) => (
-              <li key={p.id} className="admin-list-item">
-                <span className="admin-item-title">{p.title}</span>
-                <button onClick={() => handleEditProject(p.id)} className="admin-btn-edit">Edit</button>
-                <button onClick={() => handleDeleteProject(p.id)} className="admin-btn-delete">Delete</button>
+              <li key={p.id} className={listItemClass}>
+                <span className="flex-1 text-[var(--text)]">{p.title}</span>
+                <button onClick={() => handleEditProject(p.id)} className={editButtonClass}>Edit</button>
+                <button onClick={() => handleDeleteProject(p.id)} className={deleteButtonClass}>Delete</button>
               </li>
             ))}
           </ul>
         )}
-      </div>
+      </aside>
 
-      <div className="admin-dashboard">
-        <h1>Admin Dashboard</h1>
-        <div className="admin-tabs">
+      <main className={`${panelClass} flex-[2]`}>
+        <h1 className="mb-[30px] text-center text-4xl font-semibold text-[var(--text)]">Admin Dashboard</h1>
+        <div className="mb-[30px] flex flex-wrap justify-center gap-5">
           <button
-            className={activeTab === 'article' ? 'active' : ''}
+            className={`${activeTab === 'article' ? 'bg-[#3498db] text-white' : 'bg-transparent text-[#3498db] hover:bg-[#3498db] hover:text-white'} rounded border border-[#3498db] px-5 py-2.5 transition`}
             onClick={() => setActiveTab('article')}
           >
             New Article
           </button>
           <button
-            className={activeTab === 'project' ? 'active' : ''}
+            className={`${activeTab === 'project' ? 'bg-[#3498db] text-white' : 'bg-transparent text-[#3498db] hover:bg-[#3498db] hover:text-white'} rounded border border-[#3498db] px-5 py-2.5 transition`}
             onClick={() => setActiveTab('project')}
           >
             New Project
           </button>
           <button
-            className={activeTab === 'tags' ? 'active' : ''}
+            className={`${activeTab === 'tags' ? 'bg-[#3498db] text-white' : 'bg-transparent text-[#3498db] hover:bg-[#3498db] hover:text-white'} rounded border border-[#3498db] px-5 py-2.5 transition`}
             onClick={() => setActiveTab('tags')}
           >
             Manage Tags
@@ -386,18 +394,18 @@ const Admin = () => {
         </div>
 
       {activeTab === 'tags' && (
-        <div className="admin-form">
-          <h2>Existing Tags</h2>
+        <div className="flex flex-col gap-4">
+          <h2 className="text-2xl font-semibold text-[var(--primary)]">Existing Tags</h2>
           {availableTags.length === 0 ? (
             <p>No tags exist yet.</p>
           ) : (
-            <ul className="admin-item-list">
+            <ul className="space-y-3">
               {availableTags.map(tag => (
-                <li key={tag} className="admin-list-item">
-                  <span className="admin-item-title" style={{ fontSize: '18px' }}>{tag}</span>
+                <li key={tag} className={listItemClass}>
+                  <span className="flex-1 text-lg text-[var(--text)]">{tag}</span>
                   <button 
                     onClick={() => handleDeleteTag(tag)}
-                    className="admin-btn-delete"
+                    className={deleteButtonClass}
                   >
                     Delete Tag
                   </button>
@@ -409,20 +417,22 @@ const Admin = () => {
       )}
 
       {activeTab === 'article' && (
-        <form className="admin-form" onSubmit={submitArticle}>
-          <h2>Create Article</h2>
-          <div className="form-group">
-            <label>Title</label>
+        <form className="flex flex-col gap-5" onSubmit={submitArticle}>
+          <h2 className="text-2xl font-semibold text-[var(--primary)]">Create Article</h2>
+          <div className="grid gap-2">
+            <label className={labelClass}>Title</label>
             <input
+              className={inputClass}
               type="text"
               required
               value={articleTitle}
               onChange={(e) => setArticleTitle(e.target.value)}
             />
           </div>
-          <div className="form-group">
-            <label>Content (Markdown/Text)</label>
+          <div className="grid gap-2">
+            <label className={labelClass}>Content (Markdown/Text)</label>
             <textarea
+              className={`${inputClass} resize-y`}
               required
               rows={15}
               value={articleContent}
@@ -430,11 +440,11 @@ const Admin = () => {
             />
           </div>
           
-          <div className="form-group">
-            <label>Select Existing Tags:</label>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '10px' }}>
+          <div className="grid gap-3">
+            <label className={labelClass}>Select Existing Tags</label>
+            <div className="mb-2 flex flex-wrap gap-3">
               {availableTags.map(tag => (
-                <label key={tag} style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
+                <label key={tag} className="flex cursor-pointer items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm font-semibold text-[var(--secondary)]">
                   <input 
                     type="checkbox" 
                     checked={selectedTags.includes(tag)}
@@ -445,8 +455,9 @@ const Admin = () => {
               ))}
             </div>
             
-            <label>Or Create New Tags (comma-separated):</label>
+            <label className={labelClass}>Or Create New Tags (comma-separated)</label>
             <input
+              className={inputClass}
               type="text"
               placeholder="e.g., React, Node, Web Development"
               value={newTagsInput}
@@ -454,61 +465,62 @@ const Admin = () => {
             />
           </div>
 
-          <button type="submit">Upload Article</button>
+          <button className="mt-2 rounded bg-[#2ecc71] px-3 py-3 text-base font-bold text-white transition hover:bg-[#27ae60]" type="submit">Upload Article</button>
         </form>
       )}
 
       {activeTab === 'project' && (
-        <form className="admin-form" onSubmit={submitProject}>
-          <h2>Create Project</h2>
-          <div className="form-group">
-            <label>ID (e.g., project-1)</label>
-            <input type="text" required value={projectId} onChange={(e) => setProjectId(e.target.value)} />
+        <form className="flex flex-col gap-5" onSubmit={submitProject}>
+          <h2 className="text-2xl font-semibold text-[var(--primary)]">Create Project</h2>
+          <div className="grid gap-2">
+            <label className={labelClass}>ID (e.g., project-1)</label>
+            <input className={inputClass} type="text" required value={projectId} onChange={(e) => setProjectId(e.target.value)} />
           </div>
-          <div className="form-group">
-            <label>Title</label>
-            <input type="text" required value={projectTitle} onChange={(e) => setProjectTitle(e.target.value)} />
+          <div className="grid gap-2">
+            <label className={labelClass}>Title</label>
+            <input className={inputClass} type="text" required value={projectTitle} onChange={(e) => setProjectTitle(e.target.value)} />
           </div>
-          <div className="form-group">
-            <label>Type (e.g., Web App)</label>
-            <input type="text" value={type} onChange={(e) => setType(e.target.value)} />
+          <div className="grid gap-2">
+            <label className={labelClass}>Type (e.g., Web App)</label>
+            <input className={inputClass} type="text" value={type} onChange={(e) => setType(e.target.value)} />
           </div>
-          <div className="form-group">
-            <label>GitHub Link</label>
-            <input type="text" value={ghlink} onChange={(e) => setGhLink(e.target.value)} />
+          <div className="grid gap-2">
+            <label className={labelClass}>GitHub Link</label>
+            <input className={inputClass} type="text" value={ghlink} onChange={(e) => setGhLink(e.target.value)} />
           </div>
-          <div className="form-group">
-            <label>Image Source (Manual Link)</label>
-            <input type="text" value={imgsrc} onChange={(e) => setImgsrc(e.target.value)} />
+          <div className="grid gap-2">
+            <label className={labelClass}>Image Source (Manual Link)</label>
+            <input className={inputClass} type="text" value={imgsrc} onChange={(e) => setImgsrc(e.target.value)} />
           </div>
-          <div className="form-group">
-            <label>Or Upload Image</label>
-            <input type="file" accept="image/*" onChange={(e) => setImgFile(e.target.files?.[0] || null)} />
-            {imgFile && <small>Selected: {imgFile.name}</small>}
+          <div className="grid gap-2">
+            <label className={labelClass}>Or Upload Image</label>
+            <input className={inputClass} type="file" accept="image/*" onChange={(e) => setImgFile(e.target.files?.[0] || null)} />
+            {imgFile && <small className="text-[var(--text-muted)]">Selected: {imgFile.name}</small>}
           </div>
-          <div className="form-group">
-            <label>Image Alt</label>
-            <input type="text" value={imgalt} onChange={(e) => setImgalt(e.target.value)} />
+          <div className="grid gap-2">
+            <label className={labelClass}>Image Alt</label>
+            <input className={inputClass} type="text" value={imgalt} onChange={(e) => setImgalt(e.target.value)} />
           </div>
-          <div className="form-group">
-            <label>Image Style (JSON mapping)</label>
-            <input type="text" value={imgstyle} onChange={(e) => setImgstyle(e.target.value)} />
+          <div className="grid gap-2">
+            <label className={labelClass}>Image Style (JSON mapping)</label>
+            <input className={inputClass} type="text" value={imgstyle} onChange={(e) => setImgstyle(e.target.value)} />
           </div>
-          <div className="form-group">
-            <label>Role</label>
-            <input type="text" value={role} onChange={(e) => setRole(e.target.value)} />
+          <div className="grid gap-2">
+            <label className={labelClass}>Role</label>
+            <input className={inputClass} type="text" value={role} onChange={(e) => setRole(e.target.value)} />
           </div>
-          <div className="form-group">
-            <label>Description</label>
-            <textarea rows={5} required value={description} onChange={(e) => setDescription(e.target.value)} />
+          <div className="grid gap-2">
+            <label className={labelClass}>Description</label>
+            <textarea className={`${inputClass} resize-y`} rows={5} required value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
-          <div className="form-group">
-            <label>Tech Stack (JSON format, e.g. ["React", "Node"])</label>
-            <input type="text" value={tech} onChange={(e) => setTech(e.target.value)} />
+          <div className="grid gap-2">
+            <label className={labelClass}>Tech Stack (JSON format, e.g. ["React", "Node"])</label>
+            <input className={inputClass} type="text" value={tech} onChange={(e) => setTech(e.target.value)} />
           </div>
-          <button type="submit">Upload Project</button>
+          <button className="mt-2 rounded bg-[#2ecc71] px-3 py-3 text-base font-bold text-white transition hover:bg-[#27ae60]" type="submit">Upload Project</button>
         </form>
       )}
+      </main>
       </div>
     </div>
   );

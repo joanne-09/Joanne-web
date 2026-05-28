@@ -1,7 +1,6 @@
 // filepath: c:\Users\User\Documents\school\CV\react-portfolio\src\App.tsx
 import { useEffect } from 'react';
 import {HashRouter as Router, Route, Routes} from "react-router-dom";
-import './App.css'; // Import your stylesheet
 
 import Home from './pages/Home';
 import Article from './pages/Article';
@@ -16,7 +15,10 @@ import StarBackground from './components/StarBackground';
 // Declare EmailJS at the window level
 declare global {
   interface Window {
-    emailjs: any;
+    emailjs?: {
+      init: (publicKey: string) => void;
+      send: (serviceId: string, templateId: string, params: Record<string, string>) => Promise<unknown>;
+    };
   }
 }
 

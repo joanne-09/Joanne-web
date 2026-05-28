@@ -37,9 +37,9 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       setProjects(projectsData);
       setArticles(articlesData);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error fetching data:", err);
-      setError(err.message || "Failed to fetch data");
+      setError(err instanceof Error ? err.message : "Failed to fetch data");
     } finally {
       setLoading(false);
     }
