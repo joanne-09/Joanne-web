@@ -57,27 +57,31 @@ const Traveled: React.FC = () => {
   }
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden bg-[#1a252f] font-travel text-[var(--primary)]">
+    <div className="relative isolate min-h-screen w-full overflow-x-hidden bg-[var(--footer-background)] font-travel text-[var(--text)]">
       <div className="fixed top-0 z-[100] w-full">
         <Navbar />
       </div>
 
-      <main className="relative z-[3] bg-[var(--background)]">
-        <section className="relative mx-auto w-full max-w-[1400px] px-8 pb-8 pt-24 text-center">
-          <button className="mb-4 block bg-transparent text-left font-travel text-base text-[var(--primary)] opacity-70 transition hover:opacity-100 sm:absolute sm:left-8 sm:top-32 sm:mb-0" onClick={() => navigate('/travel')}>
-            &larr; Back to Travel
+      <main className="relative z-[2] bg-[var(--background)] shadow-[var(--page-shadow)]">
+        <section className="relative mx-auto w-full max-w-[1400px] px-5 pb-8 pt-28 md:px-8 md:pt-36">
+          <button className="mb-8 flex items-center gap-2 bg-transparent text-left text-sm font-semibold uppercase text-[var(--text-muted)] transition hover:text-[var(--accent)]" onClick={() => navigate('/travel')}>
+            <span aria-hidden="true">←</span>
+            Back to Travel
           </button>
-          <h1 className="m-0 font-display text-5xl font-light capitalize tracking-[0.05em] text-[var(--primary)] sm:text-6xl">{folder}</h1>
+          <div className="border-y border-[var(--border-strong)] py-10 text-center">
+            <p className="mb-3 text-sm font-semibold uppercase text-[var(--accent)]">Location</p>
+            <h1 className="m-0 font-display text-5xl font-semibold capitalize leading-tight text-[var(--primary)] sm:text-7xl">{folder}</h1>
+          </div>
         </section>
 
-        <section className="mx-auto min-h-[50vh] w-full max-w-[1400px] px-8 pb-24 pt-8">
+        <section className="mx-auto min-h-[50vh] w-full max-w-[1400px] px-5 pb-24 pt-8 md:px-8">
           {images.length === 0 ? (
-            <p className="text-center text-xl opacity-70">No images found for this location.</p>
+            <p className="text-center text-xl text-[var(--text-muted)]">No images found for this location.</p>
           ) : (
-            <div className="grid auto-rows-[250px] grid-flow-dense grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4 sm:gap-6">
+            <div className="grid auto-rows-[250px] grid-flow-dense grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-3 sm:gap-5">
               {images.map((img, index) => (
-                <div key={index} className={`${mosaicClass(index)} group relative overflow-hidden rounded transition duration-300 hover:z-[2] hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]`}>
-                  <img className="h-full w-full object-cover brightness-[.85] transition duration-700 group-hover:scale-110 group-hover:brightness-100" src={img.url} alt={`${folder} memory ${index + 1}`} loading="lazy" />
+                <div key={index} className={`${mosaicClass(index)} group relative overflow-hidden bg-[var(--surface-soft)] transition duration-300 hover:z-[2] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]`}>
+                  <img className="h-full w-full object-cover brightness-[.9] saturate-[0.9] transition duration-700 group-hover:scale-105 group-hover:brightness-100 group-hover:saturate-100" src={img.url} alt={`${folder} memory ${index + 1}`} loading="lazy" />
                 </div>
               ))}
             </div>

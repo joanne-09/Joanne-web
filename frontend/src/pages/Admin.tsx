@@ -5,8 +5,12 @@ const panelClass = "rounded-lg border border-[var(--border)] bg-[var(--backgroun
 const inputClass = "w-full rounded border border-[var(--border)] bg-[var(--background)] px-3 py-2.5 text-[var(--text)] outline-none";
 const labelClass = "text-sm text-[var(--text)] opacity-90";
 const listItemClass = "flex items-center gap-4 rounded-lg border border-[var(--border)] bg-[var(--background)] p-2.5";
-const editButtonClass = "rounded bg-[#f39c12] px-2.5 py-1 text-sm text-white";
-const deleteButtonClass = "rounded bg-[#e74c3c] px-2.5 py-1 text-sm text-white";
+const editButtonClass = "rounded bg-[var(--accent)] px-2.5 py-1 text-sm text-[var(--text-light)]";
+const deleteButtonClass = "rounded bg-[var(--accent-dark)] px-2.5 py-1 text-sm text-[var(--text-light)]";
+const primaryButtonClass = "rounded bg-[var(--primary)] px-3 py-2.5 font-bold text-[var(--text-light)] transition hover:bg-[var(--accent)]";
+const submitButtonClass = "mt-2 rounded bg-[var(--primary)] px-3 py-3 text-base font-bold text-[var(--text-light)] transition hover:bg-[var(--accent)]";
+const tabButtonClass = (active: boolean) =>
+  `${active ? 'bg-[var(--primary)] text-[var(--text-light)]' : 'bg-transparent text-[var(--primary)] hover:bg-[var(--primary)] hover:text-[var(--text-light)]'} rounded border border-[var(--primary)] px-5 py-2.5 transition`;
 
 const Admin = () => {
   const { refreshData, articles, projects } = useData();
@@ -333,7 +337,7 @@ const Admin = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button className="rounded bg-[#3498db] px-3 py-2.5 font-bold text-white transition hover:bg-[#2980b9]" type="submit">Login</button>
+          <button className={primaryButtonClass} type="submit">Login</button>
         </form>
       </div>
     );
@@ -374,19 +378,19 @@ const Admin = () => {
         <h1 className="mb-[30px] text-center text-4xl font-semibold text-[var(--text)]">Admin Dashboard</h1>
         <div className="mb-[30px] flex flex-wrap justify-center gap-5">
           <button
-            className={`${activeTab === 'article' ? 'bg-[#3498db] text-white' : 'bg-transparent text-[#3498db] hover:bg-[#3498db] hover:text-white'} rounded border border-[#3498db] px-5 py-2.5 transition`}
+            className={tabButtonClass(activeTab === 'article')}
             onClick={() => setActiveTab('article')}
           >
             New Article
           </button>
           <button
-            className={`${activeTab === 'project' ? 'bg-[#3498db] text-white' : 'bg-transparent text-[#3498db] hover:bg-[#3498db] hover:text-white'} rounded border border-[#3498db] px-5 py-2.5 transition`}
+            className={tabButtonClass(activeTab === 'project')}
             onClick={() => setActiveTab('project')}
           >
             New Project
           </button>
           <button
-            className={`${activeTab === 'tags' ? 'bg-[#3498db] text-white' : 'bg-transparent text-[#3498db] hover:bg-[#3498db] hover:text-white'} rounded border border-[#3498db] px-5 py-2.5 transition`}
+            className={tabButtonClass(activeTab === 'tags')}
             onClick={() => setActiveTab('tags')}
           >
             Manage Tags
@@ -465,7 +469,7 @@ const Admin = () => {
             />
           </div>
 
-          <button className="mt-2 rounded bg-[#2ecc71] px-3 py-3 text-base font-bold text-white transition hover:bg-[#27ae60]" type="submit">Upload Article</button>
+          <button className={submitButtonClass} type="submit">Upload Article</button>
         </form>
       )}
 
@@ -517,7 +521,7 @@ const Admin = () => {
             <label className={labelClass}>Tech Stack (JSON format, e.g. ["React", "Node"])</label>
             <input className={inputClass} type="text" value={tech} onChange={(e) => setTech(e.target.value)} />
           </div>
-          <button className="mt-2 rounded bg-[#2ecc71] px-3 py-3 text-base font-bold text-white transition hover:bg-[#27ae60]" type="submit">Upload Project</button>
+          <button className={submitButtonClass} type="submit">Upload Project</button>
         </form>
       )}
       </main>

@@ -34,29 +34,30 @@ const ArticleDetail: React.FC = () => {
   }, [id]);
 
   return (
-    <div className="relative min-h-screen w-full bg-[#1a252f]">
+    <div className="relative isolate min-h-screen w-full bg-[var(--footer-background)]">
       <Navbar />
-      <main className="relative z-[3] min-h-screen bg-[var(--background)] pt-20 text-[var(--text)]">
-        <div className="mx-auto w-full max-w-[1200px] px-5">
+      <main className="relative z-[2] min-h-screen bg-[var(--background)] px-5 pb-20 pt-28 text-[var(--text)] shadow-[var(--page-shadow)] md:pt-36">
+        <div className="mx-auto w-full max-w-[920px]">
           {error && <p>Error fetching post: {error}</p>}
           {loading && <Loading />}
           {!loading && !error && post && (
-            <article className="mx-auto my-[30px] min-w-[300px] max-w-[800px] rounded-lg bg-[var(--background-dark)] p-5 shadow-[0_3px_10px_var(--shadow-color)] sm:p-10">
-              <h1 className="mb-[15px] font-serif text-2xl font-semibold text-[var(--primary)] sm:text-[32px]">{post.title}</h1>
-              <div className="mb-[30px] flex flex-col gap-2.5 border-b border-[var(--secondary)] pb-5">
-                <small className="block text-sm text-[var(--secondary)]">
-                  Posted on: {new Date(post.created_at).toLocaleDateString()}
-                </small>
-                {post.tags && post.tags.length > 0 && (
-                  <div className="mb-0 flex flex-wrap gap-2">
-                    {post.tags.map(tag => (
-                      <span key={tag} className="rounded-xl border border-[rgba(var(--primary-rgb),0.3)] bg-[rgba(var(--primary-rgb),0.1)] px-2.5 py-[3px] text-xs text-[var(--primary)]">{tag}</span>
-                    ))}
-                  </div>
-                )}
+            <article>
+              <div className="border-b border-[var(--border-strong)] pb-8">
+                <p className="mb-4 text-sm font-semibold uppercase text-[var(--accent)]">Article</p>
+                <h1 className="font-serif text-4xl font-semibold leading-tight text-[var(--primary)] md:text-6xl">{post.title}</h1>
+                <div className="mt-7 flex flex-col gap-4 text-sm text-[var(--text-muted)]">
+                  <span>Posted on {new Date(post.created_at).toLocaleDateString()}</span>
+                  {post.tags && post.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {post.tags.map(tag => (
+                        <span key={tag} className="rounded-full border border-[var(--tag-border)] bg-[var(--tag-background)] px-3 py-1 text-xs font-semibold text-[var(--primary)]">{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="text-[15px] leading-[1.8] text-[var(--text)] sm:text-[17px]">
-                <p dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }} />
+              <div className="prose prose-lg mt-10 max-w-none text-[var(--text)]">
+                <p className="whitespace-pre-line text-lg leading-9" dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }} />
               </div>
             </article>
           )}
