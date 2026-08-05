@@ -24,6 +24,28 @@ than ambient. Content, routes, data fetching and Admin logic are unchanged.
    loaded; type has been falling back to system sans. Fixed as part of this work.
 2. `matter-js`, `@mui/material`, `@emotion/react`, `@emotion/styled` are in
    `frontend/package.json` but imported nowhere. Removed.
+3. `Travel.tsx` and `Traveled.tsx` forced `data-theme='dark'` on mount and **removed the
+   attribute** on unmount, discarding the visitor's explicit theme choice and falling back to
+   system preference. Both pages now respect the chosen theme.
+4. `Essentials.tsx` inlined the theme toggle twice (mobile and desktop), giving one setting
+   two independent pieces of React state. Now a single `ThemeToggle` rendered once.
+
+## Deviations from the plan above
+
+- **Admin accent tokens.** Collapsing `--accent` and `--accent-dark` both onto `--text` made
+  Admin's Edit and Delete buttons pixel-identical. They keep distinct weights instead:
+  Delete is solid ink, Edit is muted. This also preserves hover feedback on the primary
+  button, which hovers `--primary` → `--accent`.
+- **Footer.** Left as a normal block with a hairline top border rather than the previous
+  sticky reveal, which required every page's `<main>` to carry its own background and
+  stacking context.
+- **Theme flash.** A blocking script in `index.html` now applies `data-theme` before first
+  paint, replacing the `useInitialTheme` effect in `App.tsx`.
+- **SkillMap.** It is a physics bubble map, not a node-link graph, so there are no links to
+  weight. Confidence is re-encoded as bubble size (already in the layout) plus fill weight:
+  solid ink at the top tier down to outline-only at the bottom. Under reduced motion the
+  layout is now solved synchronously and painted once, which also removes a React render on
+  every animation frame.
 
 ## Token layer
 
