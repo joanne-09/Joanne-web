@@ -1,197 +1,152 @@
+/*
+ * Token layer.
+ *
+ * Every value is declared ONCE via light-dark(), which resolves against the
+ * active color-scheme. Only the three tiny rules below decide what that scheme
+ * is; there is no duplicated palette to keep in sync.
+ *
+ * This replaced three hand-maintained copies of the palette. Editing one copy
+ * and missing another is not a hypothetical — the explicit dark theme silently
+ * kept light-theme accent colours that way.
+ *
+ * light-dark() takes colours only, so gradients and shadows are composed from
+ * light-dark() colours rather than being switched wholesale.
+ */
+
 :root {
-    --primary: #25312d;
-    --secondary: #5d6f68;
-    --thirdary: #8f9d95;
-    --accent: #8b4056;
-    --accent-dark: #5b2838;
-    --accent-soft: #f2dfe5;
-    --section-heading: #8b4056;
-    --section-rule: #8b4056;
-    --section-rule-soft: rgba(139, 64, 86, 0.26);
-    --text: #171b19;
-    --text-muted: #64736d;
-    --text-light: #f9faf5;
-    --background: #f6f6f0;
-    --background-dark: #ffffff;
-    --surface: #ffffff;
-    --surface-soft: #edf1ec;
-    --surface-strong: #e2e8e1;
-    --border: #d9e0d9;
-    --border-strong: #b8c3ba;
-    --shadow-color: rgba(31, 41, 37, 0.12);
-    --shadow-soft: 0 18px 50px rgba(31, 41, 37, 0.08);
-    --shadow-lift: 0 28px 70px rgba(31, 41, 37, 0.13);
-    --page-shadow: 0 30px 80px rgba(12, 16, 14, 0.2);
-    --nav-background: rgba(246, 246, 240, 0.88);
-    --nav-border: rgba(37, 49, 45, 0.12);
-    --nav-overlay: rgba(246, 246, 240, 0.96);
-    --selection-background: rgba(139, 64, 86, 0.14);
-    --tag-background: rgba(139, 64, 86, 0.1);
-    --tag-border: rgba(139, 64, 86, 0.24);
-    --button-hover-background: rgba(37, 49, 45, 0.08);
-    --input-background: rgba(255, 255, 255, 0.72);
-    --focus-ring: 0 0 0 3px rgba(139, 64, 86, 0.16);
-    --image-scrim: linear-gradient(180deg, rgba(15, 19, 17, 0.04), rgba(15, 19, 17, 0.42));
-    --footer-background: #131816;
-    --footer-text: #edf1ec;
-    --footer-muted: #9aa79f;
-    --footer-link-background: rgba(237, 241, 236, 0.08);
-    --footer-link-hover: #8b4056;
-    --light: #edf1ec;
-    --mint: #48665f;
-    --gold: #a57943;
-    --primary-rgb: 37, 49, 45;
-    --accent-rgb: 139, 64, 86;
-    --surface-rgb: 255, 255, 255;
-    --star-rgb: 37, 49, 45;
-    --star-opacity: 0;
+    color-scheme: light;
 }
 
-@media(prefers-color-scheme: dark) {
-    :root {
-        --primary: #f0ebe4;
-        --secondary: #b9ada4;
-        --thirdary: #867a72;
-        --accent: #bf705c;
-        --accent-dark: #df9a83;
-        --accent-soft: #35231f;
-        --section-heading: #c77b65;
-        --section-rule: #c77b65;
-        --section-rule-soft: rgba(199, 123, 101, 0.3);
-        --text: #f1ece6;
-        --text-muted: #b8aca3;
-        --text-light: #101513;
-        --background: #11100f;
-        --background-dark: #171513;
-        --surface: #171513;
-        --surface-soft: #1d1b18;
-        --surface-strong: #292520;
-        --border: #332f2a;
-        --border-strong: #5a5148;
-        --shadow-color: rgba(0, 0, 0, 0.28);
-        --shadow-soft: 0 18px 50px rgba(0, 0, 0, 0.24);
-        --shadow-lift: 0 28px 70px rgba(0, 0, 0, 0.34);
-        --page-shadow: 0 30px 80px rgba(0, 0, 0, 0.48);
-        --nav-background: rgba(17, 16, 15, 0.88);
-        --nav-border: rgba(240, 235, 228, 0.12);
-        --nav-overlay: rgba(17, 16, 15, 0.96);
-        --selection-background: rgba(191, 112, 92, 0.2);
-        --tag-background: rgba(191, 112, 92, 0.13);
-        --tag-border: rgba(191, 112, 92, 0.28);
-        --button-hover-background: rgba(240, 235, 228, 0.08);
-        --input-background: rgba(23, 21, 19, 0.76);
-        --focus-ring: 0 0 0 3px rgba(191, 112, 92, 0.22);
-        --image-scrim: linear-gradient(180deg, rgba(4, 6, 5, 0.08), rgba(4, 6, 5, 0.62));
-        --footer-background: #090807;
-        --footer-text: #f1ece6;
-        --footer-muted: #9f948b;
-        --footer-link-background: rgba(240, 235, 228, 0.08);
-        --footer-link-hover: #bf705c;
-        --light: #1d1b18;
-        --mint: #b08b7e;
-        --gold: #c49a6c;
-        --primary-rgb: 240, 235, 228;
-        --accent-rgb: 191, 112, 92;
-        --surface-rgb: 23, 21, 19;
-        --star-rgb: 241, 236, 230;
-        --star-opacity: 0.42;
+@media (prefers-color-scheme: dark) {
+    /* system dark, unless the visitor explicitly chose light */
+    :root:not([data-theme='light']) {
+        color-scheme: dark;
     }
 }
 
 :root[data-theme='dark'] {
-    --primary: #f0ebe4;
-    --secondary: #b9ada4;
-    --thirdary: #867a72;
-    --accent: #bf705c;
-    --accent-dark: #df9a83;
-    --accent-soft: #35231f;
-    --section-heading: #c77b65;
-    --section-rule: #c77b65;
-    --section-rule-soft: rgba(199, 123, 101, 0.3);
-    --text: #f1ece6;
-    --text-muted: #b8aca3;
-    --text-light: #101513;
-    --background: #11100f;
-    --background-dark: #171513;
-    --surface: #171513;
-    --surface-soft: #1d1b18;
-    --surface-strong: #292520;
-    --border: #332f2a;
-    --border-strong: #5a5148;
-    --shadow-color: rgba(0, 0, 0, 0.28);
-    --shadow-soft: 0 18px 50px rgba(0, 0, 0, 0.24);
-    --shadow-lift: 0 28px 70px rgba(0, 0, 0, 0.34);
-    --page-shadow: 0 30px 80px rgba(0, 0, 0, 0.48);
-    --nav-background: rgba(17, 16, 15, 0.88);
-    --nav-border: rgba(240, 235, 228, 0.12);
-    --nav-overlay: rgba(17, 16, 15, 0.96);
-    --selection-background: rgba(191, 112, 92, 0.2);
-    --tag-background: rgba(191, 112, 92, 0.13);
-    --tag-border: rgba(191, 112, 92, 0.28);
-    --button-hover-background: rgba(240, 235, 228, 0.08);
-    --input-background: rgba(23, 21, 19, 0.76);
-    --focus-ring: 0 0 0 3px rgba(191, 112, 92, 0.22);
-    --image-scrim: linear-gradient(180deg, rgba(4, 6, 5, 0.08), rgba(4, 6, 5, 0.62));
-    --footer-background: #090807;
-    --footer-text: #f1ece6;
-    --footer-muted: #9f948b;
-    --footer-link-background: rgba(240, 235, 228, 0.08);
-    --footer-link-hover: #bf705c;
-    --light: #1d1b18;
-    --mint: #b08b7e;
-    --gold: #c49a6c;
-    --primary-rgb: 240, 235, 228;
-    --accent-rgb: 191, 112, 92;
-    --surface-rgb: 23, 21, 19;
-    --star-rgb: 241, 236, 230;
-    --star-opacity: 0.42;
+    color-scheme: dark;
 }
 
-:root[data-theme='light'] {
-    --primary: #25312d;
-    --secondary: #5d6f68;
-    --thirdary: #8f9d95;
-    --accent: #8b4056;
-    --accent-dark: #5b2838;
-    --accent-soft: #f2dfe5;
-    --section-heading: #8b4056;
-    --section-rule: #8b4056;
-    --section-rule-soft: rgba(139, 64, 86, 0.26);
-    --text: #171b19;
-    --text-muted: #64736d;
-    --text-light: #f9faf5;
-    --background: #f6f6f0;
-    --background-dark: #ffffff;
-    --surface: #ffffff;
-    --surface-soft: #edf1ec;
-    --surface-strong: #e2e8e1;
-    --border: #d9e0d9;
-    --border-strong: #b8c3ba;
-    --shadow-color: rgba(31, 41, 37, 0.12);
-    --shadow-soft: 0 18px 50px rgba(31, 41, 37, 0.08);
-    --shadow-lift: 0 28px 70px rgba(31, 41, 37, 0.13);
-    --page-shadow: 0 30px 80px rgba(12, 16, 14, 0.2);
-    --nav-background: rgba(246, 246, 240, 0.88);
-    --nav-border: rgba(37, 49, 45, 0.12);
-    --nav-overlay: rgba(246, 246, 240, 0.96);
-    --selection-background: rgba(139, 64, 86, 0.14);
-    --tag-background: rgba(139, 64, 86, 0.1);
-    --tag-border: rgba(139, 64, 86, 0.24);
-    --button-hover-background: rgba(37, 49, 45, 0.08);
-    --input-background: rgba(255, 255, 255, 0.72);
-    --focus-ring: 0 0 0 3px rgba(139, 64, 86, 0.16);
-    --image-scrim: linear-gradient(180deg, rgba(15, 19, 17, 0.04), rgba(15, 19, 17, 0.42));
-    --footer-background: #131816;
-    --footer-text: #edf1ec;
-    --footer-muted: #9aa79f;
-    --footer-link-background: rgba(237, 241, 236, 0.08);
-    --footer-link-hover: #8b4056;
-    --light: #edf1ec;
-    --mint: #48665f;
-    --gold: #a57943;
-    --primary-rgb: 37, 49, 45;
-    --accent-rgb: 139, 64, 86;
-    --surface-rgb: 255, 255, 255;
-    --star-rgb: 37, 49, 45;
-    --star-opacity: 0;
+:root {
+    /* --- surfaces --- */
+    --bg: light-dark(#fcfcfc, #0a0a0a);
+    --surface: light-dark(#ffffff, #121213);
+    --surface-soft: light-dark(#f5f5f4, #1a1a1b);
+    --surface-strong: light-dark(#ebebe8, #232326);
+
+    /* --- ink --- */
+    --text: light-dark(#0a0a0a, #fafaf9);
+    --text-muted: light-dark(#71717a, #8a8a8f);
+    --text-subtle: light-dark(#a1a1aa, #6b6b70);
+    --fg-invert: light-dark(#ffffff, #0a0a0a);
+
+    /* --- lines --- */
+    --border: light-dark(#e7e7e4, #232326);
+    --border-strong: light-dark(#d0d0cb, #35353a);
+
+    /*
+     * The single accent. Everything else is neutral, so this only appears
+     * where it marks something: the serif emphasis word, the active nav item,
+     * focus, and the strongest skills. The dark value is lifted and
+     * desaturated so it stays readable against near-black.
+     */
+    --brand: light-dark(#c23a20, #ff7459);
+    --brand-strong: light-dark(#a22f19, #ff9a84);
+    --brand-soft: light-dark(rgba(194, 58, 32, 0.12), rgba(255, 116, 89, 0.16));
+    --brand-contrast: light-dark(#ffffff, #0a0a0a);
+
+    /* --- depth --- */
+    --shadow-soft:
+        0 1px 2px light-dark(rgba(10, 10, 10, 0.04), rgba(0, 0, 0, 0.5)),
+        0 8px 24px light-dark(rgba(10, 10, 10, 0.05), rgba(0, 0, 0, 0.4));
+    --shadow-lift:
+        0 2px 4px light-dark(rgba(10, 10, 10, 0.05), rgba(0, 0, 0, 0.55)),
+        0 16px 40px light-dark(rgba(10, 10, 10, 0.09), rgba(0, 0, 0, 0.5));
+    --page-shadow: 0 -1px 0 var(--border);
+
+    /* --- chrome --- */
+    --nav-background: light-dark(rgba(252, 252, 252, 0.72), rgba(10, 10, 10, 0.72));
+    --nav-overlay: light-dark(#fcfcfc, #0a0a0a);
+    --scrim: linear-gradient(
+        180deg,
+        transparent 0%,
+        light-dark(rgba(10, 10, 10, 0.55), rgba(0, 0, 0, 0.72)) 100%
+    );
+    --selection-background: var(--brand-soft);
+    --hover-wash: light-dark(rgba(10, 10, 10, 0.05), rgba(250, 250, 249, 0.07));
+
+    /* pointer-tracked highlight on cards */
+    --spotlight: light-dark(rgba(10, 10, 10, 0.045), rgba(250, 250, 249, 0.06));
+}
+
+/*
+ * Shape, timing and measure. Theme-independent.
+ */
+:root {
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 999px;
+
+    --dur-fast: 150ms;
+    --dur: 250ms;
+    --dur-slow: 450ms;
+    --dur-slower: 700ms;
+
+    /* ease-out is the workhorse: things arrive decisively and settle */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+    --container: 1120px;
+    --measure: 68ch;
+    --nav-h: 64px;
+}
+
+@media (min-width: 768px) {
+    :root {
+        --nav-h: 76px;
+    }
+}
+
+/*
+ * Legacy aliases.
+ *
+ * Admin is deliberately not re-laid out as part of this redesign and still
+ * references the old token names. Mapping them here keeps it working and drags
+ * it onto the new palette for free.
+ *
+ * Admin styles Edit with --accent and Delete with --accent-dark, so those two
+ * must stay visually distinct: a destructive action should never look
+ * identical to a safe one. Delete is solid ink, Edit is the accent.
+ */
+:root {
+    --primary: var(--text);
+    --secondary: var(--text-muted);
+    --thirdary: var(--text-subtle);
+    --accent: var(--brand);
+    --accent-dark: var(--text);
+    --accent-soft: var(--brand-soft);
+    --section-heading: var(--text);
+    --section-rule: var(--brand);
+    --section-rule-soft: var(--border);
+    --text-light: var(--fg-invert);
+    --background: var(--bg);
+    --background-dark: var(--surface);
+    --section-soft-background: var(--surface-soft);
+    --shadow-color: var(--border);
+    --nav-border: var(--border);
+    --tag-background: var(--surface-soft);
+    --tag-border: var(--border);
+    --button-hover-background: var(--hover-wash);
+    --input-background: var(--surface);
+    --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--brand);
+    --image-scrim: var(--scrim);
+    --footer-background: var(--surface-soft);
+    --footer-text: var(--text);
+    --footer-muted: var(--text-muted);
+    --footer-link-background: var(--surface);
+    --footer-link-hover: var(--brand);
+    --light: var(--surface-soft);
 }

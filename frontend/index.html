@@ -2,23 +2,87 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%BASE_URL%favicon.ico" />
+    <!--
+      SVG first (scales to any density, and follows the OS theme via a
+      prefers-color-scheme block inside the file); PNGs for the browsers that
+      still ignore SVG favicons.
+
+      Paths are relative, NOT %BASE_URL%. In dev, Vite prefixes `base` onto
+      root-relative urls in this file, but %BASE_URL% has already expanded to
+      /Joanne-web/ — so it came out as /Joanne-web/Joanne-web/favicon.svg and
+      404'd on every local run. (Production was fine, which is what made it
+      easy to miss.) Relative resolves correctly in both, and is safe here
+      because HashRouter keeps the browser path at /Joanne-web/ on every route.
+    -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#fcfcfc" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
     <meta
       name="description"
-      content="Joanne Chen's Portfolio"
+      content="Computer science student at National Tsing Hua University, building practical AI and software with clear interfaces. Projects, writing, and a visual travel archive."
     />
-    <link rel="apple-touch-icon" href="%BASE_URL%logo192.png" />
-    <link rel="manifest" href="%BASE_URL%manifest.json" />
-    <title>Joanne Chen</title>
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="manifest" href="manifest.json" />
+    <title>Joanne Chen — Computer Science Portfolio</title>
+
+    <!--
+      Social preview.
+
+      og:image must be an ABSOLUTE url — crawlers do not resolve it against the
+      page, so %BASE_URL% (which expands to a site-root path) is not enough.
+      That means this block is pinned to the deployed origin: if the site ever
+      moves to a custom domain, these four urls have to move with it.
+
+      og-image.png is generated from the same monogram geometry as the favicon,
+      so the card, the tab icon and the header all stay in step.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Joanne Chen" />
+    <meta property="og:url" content="https://joanne-09.github.io/Joanne-web/" />
+    <meta property="og:title" content="Joanne Chen — Computer Science Portfolio" />
+    <meta
+      property="og:description"
+      content="Building practical AI and software with clear interfaces, careful systems thinking, and enough motion to make the work feel alive."
+    />
+    <meta property="og:image" content="https://joanne-09.github.io/Joanne-web/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Joanne Chen — computer science portfolio, Hsinchu, Taiwan" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="zh_TW" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Joanne Chen — Computer Science Portfolio" />
+    <meta
+      name="twitter:description"
+      content="Building practical AI and software with clear interfaces, careful systems thinking, and enough motion to make the work feel alive."
+    />
+    <meta name="twitter:image" content="https://joanne-09.github.io/Joanne-web/og-image.png" />
+    <meta name="twitter:image:alt" content="Joanne Chen — computer science portfolio, Hsinchu, Taiwan" />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Serif+TC:wght@400;500;600&family=Playfair+Display:ital,wght@0,700;1,700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Noto+Sans+TC:wght@300..900&family=Onest:wght@300..800&display=swap" rel="stylesheet">
+    <!-- Apply the stored theme before first paint so there is no flash. -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var theme = stored === 'light' || stored === 'dark'
+            ? stored
+            : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+
     <!-- EmailJS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   </head>

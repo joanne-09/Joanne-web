@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Navbar, Footer } from './Essentials';
 import type { Post } from '@joanne-web/shared';
+
+import { PageShell } from './PageShell';
+import { Container, EmptyState, Reveal, Tag } from './ui';
 import Loading from './Loading';
+import { localPreviewPosts, shouldUseLocalPreview } from '../data/localPreview';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL?.replace(/\/$/, '') || 'http://localhost:3001';
 
@@ -14,6 +17,14 @@ const ArticleDetail: React.FC = () => {
 
   useEffect(() => {
     const fetchPost = async () => {
+      if (shouldUseLocalPreview(BACKEND_URL)) {
+        const previewPost = localPreviewPosts.find((item) => String(item.id) === id) || localPreviewPosts[0];
+
+        setPost(previewPost || null);
+        setLoading(false);
+        return;
+      }
+
       try {
         const response = await fetch(`${BACKEND_URL}/api/posts/${id}`);
         if (!response.ok) {
@@ -34,37 +45,57 @@ const ArticleDetail: React.FC = () => {
   }, [id]);
 
   return (
-    <div className="relative isolate min-h-screen w-full bg-[var(--footer-background)]">
-      <Navbar />
-      <main className="relative z-[2] min-h-screen bg-[var(--background)] px-5 pb-20 pt-28 text-[var(--text)] shadow-[var(--page-shadow)] md:pt-36">
-        <div className="mx-auto w-full max-w-[920px]">
-          {error && <p>Error fetching post: {error}</p>}
-          {loading && <Loading />}
-          {!loading && !error && post && (
-            <article>
-              <div className="border-b border-[var(--border-strong)] pb-8">
-                <p className="mb-4 text-sm font-semibold uppercase text-[var(--accent)]">Article</p>
-                <h1 className="font-serif text-4xl font-semibold leading-tight text-[var(--primary)] md:text-6xl">{post.title}</h1>
-                <div className="mt-7 flex flex-col gap-4 text-sm text-[var(--text-muted)]">
-                  <span>Posted on {new Date(post.created_at).toLocaleDateString()}</span>
-                  {post.tags && post.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {post.tags.map(tag => (
-                        <span key={tag} className="rounded-full border border-[var(--tag-border)] bg-[var(--tag-background)] px-3 py-1 text-xs font-semibold text-[var(--primary)]">{tag}</span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="prose prose-lg mt-10 max-w-none text-[var(--text)]">
-                <p className="whitespace-pre-line text-lg leading-9" dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }} />
-              </div>
-            </article>
-          )}
-        </div>
-      </main>
-      <Footer />
-    </div>
+    <PageShell>
+      <Container className="pb-8">
+        {error ? (
+          <EmptyState
+            title="Article unavailable"
+            body="This article could not be loaded in the current environment."
+          />
+        ) : null}
+
+        {loading ? <Loading /> : null}
+
+        {!loading && !error && post ? (
+          <article className="mx-auto max-w-[var(--measure)]">
+            <header className="border-b border-line pb-9">
+              <Reveal as="p" className="label">
+                Article
+              </Reveal>
+
+              <Reveal
+                as="h1"
+                delay={80}
+                className="mt-5 text-[clamp(2rem,5vw,3.25rem)] font-semibold leading-[1.08] tracking-[-0.035em] text-ink"
+              >
+                {post.title}
+              </Reveal>
+
+              <Reveal delay={160} className="mt-7 flex flex-col gap-4">
+                <span className="text-sm text-muted">
+                  Posted on {new Date(post.created_at).toLocaleDateString()}
+                </span>
+
+                {post.tags && post.tags.length ? (
+                  <div className="flex flex-wrap gap-2">
+                    {post.tags.map((tag) => (
+                      <Tag key={tag}>{tag}</Tag>
+                    ))}
+                  </div>
+                ) : null}
+              </Reveal>
+            </header>
+
+            <Reveal delay={220} className="prose mt-10 text-[1.0625rem] leading-[1.75]">
+              <p
+                className="whitespace-pre-line"
+                dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br />') }}
+              />
+            </Reveal>
+          </article>
+        ) : null}
+      </Container>
+    </PageShell>
   );
 };
 

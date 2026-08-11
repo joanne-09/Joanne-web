@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32"
+     fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <!--
+    Favicon build of the JC monogram.
+
+    One optical difference from the in-app component: the stroke is heavier
+    (2.9 vs 2.5). A 32-unit grid drawn at 16px halves every measurement, so the
+    app weight would land near one device pixel and grey out.
+
+    Colours are inlined rather than tokenised — a favicon has no access to the
+    document's custom properties — and follow the OS theme so the mark stays
+    legible against both light and dark browser chrome.
+  -->
+  <style>
+    .ink { stroke: #0a0a0a; }
+    .accent { stroke: #c23a20; }
+    @media (prefers-color-scheme: dark) {
+      .ink { stroke: #fafaf9; }
+      .accent { stroke: #ff7459; }
+    }
+  </style>
+
+  <path class="accent" d="M9.7 7.6V17.2A4.6 4.6 0 0 1 5.1 21.8" stroke-width="2.9"/>
+  <path class="ink" d="M24.79 21.09A7.2 7.2 0 1 1 24.79 10.91" stroke-width="2.9"/>
+</svg>

@@ -1,96 +1,101 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Navbar, Footer } from '../components/Essentials';
+import React from 'react';
+import type { CSSProperties } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
+
+import { PageShell } from '../components/PageShell';
+import { Container, EmptyState, Img, Reveal } from '../components/ui';
+import { useViewNavigate } from '../lib/navigation';
 import LoadingPage from './LoadingPage';
+import { previewUrl, travelFolderImagesQueryOptions } from '../data/travelQueries';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL?.replace(/\/$/, '') || 'http://localhost:3001';
+const revealStyle = (delay: number): CSSProperties => ({ '--reveal-delay': `${delay}ms` } as CSSProperties);
 
-interface TravelImage {
-  url: string;
-  width: number;
-  height: number;
-}
-
+/** Unprefixed so the phone's two-column grid gets the same mosaic variation. */
 const mosaicClass = (index: number) => {
-  if (index % 11 === 0) return 'sm:col-span-2 sm:row-span-2';
-  if (index % 7 === 1) return 'sm:col-span-2';
-  if (index % 5 === 3) return 'sm:row-span-2';
+  if (index % 11 === 0) return 'col-span-2 row-span-2';
+  if (index % 7 === 1) return 'col-span-2';
+  if (index % 5 === 3) return 'row-span-2';
   return '';
 };
 
 const Traveled: React.FC = () => {
   const { folder } = useParams<{ folder: string }>();
-  const navigate = useNavigate();
-  const [images, setImages] = useState<TravelImage[]>([]);
-  const [loading, setLoading] = useState(true);
+  const navigate = useViewNavigate();
+  const query = useQuery({
+    ...travelFolderImagesQueryOptions(folder || ''),
+    enabled: Boolean(folder),
+  });
+  const images = query.data || [];
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      if (!folder) return;
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/images?folder=${encodeURIComponent(folder)}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data.images) {
-            setImages(data.images);
-          }
-        }
-      } catch (error) {
-        console.error(`Failed to fetch images for folder ${folder}`, error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchImages();
-  }, [folder]);
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    return () => {
-      document.documentElement.removeAttribute('data-theme');
-    };
-  }, []);
-
-  if (loading) {
+  if (query.isLoading) {
     return <LoadingPage />;
   }
 
   return (
-    <div className="relative isolate min-h-screen w-full overflow-x-hidden bg-[var(--footer-background)] font-travel text-[var(--text)]">
-      <div className="fixed top-0 z-[100] w-full">
-        <Navbar />
-      </div>
-
-      <main className="relative z-[2] bg-[var(--background)] shadow-[var(--page-shadow)]">
-        <section className="relative mx-auto w-full max-w-[1400px] px-5 pb-8 pt-28 md:px-8 md:pt-36">
-          <button className="mb-8 flex items-center gap-2 bg-transparent text-left text-sm font-semibold uppercase text-[var(--text-muted)] transition hover:text-[var(--accent)]" onClick={() => navigate('/travel')}>
-            <span aria-hidden="true">←</span>
+    <PageShell>
+      <Container className="pb-8">
+        <Reveal>
+          <button
+            onClick={() => navigate('/travel')}
+            className="group flex items-center gap-2 text-sm text-muted transition-colors duration-[var(--dur)] hover:text-brand"
+          >
+            <span
+              aria-hidden="true"
+              className="transition-transform duration-[var(--dur)] ease-[var(--ease-out-quint)] group-hover:-translate-x-0.5"
+            >
+              ←
+            </span>
             Back to Travel
           </button>
-          <div className="border-y border-[var(--border-strong)] py-10 text-center">
-            <p className="mb-3 text-sm font-semibold uppercase text-[var(--accent)]">Location</p>
-            <h1 className="m-0 font-display text-5xl font-semibold capitalize leading-tight text-[var(--primary)] sm:text-7xl">{folder}</h1>
-          </div>
-        </section>
+        </Reveal>
 
-        <section className="mx-auto min-h-[50vh] w-full max-w-[1400px] px-5 pb-24 pt-8 md:px-8">
+        <div className="mt-10 border-b border-line pb-9">
+          <Reveal as="p" className="label">
+            Location
+          </Reveal>
+          <Reveal
+            as="h1"
+            delay={80}
+            className="mt-4 text-[clamp(2.5rem,7vw,4.5rem)] font-semibold capitalize leading-[1.04] tracking-[-0.04em] text-ink"
+          >
+            {folder}
+          </Reveal>
+          <Reveal as="p" delay={160} className="mt-4 text-sm text-muted">
+            {images.length} {images.length === 1 ? 'image' : 'images'}
+          </Reveal>
+        </div>
+
+        <div className="mt-12 pb-8">
           {images.length === 0 ? (
-            <p className="text-center text-xl text-[var(--text-muted)]">No images found for this location.</p>
+            <EmptyState
+              title="Nothing here"
+              body="No images were found for this location."
+            />
           ) : (
-            <div className="grid auto-rows-[250px] grid-flow-dense grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-3 sm:gap-5">
+            <div className="grid auto-rows-[150px] grid-flow-dense grid-cols-2 gap-3 sm:auto-rows-[250px] sm:grid-cols-[repeat(auto-fit,minmax(280px,1fr))] sm:gap-5">
               {images.map((img, index) => (
-                <div key={index} className={`${mosaicClass(index)} group relative overflow-hidden bg-[var(--surface-soft)] transition duration-300 hover:z-[2] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]`}>
-                  <img className="h-full w-full object-cover brightness-[.9] saturate-[0.9] transition duration-700 group-hover:scale-105 group-hover:brightness-100 group-hover:saturate-100" src={img.url} alt={`${folder} memory ${index + 1}`} loading="lazy" />
+                <div
+                  key={index}
+                  className={`${mosaicClass(index)} clip-reveal group relative overflow-hidden rounded-[var(--radius-md)] border border-line bg-surface-soft transition-[transform,box-shadow] duration-[var(--dur)] ease-[var(--ease-out-quint)] hover:z-[2] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]`}
+                  data-reveal=""
+                  style={revealStyle((index % 8) * 70)}
+                >
+                  <Img
+                    className="h-full w-full scale-100 object-cover group-hover:scale-[1.05]"
+                    src={previewUrl(img)}
+                    srcSet={img.thumbnailUrl && img.url ? `${img.thumbnailUrl} 720w, ${img.url} 1600w` : undefined}
+                    sizes="(min-width: 1024px) 32vw, (min-width: 640px) 50vw, 100vw"
+                    alt={`${folder} memory ${index + 1}`}
+                    priority={index < 4}
+                  />
                 </div>
               ))}
             </div>
           )}
-        </section>
-      </main>
-
-      <Footer />
-    </div>
+        </div>
+      </Container>
+    </PageShell>
   );
 };
 

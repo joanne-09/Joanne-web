@@ -1,0 +1,304 @@
+/*
+ * Motion system: "precise and earned".
+ *
+ * The page is still at rest. Nothing loops, nothing drifts. Every effect here
+ * is either a one-shot arrival or a direct response to the pointer, scroll
+ * position or a route change — with the single exception of the travel
+ * marquees, which are a deliberate content strip.
+ *
+ * The reduced-motion block at the bottom is the kill switch for all of it.
+ */
+
+/* --- scroll reveal ------------------------------------------------------
+ * App.tsx observes [data-reveal] and adds .is-revealed. Keeping that contract
+ * means the observer logic did not need to change.
+ */
+[data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- hero split text ----------------------------------------------------
+ * Words rise out of a clipped line box, one after another. The serif emphasis
+ * word is given a longer delay by SplitText so it lands last.
+ */
+.split-line {
+  display: block;
+  /* clip the rise without cropping descenders */
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.split-word {
+  display: inline-block;
+  opacity: 0;
+  /* rises a full line height out of the mask, unblurring as it lands */
+  transform: translate3d(0, 1.05em, 0);
+  filter: blur(6px);
+  animation: word-in 900ms var(--ease-out) forwards;
+  animation-delay: calc(var(--word-index, 0) * 85ms + var(--split-delay, 0ms));
+}
+
+@keyframes word-in {
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+/* --- scroll-linked hero -------------------------------------------------
+ * The hero drifts up slower than the page and fades as it leaves, so the
+ * section beneath feels like it is arriving over the top of it.
+ */
+.hero-parallax {
+  transform: translate3d(0, calc(var(--scroll-p, 0) * 72px), 0);
+  opacity: calc(1 - var(--scroll-p, 0) * 1.15);
+  will-change: transform, opacity;
+}
+
+/*
+ * The hero does not move on phones at all.
+ *
+ * No fade first: the hero is nearly a full screen there, so tying opacity to
+ * viewport-fraction scrolled dimmed the headline and buttons to ~45% while the
+ * user was still looking straight at them.
+ *
+ * But the drift has to go with it. The hero's resting gap to the About eyebrow
+ * is 56px on a 375px screen, and the parallax pushes it down by up to 72px —
+ * so the "Start a conversation" button ended up printed across the ABOUT
+ * label. On desktop the fade hid that collision; removing the fade here left
+ * it fully opaque and visible. Parallax against a fixed viewport is a
+ * large-screen gesture anyway.
+ */
+@media (max-width: 767px) {
+  .hero-parallax {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* --- clip reveal ---------------------------------------------------------
+ * Media wipes open from the bottom as it enters, instead of just fading.
+ *
+ * This goes on the WRAPPER, never on the <img> itself: Img owns an
+ * opacity/filter transition for its load-in, and putting a second
+ * transition shorthand on the same element would clobber it. (Unlayered CSS
+ * like this file also outranks Tailwind's @layer utilities, so the conflict
+ * would resolve silently in the wrong direction.)
+ */
+.clip-reveal {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1s var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.is-revealed .clip-reveal,
+.clip-reveal.is-revealed {
+  clip-path: inset(0 0 0 0);
+}
+
+/* --- marquee track -------------------------------------------------------
+ * Two identical copies of the content; translating by -50% lands copy two
+ * exactly where copy one began, so the seam is invisible.
+ */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-left var(--marquee-duration, 40s) linear infinite;
+}
+
+.marquee-track--reverse {
+  animation-name: marquee-right;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* --- pointer spotlight --------------------------------------------------
+ * A soft radial wash that tracks the cursor inside a card. Sits behind the
+ * card content via the parent's own stacking context.
+ */
+.spot {
+  position: relative;
+  isolation: isolate;
+}
+
+.spot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    240px circle at var(--px, 50%) var(--py, 50%),
+    var(--spotlight),
+    transparent 72%
+  );
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease-out);
+  pointer-events: none;
+}
+
+.spot:hover::before,
+.spot:focus-within::before {
+  opacity: 1;
+}
+
+/* --- magnetic release ----------------------------------------------------
+ * Applied only while a magnetic element springs back to rest. During tracking
+ * the transform is untransitioned so it follows the pointer exactly.
+ */
+.magnetic-release {
+  transition: transform 420ms var(--ease-out) !important;
+}
+
+/* --- scroll progress rail ----------------------------------------------- */
+.scroll-rail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1200;
+  width: 100%;
+  height: 2px;
+  background: var(--brand);
+  transform: scaleX(var(--progress, 0));
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+/* --- nav active underline -----------------------------------------------
+ * A single element slid and resized between items, rather than a border on
+ * each one, so the transition is continuous.
+ */
+.nav-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--brand);
+  transform: translate3d(var(--underline-x, 0), 0, 0);
+  width: var(--underline-w, 0);
+  opacity: var(--underline-o, 0);
+  transition:
+    transform var(--dur) var(--ease-out),
+    width var(--dur) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
+  pointer-events: none;
+}
+
+/* --- route transitions --------------------------------------------------
+ * Driven by document.startViewTransition in App.tsx. Browsers without the API
+ * simply navigate with no animation.
+ */
+::view-transition-old(root) {
+  animation: vt-out 180ms var(--ease-out) both;
+}
+
+::view-transition-new(root) {
+  animation: vt-in 320ms var(--ease-out) both;
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+}
+
+/* --- travel marquees ----------------------------------------------------- */
+@keyframes marquee-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* --- loading ------------------------------------------------------------- */
+@keyframes rail-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+.rail-sweep {
+  animation: rail-sweep 1.4s var(--ease-in-out) infinite;
+}
+
+/* --- reduced motion ------------------------------------------------------
+ * Everything above collapses to its resting state. Reveal and split-text must
+ * be forced visible explicitly, otherwise killing the animation would leave
+ * content stuck at opacity 0.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-reveal],
+  .split-word {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+  }
+
+  .clip-reveal {
+    clip-path: none !important;
+  }
+
+  .hero-parallax {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .rail-sweep,
+  .marquee-track {
+    animation: none !important;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}

@@ -1,15 +1,30 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
+import type { Project } from '@joanne-web/shared';
 
 import { Navbar, Footer } from '../components/Essentials';
 import { MailIcon, MapPinIcon, PhoneIcon } from '../components/Icons';
 import SkillMap from '../components/SkillMap';
+import {
+  Button,
+  Card,
+  Container,
+  Img,
+  Reveal,
+  SectionHeader,
+  SplitText,
+  Tag,
+} from '../components/ui';
+import { useData } from '../contexts/useData';
+import { useScrollParallax } from '../lib/motion';
+import { scrollToId, useViewNavigate } from '../lib/navigation';
 
 interface EducationItem {
   year: string;
   institution: string;
   degree: string;
-  gpa?: string;
+  focus: string;
+  note: string;
 }
 
 interface ActivityItem {
@@ -19,168 +34,420 @@ interface ActivityItem {
   description: string;
 }
 
-const containerClass = 'mx-auto w-full max-w-[1180px] px-5';
-const sectionClass = 'w-full bg-[var(--background)] py-20 md:py-28';
-const buttonClass = 'inline-flex items-center justify-center rounded-full bg-[var(--primary)] px-6 py-3 text-sm font-semibold text-[var(--text-light)] transition hover:-translate-y-1 hover:bg-[var(--accent)] hover:shadow-[var(--shadow-soft)] focus:outline-none focus:shadow-[var(--focus-ring)]';
+interface HomeProject {
+  id: string | number;
+  ghlink: string;
+  imgsrc: string;
+  imgalt: string;
+  title: string;
+  type: string;
+  description: string;
+  role?: string;
+  tech?: unknown;
+}
 
 const contactItems = [
-  { Icon: MailIcon, label: 'Email', value: 'joanne.zh2015@gmail.com' },
-  { Icon: PhoneIcon, label: 'Phone', value: '+886 905-937-165' },
+  { Icon: MailIcon, label: 'Email', value: 'joanne.zh2015@gmail.com', href: 'mailto:joanne.zh2015@gmail.com' },
+  { Icon: PhoneIcon, label: 'Phone', value: '+886 905-937-165', href: 'tel:+886905937165' },
   { Icon: MapPinIcon, label: 'Location', value: 'Hsinchu, Taiwan' },
 ];
 
-const SectionMarker: React.FC<{ label: string }> = ({ label }) => (
-  <div>
-    <h2 className="font-serif text-4xl font-semibold leading-tight text-[var(--section-heading)] md:text-5xl">{label}</h2>
-    <div className="mt-5 flex w-36 items-center gap-2">
-      <span className="h-[6px] w-12 rounded-full bg-[var(--section-rule)]"></span>
-      <span className="h-px flex-1 bg-[var(--section-rule-soft)]"></span>
-    </div>
-  </div>
-);
-
-const Hero: React.FC = () => {
-  return (
-    <section className="relative w-full overflow-hidden bg-[var(--background)] pt-20">
-      <div className={`${containerClass} grid min-h-[88svh] items-center gap-12 py-14 md:grid-cols-[minmax(0,0.98fr)_minmax(320px,0.82fr)] md:py-20`}>
-        <div className="min-w-0">
-          <p className="mb-5 text-sm font-semibold uppercase text-[var(--accent)]">Portfolio / Computer Science</p>
-          <h1 className="max-w-[760px] font-serif text-[clamp(3.4rem,14vw,5.2rem)] font-semibold leading-[1.02] text-[var(--primary)] md:text-[clamp(4.8rem,6vw,7rem)]">
-            <span className="block">&#x9673;&#x82B7;&#x598D;</span>
-            <span className="block">Joanne Chen</span>
-          </h1>
-          <div className="mt-9 flex flex-wrap items-center gap-4">
-            <a href="#contact" className={buttonClass}>Get In Touch</a>
-          </div>
-        </div>
-
-        <div className="hidden min-w-0 md:block">
-          <div className="relative ml-auto aspect-[4/3] max-h-[560px] w-full overflow-hidden rounded-[4px]">
-            <img
-              className="h-full w-full object-cover object-center opacity-90 saturate-[0.86]"
-              src={`${import.meta.env.BASE_URL}images/profile.jpg`}
-              alt="Joanne Chen portrait"
-            />
-            <div className="absolute inset-0 bg-[var(--image-scrim)]"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const About: React.FC = () => {
-  return (
-    <section id="about" className={sectionClass}>
-      <div className={containerClass}>
-        <div className="grid gap-10 md:grid-cols-[260px_1fr] md:items-start">
-          <SectionMarker label="About" />
-          <div className="max-w-[840px] space-y-6 text-lg leading-8 text-[var(--text)] md:text-xl md:leading-9">
-            <p>I am an undergraduate Computer Science student at National Tsing Hua University.</p>
-            <p>My technical interests span machine learning, computer vision, and software development. I enjoy building projects that stretch my boundaries and sharpen my instincts for useful, resilient systems.</p>
-            <p>Outside of code, music, film, and Japanese animation keep my sense of rhythm and storytelling alive. Those influences often find their way back into how I think about interfaces and technical work.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const educationData: EducationItem[] = [
+const routeLinks = [
   {
-    year: '2023 - Present',
-    institution: 'National Tsing Hua University (NTHU)',
-    degree: 'B.S. in Computer Science',
+    label: 'Projects',
+    path: '/projects',
+    description: 'AI tools, web systems, games, and interface experiments.',
   },
   {
-    year: '2020 - 2023',
-    institution: 'National Experimental High School in Hsinchu (NEHS)',
-    degree: 'Normal Program',
+    label: 'Article',
+    path: '/article',
+    description: 'Notes from learning, debugging, and translating technical ideas.',
+  },
+  {
+    label: 'Travel',
+    path: '/travel',
+    description: 'A visual archive of places, textures, food, and small memories.',
   },
 ];
 
-const Education: React.FC = () => {
-  return (
-    <section id="education" className={sectionClass}>
-      <div className={containerClass}>
-        <div className="grid gap-10 md:grid-cols-[260px_1fr]">
-          <SectionMarker label="Education" />
-          <div className="border-t border-[var(--border)]">
-            {educationData.map((edu) => (
-              <div className="grid gap-4 border-b border-[var(--border)] py-8 md:grid-cols-[180px_1fr]" key={`${edu.year}-${edu.institution}`}>
-                <p className="text-sm font-semibold text-[var(--accent)]">{edu.year}</p>
-                <div>
-                  <h3 className="text-2xl font-semibold text-[var(--primary)]">{edu.institution}</h3>
-                  {edu.gpa && <p className="mt-2 text-[var(--text-muted)]">{edu.gpa}</p>}
-                  <p className="mt-2 text-lg text-[var(--text-muted)]">{edu.degree}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
+const fallbackProjects: HomeProject[] = [
+  {
+    id: 'lexiaid',
+    ghlink: 'https://github.com/joanne-09',
+    imgsrc: 'images/lexiaid.png',
+    imgalt: 'LexiAid project preview',
+    title: 'LexiAid',
+    type: 'AI / Accessibility',
+    description: 'A reading support tool shaped around recognition, language learning, and accessible interaction patterns.',
+    role: 'Frontend, model integration, UI design',
+    tech: ['React', 'TypeScript', 'AI'],
+  },
+  {
+    id: 'chatroom',
+    ghlink: 'https://github.com/joanne-09',
+    imgsrc: 'images/chatroom_project.png',
+    imgalt: 'Realtime chatroom interface',
+    title: 'Realtime Chatroom',
+    type: 'Full-stack',
+    description: 'A socket-based chat experience focused on clear conversation flow and resilient message state.',
+    role: 'Backend APIs, client UX, deployment',
+    tech: ['Node', 'React', 'WebSocket'],
+  },
+  {
+    id: 'beat-game',
+    ghlink: 'https://github.com/joanne-09',
+    imgsrc: 'images/beat_game.png',
+    imgalt: 'Beat game project',
+    title: 'Beat Game',
+    type: 'Game / Interaction',
+    description: 'A rhythm-based browser game exploring timing feedback, gesture clarity, and playful interface motion.',
+    role: 'Gameplay logic, interaction design',
+    tech: ['JavaScript', 'Canvas', 'Game Design'],
+  },
+];
+
+const educationData: EducationItem[] = [
+  {
+    year: '2023 — Present',
+    institution: 'National Tsing Hua University',
+    degree: 'B.S. in Computer Science',
+    focus: 'Computer Science / AI / Systems',
+    note: 'Current academic base for machine learning, computer vision, and software development work.',
+  },
+  {
+    year: '2020 — 2023',
+    institution: 'National Experimental High School, Hsinchu',
+    degree: 'Normal Program',
+    focus: 'Science Foundation / Independent Learning',
+    note: 'Built the study habits and technical curiosity that later shaped project-based work.',
+  },
+];
 
 const activitiesData: ActivityItem[] = [
   {
     title: 'NTHU Blockchain Club x NTHU GDSC',
-    period: '2024 - Present',
+    period: '2024 — Present',
     role: 'Activities Department',
     description: 'Lead the planning and execution of technical workshops and networking events with industry professionals. Develop timelines and coordinate teams for club activities focused on blockchain technology and software development.',
   },
   {
     title: 'NYCU Google Developer Student Club',
-    period: '2025 - Present',
-    role: 'Public Relations and Activities Department',
+    period: '2025 — Present',
+    role: 'Public Relations and Activities',
     description: 'Build relationships with industry professionals and potential speakers for technical workshops. Collaborate with lecturers on curriculum and improve club visibility through strategic content.',
   },
   {
     title: 'NTHU Pop Dance Club',
-    period: '2023 - 2024',
+    period: '2023 — 2024',
     role: 'Member',
     description: 'Participated in intensive hip-hop dance training and semester showcases, developing teamwork, discipline, and performance confidence through collaborative artistic work.',
   },
 ];
 
-const Activities: React.FC = () => {
+const imageUrl = (path: string) => {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  return `${import.meta.env.BASE_URL}${cleanPath}`;
+};
+
+const toProject = (project: Project | HomeProject): HomeProject => ({
+  id: project.id,
+  ghlink: project.ghlink,
+  imgsrc: project.imgsrc,
+  imgalt: project.imgalt,
+  title: project.title,
+  type: project.type,
+  description: project.description,
+  role: project.role,
+  tech: project.tech,
+});
+
+const projectTags = (tech: unknown) => {
+  if (Array.isArray(tech)) return tech.map(String).slice(0, 4);
+  if (typeof tech === 'string') {
+    try {
+      const parsed = JSON.parse(tech);
+      return Array.isArray(parsed) ? parsed.map(String).slice(0, 4) : [];
+    } catch {
+      return tech.split(',').map((tag) => tag.trim()).filter(Boolean).slice(0, 4);
+    }
+  }
+  return [];
+};
+
+// Tighter rhythm on phones — the desktop spacing stacked up to a needlessly
+// long scroll once every section was in one column.
+const section = 'py-14 md:py-28';
+
+const Hero: React.FC = () => {
+  const navigate = useViewNavigate();
+  // --scroll-p is set on the section and inherited by .hero-parallax inside it.
+  const ref = useRef<HTMLElement>(null);
+  useScrollParallax(ref);
+
   return (
-    <section id="activities" className="w-full bg-[var(--surface-soft)] py-20 md:py-28">
-      <div className={containerClass}>
-        <div className="grid gap-10 md:grid-cols-[260px_1fr]">
-          <SectionMarker label="Experience" />
-          <div className="border-t border-[var(--border-strong)]">
-            {activitiesData.map((activity, index) => (
-              <article className="grid gap-5 border-b border-[var(--border-strong)] py-8 md:grid-cols-[88px_1fr_180px]" key={activity.title}>
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--primary)] text-sm font-semibold text-[var(--text-light)]">
-                  {String(index + 1).padStart(2, '0')}
-                </div>
-                <div>
-                  <h3 className="text-2xl font-semibold text-[var(--primary)]">{activity.title}</h3>
-                  <p className="mt-3 max-w-[720px] leading-7 text-[var(--text)]">{activity.description}</p>
-                </div>
-                <div className="text-sm leading-6 text-[var(--text-muted)] md:text-right">
-                  <p className="font-semibold text-[var(--primary)]">{activity.period}</p>
-                  <p>{activity.role}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </div>
+    <section ref={ref} className="flex min-h-[86svh] items-center pt-[var(--nav-h)]">
+      <Container className="hero-parallax">
+        <SplitText
+          as="h1"
+          text={'Joanne Chen .'}
+          emphasis="Chen"
+          delay={160}
+          className="mt-7 block max-w-[16ch] text-[clamp(2.75rem,7vw,5rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-ink"
+        />
+
+        <Reveal as="p" delay={260} className="mt-6 text-lg text-subtle">
+          {'陳芷妍'}
+        </Reveal>
+
+        <Reveal as="p" delay={320} className="mt-6 max-w-[54ch] text-base leading-relaxed text-muted">
+          A computer science student who enjoys exploring new knowledge and creating interesting stuff.
+        </Reveal>
+
+        <Reveal delay={400} className="mt-10 flex flex-wrap items-center gap-3">
+          <Button onClick={() => navigate('/projects')}>View selected work</Button>
+          <Button variant="ghost" onClick={() => scrollToId('contact')}>
+            Say hello
+          </Button>
+        </Reveal>
+      </Container>
     </section>
   );
 };
 
+const About: React.FC = () => (
+  <section id="about" className={section}>
+    <Container>
+      <div className="grid gap-10 md:grid-cols-[1fr_1.35fr] md:gap-16">
+        {/*
+          On a phone the copy leads and the portrait follows. Stacked, a
+          full-width 4:5 portrait ate an entire screen before the section had
+          said anything.
+        */}
+        <Reveal className="order-2 md:order-1">
+          <div className="clip-reveal overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface-soft">
+            <Img
+              src={imageUrl('images/profile.jpg')}
+              alt="Joanne Chen"
+              className="aspect-[4/3] w-full object-cover sm:aspect-[4/5]"
+            />
+          </div>
+        </Reveal>
+
+        <div className="order-1 flex flex-col gap-5 md:order-2">
+          <Reveal as="p" className="label">
+            About
+          </Reveal>
+          <Reveal
+            as="p"
+            delay={80}
+            className="text-[clamp(1.25rem,2.2vw,1.6rem)] font-medium leading-snug tracking-[-0.02em] text-ink"
+          >
+            I'm curious about new ideas and enjoy learning by{' '}
+            <span className="serif-accent">building</span> things.
+          </Reveal>
+          <Reveal as="p" delay={140} className="max-w-[58ch] text-base leading-relaxed text-muted">
+            I study Computer Science at National Tsing Hua University. I'm especially interested in
+            AI, computer vision, and web development.
+          </Reveal>
+          <Reveal as="p" delay={200} className="max-w-[58ch] text-base leading-relaxed text-muted">
+            Outside of class, I enjoy dancing, travelling, and helping organize events with student
+            clubs.
+          </Reveal>
+          <Reveal delay={260} className="mt-2 flex flex-wrap gap-2">
+            <Tag>NTHU Computer Science</Tag>
+            <Tag>AI / Computer Vision / Web</Tag>
+            <Tag>Dance / Travel / Student Clubs</Tag>
+          </Reveal>
+        </div>
+      </div>
+    </Container>
+  </section>
+);
+
+const WorkPreview: React.FC = () => {
+  const { projects } = useData();
+  const selectedProjects = (projects.length ? projects.map(toProject) : fallbackProjects).slice(0, 4);
+
+  return (
+    <section id="work" className={section}>
+      <Container>
+        <SectionHeader
+          label="Selected work"
+          title={
+            <>
+              Projects that move between prototypes, systems, and{' '}
+              <span className="serif-accent">product</span>-minded interfaces.
+            </>
+          }
+        />
+
+        <div className="mt-12 grid gap-5 md:grid-cols-2">
+          {selectedProjects.map((project, index) => (
+            <Reveal key={project.id} delay={index * 70}>
+              <Card href={project.ghlink} className="h-full">
+                <div className="clip-reveal aspect-[16/10] w-full overflow-hidden border-b border-line bg-surface-soft">
+                  <Img
+                    src={imageUrl(project.imgsrc)}
+                    alt={project.imgalt}
+                    className="h-full w-full scale-100 object-cover group-hover:scale-[1.04]"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-3 p-6">
+                  <div className="flex items-baseline justify-between gap-4">
+                    <p className="label">{project.type}</p>
+                    <span className="label tabular-nums">{String(index + 1).padStart(2, '0')}</span>
+                  </div>
+
+                  <h3 className="text-xl font-semibold text-ink">{project.title}</h3>
+
+                  <p className="text-sm leading-relaxed text-muted">{project.description}</p>
+
+                  {projectTags(project.tech).length ? (
+                    <div className="mt-1 flex flex-wrap gap-2">
+                      {projectTags(project.tech).map((tag) => (
+                        <Tag key={tag}>{tag}</Tag>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              </Card>
+            </Reveal>
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+};
+
+interface TimelineEntry {
+  key: string;
+  period: string;
+  title: string;
+  subtitle: string;
+  body: string;
+  aside?: string;
+}
+
+const Timeline: React.FC<{ entries: TimelineEntry[] }> = ({ entries }) => (
+  <ol className="mt-10 border-t border-line">
+    {entries.map((entry, index) => (
+      <Reveal
+        as="li"
+        key={entry.key}
+        delay={index * 70}
+        className="grid gap-3 border-b border-line py-7 md:grid-cols-[11rem_1fr] md:gap-8"
+      >
+        <p className="label md:pt-1.5">{entry.period}</p>
+
+        <div>
+          <h3 className="text-lg font-semibold text-ink">{entry.title}</h3>
+          <p className="mt-1 text-sm text-muted">{entry.subtitle}</p>
+          <p className="mt-3 max-w-[62ch] text-sm leading-relaxed text-muted">{entry.body}</p>
+          {entry.aside ? <p className="mt-3 text-xs text-subtle">{entry.aside}</p> : null}
+        </div>
+      </Reveal>
+    ))}
+  </ol>
+);
+
+const Education: React.FC = () => (
+  <section id="education" className={section}>
+    <Container>
+      <SectionHeader
+        label="Education"
+        title={
+          <>
+            Where the <span className="serif-accent">foundation</span> was built.
+          </>
+        }
+      />
+      <Timeline
+        entries={educationData.map((item) => ({
+          key: item.institution,
+          period: item.year,
+          title: item.institution,
+          subtitle: item.degree,
+          body: item.note,
+          aside: item.focus,
+        }))}
+      />
+    </Container>
+  </section>
+);
+
+const Experience: React.FC = () => (
+  <section id="experience" className={section}>
+    <Container>
+      <SectionHeader
+        label="Experience"
+        title={
+          <>
+            Where the work became <span className="serif-accent">collaborative</span>.
+          </>
+        }
+      />
+      <Timeline
+        entries={activitiesData.map((item) => ({
+          key: item.title,
+          period: item.period,
+          title: item.title,
+          subtitle: item.role,
+          body: item.description,
+        }))}
+      />
+    </Container>
+  </section>
+);
+
+const Explore: React.FC = () => {
+  const navigate = useViewNavigate();
+
+  return (
+    <section className={section}>
+      <Container>
+        <SectionHeader label="Elsewhere" title="Other ways through the site." />
+
+        <div className="mt-10 grid gap-5 md:grid-cols-3">
+          {routeLinks.map((route, index) => (
+            <Reveal key={route.path} delay={index * 70}>
+              <Card onClick={() => navigate(route.path)} className="h-full">
+                <div className="flex h-full flex-col gap-3 p-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-ink">{route.label}</h3>
+                    <span
+                      aria-hidden="true"
+                      className="text-muted transition-[transform,color] duration-[var(--dur)] ease-[var(--ease-out-quint)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-brand"
+                    >
+                      ↗
+                    </span>
+                  </div>
+                  <p className="text-sm leading-relaxed text-muted">{route.description}</p>
+                </div>
+              </Card>
+            </Reveal>
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+};
+
+const fieldClass =
+  'w-full rounded-[var(--radius-md)] border border-line bg-surface px-4 py-3 text-sm text-ink ' +
+  'placeholder:text-subtle transition-colors duration-[var(--dur)] hover:border-line-strong ' +
+  'focus:border-line-strong';
+
 const Contact: React.FC = () => {
   const form = useRef<HTMLFormElement>(null);
-  const [submitStatus, setSubmitStatus] = useState('Send Message');
+  const [submitStatus, setSubmitStatus] = useState('Send message');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const EMAILJS_PUBLIC_KEY = "s2wBA3kCBZmht7nni";
-  const EMAILJS_SERVICE_ID = "service_urorrpv";
-  const EMAILJS_TEMPLATE_ID = "template_f4oweup";
+  const EMAILJS_PUBLIC_KEY = 's2wBA3kCBZmht7nni';
+  const EMAILJS_SERVICE_ID = 'service_urorrpv';
+  const EMAILJS_TEMPLATE_ID = 'template_f4oweup';
 
   useEffect(() => {
     if (window.emailjs) {
@@ -188,15 +455,15 @@ const Contact: React.FC = () => {
     }
   }, []);
 
-  const sendEmail = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const sendEmail = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (!form.current || !window.emailjs) {
-      setSubmitStatus("EmailJS not loaded");
+      setSubmitStatus('Email service unavailable');
       return;
     }
 
     setIsSubmitting(true);
-    setSubmitStatus('Sending...');
+    setSubmitStatus('Sending');
 
     const templateParams = {
       name: (form.current.elements.namedItem('contact-name') as HTMLInputElement).value,
@@ -206,78 +473,145 @@ const Contact: React.FC = () => {
 
     window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
       .then(() => {
-        setSubmitStatus("Message Sent!");
+        setSubmitStatus('Message sent');
         form.current?.reset();
-        setTimeout(() => {
-          setSubmitStatus("Send Message");
+        window.setTimeout(() => {
+          setSubmitStatus('Send message');
           setIsSubmitting(false);
         }, 3000);
       }, (error: unknown) => {
         console.error('Email failed to send:', error);
-        setSubmitStatus("Failed to send");
-        setTimeout(() => {
-          setSubmitStatus("Send Message");
+        setSubmitStatus('Failed to send');
+        window.setTimeout(() => {
+          setSubmitStatus('Send message');
           setIsSubmitting(false);
         }, 3000);
       });
   };
 
-  const inputClass = 'block w-full rounded-[4px] border border-[var(--border)] bg-[var(--surface)] px-5 py-4 text-[var(--text)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:shadow-[var(--focus-ring)]';
-
   return (
-    <section id="contact" className="w-full bg-[var(--background)] py-20 md:py-28">
-      <div className={containerClass}>
-        <div className="grid gap-12 md:grid-cols-[0.78fr_1.22fr]">
+    <section id="contact" className={section}>
+      <Container>
+        <div className="grid gap-12 md:grid-cols-2 md:gap-16">
           <div>
-            <SectionMarker label="Contact" />
-            <div className="mt-10 space-y-6">
-              {contactItems.map(({ Icon, label, value }) => (
-                <div className="flex items-start gap-4" key={label}>
-                  <span className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--accent-soft)] text-[var(--accent)]">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <div>
-                    <h4 className="text-sm font-semibold uppercase text-[var(--text-muted)]">{label}</h4>
-                    {label === 'Email' ? (
-                      <p className="mt-1 text-lg text-[var(--primary)]"><a href={`mailto:${value}`} className="hover:text-[var(--accent)]">{value}</a></p>
+            <SectionHeader
+              label="Contact"
+              title={
+                <>
+                  Start with an idea, a project, or a{' '}
+                  <span className="serif-accent">question</span>.
+                </>
+              }
+            />
+
+            <div className="mt-10 border-t border-line">
+              {contactItems.map(({ Icon, label, value, href }, index) => {
+                const content = (
+                  <>
+                    <Icon className="h-4 w-4 shrink-0 text-muted" />
+                    <span className="flex flex-col">
+                      <span className="label">{label}</span>
+                      <span className="mt-1 text-sm text-ink">{value}</span>
+                    </span>
+                  </>
+                );
+
+                const shared = 'flex items-start gap-4 border-b border-line py-5';
+
+                return (
+                  <Reveal key={label} delay={index * 60}>
+                    {href ? (
+                      <a
+                        href={href}
+                        className={`${shared} transition-colors duration-[var(--dur)] hover:bg-[var(--hover-wash)]`}
+                      >
+                        {content}
+                      </a>
                     ) : (
-                      <p className="mt-1 text-lg text-[var(--primary)]">{value}</p>
+                      <div className={shared}>{content}</div>
                     )}
-                  </div>
-                </div>
-              ))}
+                  </Reveal>
+                );
+              })}
             </div>
           </div>
 
-          <form ref={form} id="contact-form" onSubmit={sendEmail} className="flex flex-col gap-4 border-t border-[var(--border)] pt-2 md:border-l md:border-t-0 md:pl-12">
-            <input className={inputClass} type="text" name="contact-name" id="contact-name" placeholder="Your Name" required />
-            <input className={inputClass} type="email" name="contact-email" id="contact-email" placeholder="Your Email" required />
-            <textarea className={`${inputClass} min-h-[170px] resize-y`} name="contact-message" id="contact-message" placeholder="Your Message" required></textarea>
-            <button type="submit" className={`${buttonClass} mt-4 self-start`} disabled={isSubmitting}>
-              {submitStatus}
-            </button>
-          </form>
+          <Reveal delay={160}>
+            <form
+              ref={form}
+              id="contact-form"
+              onSubmit={sendEmail}
+              className="flex flex-col gap-4 rounded-[var(--radius-card)] border border-line bg-surface p-6 md:p-8"
+            >
+              <div className="flex flex-col gap-2">
+                <label htmlFor="contact-name" className="label">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  name="contact-name"
+                  id="contact-name"
+                  placeholder="Your name"
+                  required
+                  className={fieldClass}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label htmlFor="contact-email" className="label">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="contact-email"
+                  id="contact-email"
+                  placeholder="you@example.com"
+                  required
+                  className={fieldClass}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label htmlFor="contact-message" className="label">
+                  Message
+                </label>
+                <textarea
+                  name="contact-message"
+                  id="contact-message"
+                  rows={5}
+                  placeholder="What should we make clearer, smarter, or more alive?"
+                  required
+                  className={`${fieldClass} resize-y`}
+                />
+              </div>
+
+              <Button type="submit" disabled={isSubmitting} className="mt-2 self-start">
+                {submitStatus}
+              </Button>
+            </form>
+          </Reveal>
         </div>
-      </div>
+      </Container>
     </section>
   );
 };
 
-const Home = () => {
-  return (
-    <div className="relative isolate min-h-screen w-full bg-[var(--footer-background)] font-sans text-[var(--text)]">
-      <Navbar />
-      <main className="relative z-[2] overflow-hidden bg-[var(--background)] shadow-[var(--page-shadow)]">
-        <Hero />
-        <About />
-        <SkillMap />
-        <Education />
-        <Activities />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
-  );
-};
+const Home = () => (
+  <div className="min-h-screen bg-bg text-ink">
+    <Navbar />
+    {/* opaque and above the fixed footer, so it covers it until scrolled past */}
+    <main className="relative z-10 bg-bg pb-16">
+      <Hero />
+      <About />
+      <WorkPreview />
+      <SkillMap />
+      <Education />
+      <Experience />
+      <Explore />
+      <Contact />
+    </main>
+    <Footer />
+  </div>
+);
 
 export default Home;

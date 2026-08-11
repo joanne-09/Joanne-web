@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useData } from '../contexts/DataContext';
+import { useData } from '../contexts/useData';
 
 const panelClass = "rounded-lg border border-[var(--border)] bg-[var(--background-dark)] p-6 shadow-sm";
 const inputClass = "w-full rounded border border-[var(--border)] bg-[var(--background)] px-3 py-2.5 text-[var(--text)] outline-none";
@@ -328,11 +328,12 @@ const Admin = () => {
   if (!isAuthenticated) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[var(--background)] px-6 text-[var(--text)]">
-        <form className={`${panelClass} flex w-full max-w-[300px] flex-col gap-5 backdrop-blur`} onSubmit={handleLogin}>
+        <form className={`${panelClass} flex w-full max-w-[300px] flex-col gap-5 backdrop-blur`} data-reveal="rise" onSubmit={handleLogin}>
           <h2 className="m-0 text-center text-2xl font-semibold text-[var(--text)]">Admin Login</h2>
           <input
             className={inputClass}
             type="password"
+            autoComplete="current-password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -346,7 +347,7 @@ const Admin = () => {
   return (
     <div className="min-h-screen bg-[var(--background)] px-5 py-[100px] text-[var(--text)]">
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-[30px] lg:flex-row">
-      <aside className={`${panelClass} h-max max-h-[80vh] flex-1 overflow-y-auto`}>
+      <aside className={`${panelClass} h-max max-h-[80vh] flex-1 overflow-y-auto`} data-reveal="rise">
         <h2 className="mb-4 text-2xl font-semibold text-[var(--text)]">Manage Articles</h2>
         {articles.length === 0 ? <p>No articles found.</p> : (
           <ul className="space-y-3">
@@ -374,7 +375,7 @@ const Admin = () => {
         )}
       </aside>
 
-      <main className={`${panelClass} flex-[2]`}>
+      <main className={`${panelClass} flex-[2]`} data-reveal="rise" style={{ '--reveal-delay': '110ms' } as React.CSSProperties}>
         <h1 className="mb-[30px] text-center text-4xl font-semibold text-[var(--text)]">Admin Dashboard</h1>
         <div className="mb-[30px] flex flex-wrap justify-center gap-5">
           <button

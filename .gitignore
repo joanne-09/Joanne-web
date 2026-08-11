@@ -18,6 +18,8 @@ lerna-debug.log*
 *.sln
 *.sw?
 .env
+.agents/
+skills-lock.json
 
 # frontend build artifacts
 frontend/node_modules/

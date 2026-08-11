@@ -1,0 +1,226 @@
+@layer base {
+  html {
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    /* so anchor targets clear the fixed header */
+    scroll-padding-top: calc(var(--nav-h) + 24px);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+  }
+
+  body {
+    min-width: 320px;
+    margin: 0;
+    overflow-x: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Onest", "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.65;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 0;
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  h3,
+  h4 {
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  button {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  ::selection {
+    background: var(--selection-background);
+  }
+
+  /*
+   * One focus treatment everywhere. Two rings — bg then ink — so it stays
+   * visible against both page and card surfaces in either theme.
+   */
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--radius-sm);
+  }
+}
+
+/*
+ * The single typographic gesture that carries emphasis now that there is no
+ * accent colour. Instrument Serif runs small for its point size, so it is
+ * optically corrected up to sit level with the surrounding Onest.
+ */
+.serif-accent {
+  font-family: "Instrument Serif", ui-serif, Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.12em;
+  letter-spacing: -0.01em;
+  color: var(--brand);
+}
+
+/*
+ * Display serif for oversized titles.
+ *
+ * Same family and accent as .serif-accent, but deliberately sets no font-size
+ * so the caller controls it. (.serif-accent carries a 1.12em optical bump for
+ * inline use, which would otherwise override a display-scale clamp — this file
+ * is unlayered and outranks Tailwind's utilities.)
+ */
+.display-serif {
+  font-family: "Instrument Serif", ui-serif, Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--brand);
+}
+
+/*
+ * Clears a pocket in the middle of the travel photo band for the title.
+ *
+ * The narrow breakpoint needs a wider, stronger wash: the ellipse is sized in
+ * percentages, so on a phone it covers far less absolute area and busy images
+ * were bleeding straight into the title and eyebrow. Kept as tight as
+ * legibility allows — washing the whole hero drains the photographs, which are
+ * the content here.
+ */
+.travel-wash {
+  background: radial-gradient(
+    ellipse 84% 36% at 50% 50%,
+    var(--bg) 0%,
+    color-mix(in oklab, var(--bg) 95%, transparent) 52%,
+    transparent 84%
+  );
+}
+
+@media (min-width: 768px) {
+  .travel-wash {
+    background: radial-gradient(
+      ellipse 44% 34% at 50% 50%,
+      var(--bg) 0%,
+      color-mix(in oklab, var(--bg) 88%, transparent) 42%,
+      transparent 74%
+    );
+  }
+}
+
+/* Eyebrow label above section headings. */
+.label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+/* Long-form reading measure for article bodies. */
+.prose {
+  max-width: var(--measure);
+  color: var(--text);
+}
+
+.prose > * + * {
+  margin-top: 1.25em;
+}
+
+.prose h2 {
+  margin-top: 2em;
+  font-size: 1.5rem;
+}
+
+.prose h3 {
+  margin-top: 1.75em;
+  font-size: 1.175rem;
+}
+
+.prose a {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-color: var(--border-strong);
+  transition: text-decoration-color var(--dur) var(--ease-out);
+}
+
+.prose a:hover {
+  color: var(--brand);
+  text-decoration-color: var(--brand);
+}
+
+.prose img {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+.prose blockquote {
+  margin: 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--border-strong);
+  color: var(--text-muted);
+}
+
+.prose code {
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-sm);
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  font-size: 0.9em;
+}
+
+.prose pre {
+  overflow-x: auto;
+  padding: 1rem 1.15rem;
+  border-radius: var(--radius-lg);
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+}
+
+.prose pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}

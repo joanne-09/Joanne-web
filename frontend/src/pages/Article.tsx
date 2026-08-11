@@ -1,16 +1,22 @@
 import React, { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-import { Navbar, Footer } from '../components/Essentials';
-import { useData } from '../contexts/DataContext';
+import { PageHeader, PageShell } from '../components/PageShell';
+import { Container, EmptyState, Reveal, Tag } from '../components/ui';
+import { SearchIcon } from '../components/Icons';
+import { useData } from '../contexts/useData';
+import { useViewNavigate } from '../lib/navigation';
 import LoadingPage from './LoadingPage';
 
-const tagButtonClass = (active: boolean) =>
-  `${active ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--text-light)]' : 'border-[var(--border-strong)] bg-transparent text-[var(--text)] hover:border-[var(--accent)] hover:text-[var(--accent)]'} rounded-full border px-4 py-2 text-sm font-semibold transition`;
+const filterChip = (active: boolean) =>
+  `inline-flex min-h-10 items-center rounded-[var(--radius-full)] border px-3.5 py-1.5 text-sm transition-[background-color,border-color,color] duration-[var(--dur)] md:min-h-0 ${
+    active
+      ? 'border-transparent bg-brand text-brand-contrast'
+      : 'border-line text-muted hover:border-line-strong hover:text-ink'
+  }`;
 
-const ArticleLists: React.FC = () => {
+const ArticleList: React.FC = () => {
   const { articles: posts, error } = useData();
-  const navigate = useNavigate();
+  const navigate = useViewNavigate();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -18,89 +24,127 @@ const ArticleLists: React.FC = () => {
 
   const allTags = useMemo(() => {
     const tags = new Set<string>();
-    posts.forEach(post => {
+    posts.forEach((post) => {
       if (post.tags && Array.isArray(post.tags)) {
-        post.tags.forEach(tag => tags.add(tag));
+        post.tags.forEach((tag) => tags.add(tag));
       }
     });
     return Array.from(tags).sort();
   }, [posts]);
 
-  const filteredPosts = useMemo(() => {
-    return posts.filter(post => {
-      const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesTag = selectedTag ? (post.tags && post.tags.includes(selectedTag)) : true;
-      return matchesSearch && matchesTag;
-    });
-  }, [posts, searchQuery, selectedTag]);
+  const filteredPosts = useMemo(
+    () =>
+      posts.filter((post) => {
+        const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesTag = selectedTag ? post.tags && post.tags.includes(selectedTag) : true;
+        return matchesSearch && matchesTag;
+      }),
+    [posts, searchQuery, selectedTag],
+  );
+
+  if (error) {
+    return (
+      <EmptyState
+        title="Articles unavailable"
+        body="Writing could not be loaded in this environment. The article index will fill in once the API is reachable."
+      />
+    );
+  }
 
   return (
-    <section className="w-full bg-[var(--background)]">
-      <div className="mb-10 flex w-full flex-col gap-5 border-y border-[var(--border-strong)] py-5">
-        <div className="flex flex-wrap items-center gap-3">
-          <button
-            className={`${isSearchVisible ? 'border-[var(--accent)] text-[var(--accent)]' : 'border-[var(--border-strong)] text-[var(--primary)]'} flex h-10 w-10 items-center justify-center rounded-full border bg-transparent transition hover:border-[var(--accent)] hover:text-[var(--accent)]`}
-            onClick={() => setIsSearchVisible(!isSearchVisible)}
-            title="Toggle Search"
-            aria-label="Toggle Search"
-          >
-            <span className="text-sm font-semibold" aria-hidden="true">⌕</span>
-          </button>
+    <>
+      <Reveal className="flex flex-col gap-4 border-b border-line pb-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="label">
+            {filteredPosts.length} {filteredPosts.length === 1 ? 'piece' : 'pieces'}
+          </p>
 
-          {allTags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              <button className={tagButtonClass(selectedTag === null)} onClick={() => setSelectedTag(null)}>All</button>
-              {allTags.map(tag => (
-                <button key={tag} className={tagButtonClass(selectedTag === tag)} onClick={() => setSelectedTag(tag)}>{tag}</button>
-              ))}
-            </div>
-          )}
+          <button
+            onClick={() => setIsSearchVisible((visible) => !visible)}
+            aria-label="Toggle search"
+            aria-expanded={isSearchVisible}
+            className={filterChip(isSearchVisible)}
+          >
+            <span className="flex items-center gap-2">
+              <SearchIcon className="h-3.5 w-3.5" />
+              Search
+            </span>
+          </button>
         </div>
 
-        {isSearchVisible && (
+        {isSearchVisible ? (
           <input
             type="text"
-            className="w-full border-0 border-b border-[var(--border-strong)] bg-[var(--input-background)] px-0 py-4 text-base text-[var(--text)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:shadow-[var(--focus-ring)]"
-            placeholder="Search articles by title..."
+            autoFocus
+            placeholder="Search articles by title…"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            className="w-full rounded-[var(--radius-md)] border border-line bg-surface px-4 py-3 text-sm text-ink placeholder:text-subtle transition-colors duration-[var(--dur)] hover:border-line-strong focus:border-line-strong"
           />
-        )}
-      </div>
+        ) : null}
 
-      {error && <p>Error fetching posts: {error}</p>}
-      {!error && (
-        <div className="border-t border-[var(--border-strong)]">
-          {filteredPosts.length > 0 ? (
-            filteredPosts.map((post, index) => (
-              <article
-                key={post.id}
-                className="group grid cursor-pointer gap-5 border-b border-[var(--border-strong)] py-8 transition hover:bg-[var(--button-hover-background)] md:grid-cols-[70px_1fr_150px]"
-                onClick={() => navigate(`/article/${post.id}`)}
+        {allTags.length ? (
+          <div className="flex flex-wrap gap-2">
+            <button className={filterChip(selectedTag === null)} onClick={() => setSelectedTag(null)}>
+              All
+            </button>
+            {allTags.map((tag) => (
+              <button
+                key={tag}
+                className={filterChip(selectedTag === tag)}
+                onClick={() => setSelectedTag(tag)}
               >
-                <p className="text-sm font-semibold text-[var(--accent)]">{String(index + 1).padStart(2, '0')}</p>
-                <div>
-                  <h2 className="text-3xl font-semibold leading-tight text-[var(--primary)] transition group-hover:text-[var(--accent)]">{post.title}</h2>
-                  {post.tags && post.tags.length > 0 && (
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {post.tags.map(tag => (
-                        <span key={tag} className="rounded-full border border-[var(--tag-border)] bg-[var(--tag-background)] px-3 py-1 text-xs font-semibold text-[var(--primary)]">{tag}</span>
+                {tag}
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </Reveal>
+
+      {filteredPosts.length ? (
+        <ol>
+          {filteredPosts.map((post, index) => (
+            <Reveal as="li" key={post.id} delay={index * 60}>
+              <button
+                onClick={() => navigate(`/article/${post.id}`)}
+                className="group grid w-full grid-cols-[2.5rem_1fr] gap-4 border-b border-line py-7 text-left transition-colors duration-[var(--dur)] hover:bg-[var(--hover-wash)] md:grid-cols-[3rem_1fr_9rem] md:gap-8"
+              >
+                <span className="label tabular-nums md:pt-1.5">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+
+                <span className="flex flex-col gap-3">
+                  <span className="text-xl font-semibold tracking-[-0.02em] text-ink transition-colors duration-[var(--dur)] group-hover:text-brand md:text-2xl">
+                    {post.title}
+                  </span>
+
+                  <span className="max-w-[64ch] text-sm leading-relaxed text-muted">
+                    {post.content.substring(0, 180)}…
+                  </span>
+
+                  {post.tags && post.tags.length ? (
+                    <span className="mt-1 flex flex-wrap gap-2">
+                      {post.tags.map((tag) => (
+                        <Tag key={tag}>{tag}</Tag>
                       ))}
-                    </div>
-                  )}
-                  <p className="mt-4 max-w-[780px] leading-7 text-[var(--text-muted)]">{post.content.substring(0, 180)}...</p>
-                </div>
-                <div className="text-sm text-[var(--text-muted)] md:text-right">
-                  <span>{new Date(post.created_at).toLocaleDateString()}</span>
-                </div>
-              </article>
-            ))
-          ) : (
-            <p className="py-8 text-[var(--text-muted)]">No posts found.</p>
-          )}
-        </div>
+                    </span>
+                  ) : null}
+                </span>
+
+                <span className="label col-start-2 md:col-start-3 md:pt-1.5 md:text-right">
+                  {new Date(post.created_at).toLocaleDateString()}
+                </span>
+              </button>
+            </Reveal>
+          ))}
+        </ol>
+      ) : (
+        <EmptyState
+          title="Nothing matches"
+          body="No posts match the current search or tag. Try clearing the filters."
+        />
       )}
-    </section>
+    </>
   );
 };
 
@@ -112,21 +156,17 @@ const Article: React.FC = () => {
   }
 
   return (
-    <div className="relative isolate min-h-screen w-full bg-[var(--footer-background)]">
-      <Navbar />
-      <main className="relative z-[2] min-h-screen bg-[var(--background)] px-5 pb-20 pt-28 text-[var(--text)] shadow-[var(--page-shadow)] md:pt-36">
-        <div className="mx-auto w-full max-w-[1180px]">
-          <div className="mb-14 grid gap-6 md:grid-cols-[0.72fr_1fr] md:items-end">
-            <div>
-              <p className="mb-3 text-sm font-semibold uppercase text-[var(--accent)]">Writing</p>
-              <h1 className="font-serif text-5xl font-semibold leading-tight text-[var(--primary)] md:text-7xl">Articles</h1>
-            </div>
-          </div>
-          <ArticleLists />
-        </div>
-      </main>
-      <Footer />
-    </div>
+    <PageShell>
+      <PageHeader
+        kicker="Writing"
+        title={'Articles'}
+        lead="Short notes on projects, interfaces, research details, and technical decisions."
+      />
+
+      <Container className="mt-14 pb-8">
+        <ArticleList />
+      </Container>
+    </PageShell>
   );
 };
 

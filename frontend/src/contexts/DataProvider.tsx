@@ -1,18 +1,18 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
-import type { Project, Post } from '@joanne-web/shared';
-
-interface DataContextType {
-  projects: Project[];
-  articles: Post[];
-  loading: boolean;
-  error: string | null;
-  refreshData: () => Promise<void>;
-}
-
-const DataContext = createContext<DataContextType | undefined>(undefined);
+import type { Post, Project } from '@joanne-web/shared';
+import { localPreviewPosts, localPreviewProjects, shouldUseLocalPreview } from '../data/localPreview';
+import { DataContext } from './dataContextCore';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL?.replace(/\/$/, '') || 'http://localhost:3001';
+
+const shouldFallbackToPreviewData = () => {
+  if (import.meta.env.DEV) return true;
+  if (typeof window === 'undefined') return false;
+
+  return ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname) ||
+    window.location.hostname.endsWith('github.io');
+};
 
 export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -23,6 +23,14 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const fetchData = async () => {
     setLoading(true);
     setError(null);
+
+    if (shouldUseLocalPreview(BACKEND_URL)) {
+      setProjects(localPreviewProjects);
+      setArticles(localPreviewPosts);
+      setLoading(false);
+      return;
+    }
+
     try {
       const [projectsRes, articlesRes] = await Promise.all([
         fetch(`${BACKEND_URL}/api/projects`),
@@ -38,6 +46,13 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setProjects(projectsData);
       setArticles(articlesData);
     } catch (err: unknown) {
+      if (shouldFallbackToPreviewData()) {
+        setProjects(localPreviewProjects);
+        setArticles(localPreviewPosts);
+        setError(null);
+        return;
+      }
+
       console.error("Error fetching data:", err);
       setError(err instanceof Error ? err.message : "Failed to fetch data");
     } finally {
@@ -54,12 +69,4 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       {children}
     </DataContext.Provider>
   );
-};
-
-export const useData = () => {
-  const context = useContext(DataContext);
-  if (context === undefined) {
-    throw new Error('useData must be used within a DataProvider');
-  }
-  return context;
 };

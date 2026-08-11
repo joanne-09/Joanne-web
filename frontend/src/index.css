@@ -1,64 +1,35 @@
 @import "tailwindcss";
 @import "./variables.css";
+@import "./styles/base.css";
+@import "./styles/motion.css";
 
+/*
+ * Tailwind theme bridge.
+ *
+ * These point at the runtime CSS variables rather than fixed values, so
+ * utilities like bg-surface / text-ink / border-line follow the active theme
+ * instead of being baked in at build time.
+ */
 @theme {
-  --font-sans: "Source Sans Pro", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Noto Serif TC", ui-serif, Georgia, serif;
-  --font-travel: "Source Sans Pro", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Playfair Display", ui-serif, Georgia, serif;
-}
+  --font-sans: "Onest", "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
 
-@layer base {
-  html {
-    box-sizing: border-box;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    scroll-behavior: smooth;
-  }
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-soft: var(--surface-soft);
+  --color-surface-strong: var(--surface-strong);
+  --color-ink: var(--text);
+  --color-muted: var(--text-muted);
+  --color-subtle: var(--text-subtle);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-invert: var(--fg-invert);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-contrast: var(--brand-contrast);
 
-  *, *::before, *::after {
-    box-sizing: inherit;
-  }
+  --radius-card: var(--radius-lg);
 
-  body {
-    min-width: 320px;
-    margin: 0;
-    overflow-x: hidden;
-    background: var(--footer-background);
-    color: var(--text);
-    font-family: "Source Sans Pro", ui-sans-serif, system-ui, sans-serif;
-    line-height: 1.6;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  button,
-  input,
-  textarea {
-    font: inherit;
-  }
-
-  button {
-    cursor: pointer;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  ::selection {
-    background: var(--selection-background);
-  }
-}
-
-@keyframes marquee-left {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-@keyframes marquee-right {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 }
