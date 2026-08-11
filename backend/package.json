@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node dist/server.js",
     "build": "npx tsc",
-    "dev": "ts-node src/server.ts"
+    "dev": "ts-node src/server.ts",
+    "test": "node --test -r ts-node/register \"src/**/*.test.ts\""
   },
   "dependencies": {
     "@joanne-web/shared": "file:../shared",
