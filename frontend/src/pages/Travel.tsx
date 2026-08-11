@@ -134,7 +134,7 @@ const Travel: React.FC = () => {
             */}
             <div className="pointer-events-none relative px-5 text-center">
               <Reveal as="p" className="label absolute inset-x-0 bottom-full mb-3">
-                A visual archive
+                Visual archive
               </Reveal>
 
               <Reveal
@@ -153,7 +153,7 @@ const Travel: React.FC = () => {
             label="Gallery"
             title={
               <>
-                Places, textures, food, and small <span className="serif-accent">memories</span>.
+                Places, textures, food, and <span className="serif-accent">memories</span>.
               </>
             }
             lead="Open a set to see everything from that trip."

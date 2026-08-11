@@ -286,8 +286,7 @@ export const Footer: React.FC = () => {
               Joanne <span className="serif-accent">Chen</span>
             </p>
             <p className="mt-3 text-sm leading-relaxed text-muted">
-              Computer science student building small, considered systems across AI, software, and
-              visual storytelling.
+              A computer science student who enjoys exploring new knowledge and creating interesting stuff.
             </p>
           </div>
 

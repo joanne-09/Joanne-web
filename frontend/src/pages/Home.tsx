@@ -125,22 +125,22 @@ const educationData: EducationItem[] = [
 
 const activitiesData: ActivityItem[] = [
   {
+    title: '14th Meichu Hackathon',
+    period: '2025 — Present',
+    role: 'Development Department Lead',
+    description: 'Lead the development team and collaborate with other departments to align goals, coordinate responsibilities, and keep the hackathon moving forward.',
+  },
+  {
     title: 'NTHU Blockchain Club x NTHU GDSC',
-    period: '2024 — Present',
+    period: '2024 — 2025',
     role: 'Activities Department',
     description: 'Lead the planning and execution of technical workshops and networking events with industry professionals. Develop timelines and coordinate teams for club activities focused on blockchain technology and software development.',
   },
   {
     title: 'NYCU Google Developer Student Club',
-    period: '2025 — Present',
+    period: '2025.2 — 2025.9',
     role: 'Public Relations and Activities',
     description: 'Build relationships with industry professionals and potential speakers for technical workshops. Collaborate with lecturers on curriculum and improve club visibility through strategic content.',
-  },
-  {
-    title: 'NTHU Pop Dance Club',
-    period: '2023 — 2024',
-    role: 'Member',
-    description: 'Participated in intensive hip-hop dance training and semester showcases, developing teamwork, discipline, and performance confidence through collaborative artistic work.',
   },
 ];
 
@@ -237,28 +237,28 @@ const About: React.FC = () => (
 
         <div className="order-1 flex flex-col gap-5 md:order-2">
           <Reveal as="p" className="label">
-            About
+            About me
           </Reveal>
           <Reveal
             as="p"
             delay={80}
             className="text-[clamp(1.25rem,2.2vw,1.6rem)] font-medium leading-snug tracking-[-0.02em] text-ink"
           >
-            I'm curious about new ideas and enjoy learning by{' '}
-            <span className="serif-accent">building</span> things.
+            Hi, I'm <span className="serif-accent">Joanne</span>.
           </Reveal>
           <Reveal as="p" delay={140} className="max-w-[58ch] text-base leading-relaxed text-muted">
-            I study Computer Science at National Tsing Hua University. I'm especially interested in
-            AI, computer vision, and web development.
+            I'm a Computer Science student at National Tsing Hua University, with
+            interests in AI and computer vision. In the future, I want to explore full-stack
+            development and finance, broaden what I know, and see where those interests lead me.
           </Reveal>
           <Reveal as="p" delay={200} className="max-w-[58ch] text-base leading-relaxed text-muted">
-            Outside of class, I enjoy dancing, travelling, and helping organize events with student
-            clubs.
+            Outside of class, I enjoy music, photography, travel, and anime. I'm also looking
+            forward to spending more time outdoors and trying new activities.
           </Reveal>
           <Reveal delay={260} className="mt-2 flex flex-wrap gap-2">
-            <Tag>NTHU Computer Science</Tag>
-            <Tag>AI / Computer Vision / Web</Tag>
-            <Tag>Dance / Travel / Student Clubs</Tag>
+            <Tag>Computer Science</Tag>
+            <Tag>Photography</Tag>
+            <Tag>Music</Tag>
           </Reveal>
         </div>
       </div>
@@ -277,8 +277,7 @@ const WorkPreview: React.FC = () => {
           label="Selected work"
           title={
             <>
-              Projects that move between prototypes, systems, and{' '}
-              <span className="serif-accent">product</span>-minded interfaces.
+              Academic and personal <span className="serif-accent">projects</span>.
             </>
           }
         />
@@ -382,13 +381,13 @@ const Experience: React.FC = () => (
   <section id="experience" className={section}>
     <Container>
       <SectionHeader
-        label="Experience"
-        title={
-          <>
-            Where the work became <span className="serif-accent">collaborative</span>.
-          </>
-        }
-      />
+          label="Experience"
+          title={
+            <>
+              Student <span className="serif-accent">organizations</span> and activities.
+            </>
+          }
+        />
       <Timeline
         entries={activitiesData.map((item) => ({
           key: item.title,
@@ -498,7 +497,7 @@ const Contact: React.FC = () => {
               label="Contact"
               title={
                 <>
-                  Start with an idea, a project, or a{' '}
+                  Start with a{' '}
                   <span className="serif-accent">question</span>.
                 </>
               }

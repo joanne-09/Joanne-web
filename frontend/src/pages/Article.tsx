@@ -160,7 +160,7 @@ const Article: React.FC = () => {
       <PageHeader
         kicker="Writing"
         title={'Articles'}
-        lead="Short notes on projects, interfaces, research details, and technical decisions."
+        lead="Short notes on projects and thoughts."
       />
 
       <Container className="mt-14 pb-8">

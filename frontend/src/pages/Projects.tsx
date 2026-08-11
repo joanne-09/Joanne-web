@@ -28,7 +28,7 @@ const Projects: React.FC = () => {
       <PageHeader
         kicker="Selected work"
         title={'Projects'}
-        lead="Practical builds across AI, web systems, games, and interface experiments."
+        lead="Projects span multiple disciplines, explore compelling ideas, and solve interesting problems."
       />
 
       <Container className="mt-14 pb-8">

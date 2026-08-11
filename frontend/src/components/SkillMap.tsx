@@ -307,7 +307,7 @@ const SkillMap: React.FC = () => {
           label="Skills"
           title={
             <>
-              What I reach for, weighted by <span className="serif-accent">confidence</span>.
+              Technical <span className="serif-accent">skills</span>, tools, and languages.
             </>
           }
           lead="Bigger and more solid means more practised. Drag a bubble to move it, or tap one to see what is inside."
