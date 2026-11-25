@@ -178,7 +178,17 @@ const experienceData: ExperienceItem[] = [
     role: 'RD Intern, Information and Communications Research Laboratories',
     location: 'Hsinchu, Taiwan',
     story: [
-      'I work on agent-teams, a Claude Code plugin where AI agents for requirements, architecture, development, QA and project management build software together from one GitHub Projects board. I wrote every agent\'s role and added a QA agent that tests the running app in a browser rather than reading the code, and we made the board the only way agents hand off work, so permissions are enforced in code, not prompts. I also turned a two-hour setup into a single install command, so project managers who are not engineers can use it themselves.',
+      'Building agent-teams, a Claude Code plugin where AI agents for requirements, architecture, development, QA and project management ship software together from one GitHub Projects board. I wrote the agents\' roles, added a QA agent that tests the running app in a browser, and cut setup from two hours to one command.',
+    ],
+  },
+  {
+    key: 'syslab',
+    period: 'Feb 2026 — Present',
+    title: 'NTHU SYSLAB',
+    role: 'Undergraduate Student Researcher, advised by Prof. Yun-Chih Chen',
+    location: 'Hsinchu, Taiwan',
+    story: [
+      'Researching LLM serving systems: offloading KV-cache to SSD for agentic coding workloads, built on vLLM, LMCache and ZNS SSDs. This work became our ASP-DAC 2027 paper.',
     ],
   },
   {
@@ -188,7 +198,17 @@ const experienceData: ExperienceItem[] = [
     role: 'Head of Development',
     location: 'Hsinchu, Taiwan',
     story: [
-      'I led a six-person team building the software behind the 2026 event, turning what other departments needed into plans we could ship: an event app, a registration site and a blog. Our biggest change was replacing the old LINE bot with a React web app on FastAPI and AWS, which about 400 participants, staff and visitors used, and all three services stayed up through the whole event.',
+      'Led a six-person team that built the event app, registration site and blog for the 2026 hackathon. Our web app replaced the old LINE bot and served about 400 participants, staff and visitors without going down.',
+    ],
+  },
+  {
+    key: 'datalab',
+    period: 'Jan 2025 — Present',
+    title: 'NTHU DATALAB',
+    role: 'Undergraduate Student Researcher, advised by Prof. Shan-Hung Wu',
+    location: 'Hsinchu, Taiwan',
+    story: [
+      'Researching LLM creative writing: teaching story-writing models to learn from readers\' written critiques instead of a single score.',
     ],
   },
 ];

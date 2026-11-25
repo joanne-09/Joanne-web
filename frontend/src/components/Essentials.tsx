@@ -238,7 +238,7 @@ const socials = [
   { href: 'https://github.com/joanne-09', label: 'GitHub', Icon: GithubIcon },
   { href: 'https://www.instagram.com/joanne09._/', label: 'Instagram', Icon: InstagramIcon },
   {
-    href: 'https://www.linkedin.com/in/%E9%99%B3-%E8%8A%B7%E5%A6%8D-379085357/',
+    href: 'https://www.linkedin.com/in/chih-yen-chen-379085357/',
     label: 'LinkedIn',
     Icon: LinkedinIcon,
   },
