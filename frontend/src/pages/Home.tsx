@@ -4,6 +4,7 @@ import type { Project } from '@joanne-web/shared';
 
 import { Navbar, Footer } from '../components/Essentials';
 import { MailIcon, MapPinIcon, PhoneIcon } from '../components/Icons';
+import { KvCacheViz, WritingViz } from '../components/ResearchViz';
 import SkillMap from '../components/SkillMap';
 import {
   Button,
@@ -17,6 +18,7 @@ import {
 } from '../components/ui';
 import { useData } from '../contexts/useData';
 import { useScrollParallax } from '../lib/motion';
+import useHoverOrInView from '../lib/useHoverOrInView';
 import { scrollToId, useViewNavigate } from '../lib/navigation';
 
 interface EducationItem {
@@ -404,12 +406,14 @@ const Timeline: React.FC<{ entries: TimelineEntry[] }> = ({ entries }) => (
         as="li"
         key={entry.key}
         delay={index * 70}
-        className="grid gap-3 border-b border-line py-7 md:grid-cols-[11rem_1fr] md:gap-8"
+        className="group grid gap-3 border-b border-line py-7 md:grid-cols-[11rem_1fr] md:gap-8"
       >
         <p className="label md:pt-1.5">{entry.period}</p>
 
         <div>
-          <h3 className="text-lg font-semibold text-ink">{entry.title}</h3>
+          <h3 className="text-lg font-semibold text-ink transition-colors duration-[var(--dur)] group-hover:text-brand group-focus-within:text-brand">
+            {entry.title}
+          </h3>
           <p className="mt-1 text-sm text-muted">{entry.subtitle}</p>
           {Array.isArray(entry.body) ? (
             <BulletList points={entry.body} />
@@ -469,6 +473,73 @@ const BulletList: React.FC<{ points: string[] }> = ({ points }) => (
   </ul>
 );
 
+const researchViz: Record<string, React.FC<{ active: boolean }>> = {
+  'multi-agent-kv-cache': KvCacheViz,
+  'engaging-creative-writing': WritingViz,
+};
+
+const ResearchRow: React.FC<{ item: ResearchItem }> = ({ item }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const active = useHoverOrInView(ref);
+  const Viz = researchViz[item.key];
+
+  /*
+   * lg: the third column animates from 0 to 19rem, so the copy narrows to the
+   * left while the results card slides in from the right edge. Nothing is
+   * reserved while it is hidden. Below lg the card opens under the copy.
+   */
+  return (
+    <div
+      ref={ref}
+      className={`grid items-start gap-3 py-8 md:grid-cols-[11rem_1fr] md:gap-8 lg:gap-x-0 lg:transition-[grid-template-columns] lg:duration-500 lg:ease-[var(--ease-out-quint)] ${
+        active ? 'lg:grid-cols-[11rem_1fr_22rem]' : 'lg:grid-cols-[11rem_1fr_0rem]'
+      }`}
+    >
+      <p className="label md:pt-1.5 lg:pr-8">{item.period}</p>
+      <div className="min-w-0">
+        <p className="label">{item.kind}</p>
+        <h3
+          className={`mt-2 text-lg font-semibold leading-snug transition-colors duration-[var(--dur)] ${
+            active ? 'text-brand' : 'text-ink'
+          }`}
+        >
+          {item.title}
+        </h3>
+        <p className="mt-1 text-sm text-muted">{item.subtitle}</p>
+        {item.venue ? <p className="mt-1 text-xs text-subtle">{item.venue}</p> : null}
+        {item.link ? (
+          <a
+            href={item.link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-block text-xs text-subtle underline-offset-4 transition-colors duration-[var(--dur)] hover:text-ink hover:underline"
+          >
+            {item.link.label} ↗
+          </a>
+        ) : null}
+        <Story paragraphs={item.story} />
+      </div>
+      {Viz ? (
+        <div
+          className={`grid min-w-0 transition-[grid-template-rows,opacity] duration-500 ease-[var(--ease-out-quint)] md:col-start-2 lg:relative lg:col-start-3 lg:row-start-1 lg:block lg:self-stretch lg:overflow-x-clip lg:overflow-y-visible ${
+            active ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+          }`}
+        >
+          <div className="min-h-0 overflow-hidden p-1 lg:absolute lg:inset-x-0 lg:top-0 lg:overflow-visible lg:p-0">
+            <div
+              className={`pt-2 transition-transform duration-500 ease-[var(--ease-out-quint)] lg:ml-auto lg:mr-1 lg:w-[20.5rem] lg:pt-0 ${
+                active ? 'lg:translate-x-0' : 'lg:translate-x-12'
+              }`}
+            >
+              <Viz active={active} />
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
 const Research: React.FC = () => (
   <section id="research" className={section}>
     <Container>
@@ -482,30 +553,8 @@ const Research: React.FC = () => (
       />
       <ol className="mt-10 border-t border-line">
         {researchData.map((item, index) => (
-          <Reveal
-            as="li"
-            key={item.key}
-            delay={index * 70}
-            className="grid gap-3 border-b border-line py-8 md:grid-cols-[11rem_1fr] md:gap-8"
-          >
-            <p className="label md:pt-1.5">{item.period}</p>
-            <div>
-              <p className="label">{item.kind}</p>
-              <h3 className="mt-2 text-lg font-semibold leading-snug text-ink">{item.title}</h3>
-              <p className="mt-1 text-sm text-muted">{item.subtitle}</p>
-              {item.venue ? <p className="mt-1 text-xs text-subtle">{item.venue}</p> : null}
-              {item.link ? (
-                <a
-                  href={item.link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 inline-block text-xs text-subtle underline-offset-4 transition-colors duration-[var(--dur)] hover:text-ink hover:underline"
-                >
-                  {item.link.label} ↗
-                </a>
-              ) : null}
-              <Story paragraphs={item.story} />
-            </div>
+          <Reveal as="li" key={item.key} delay={index * 70} className="border-b border-line">
+            <ResearchRow item={item} />
           </Reveal>
         ))}
       </ol>
@@ -530,11 +579,13 @@ const Experience: React.FC = () => (
             as="li"
             key={item.key}
             delay={index * 70}
-            className="grid gap-3 border-b border-line py-8 md:grid-cols-[11rem_1fr] md:gap-8"
+            className="group grid gap-3 border-b border-line py-8 md:grid-cols-[11rem_1fr] md:gap-8"
           >
             <p className="label md:pt-1.5">{item.period}</p>
             <div>
-              <h3 className="text-lg font-semibold text-ink">{item.title}</h3>
+              <h3 className="text-lg font-semibold text-ink transition-colors duration-[var(--dur)] group-hover:text-brand group-focus-within:text-brand">
+                {item.title}
+              </h3>
               <p className="mt-1 text-sm text-muted">{item.role}</p>
               <p className="mt-1 text-xs text-subtle">{item.location}</p>
               <Story paragraphs={item.story} />
