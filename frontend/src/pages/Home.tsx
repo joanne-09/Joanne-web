@@ -123,18 +123,88 @@ const educationData: EducationItem[] = [
   },
 ];
 
-const activitiesData: ActivityItem[] = [
+interface ResearchItem {
+  key: string;
+  period: string;
+  kind: string;
+  title: string;
+  subtitle: string;
+  venue?: string;
+  link?: { href: string; label: string };
+  points: string[];
+}
+
+const researchData: ResearchItem[] = [
   {
-    title: '14th Meichu Hackathon',
-    period: '2025 — Present',
-    role: 'Development Department Lead',
-    description: 'Lead the development team and collaborate with other departments to align goals, coordinate responsibilities, and keep the hackathon moving forward.',
+    key: 'multi-agent-kv-cache',
+    period: 'Jan 2027',
+    kind: 'Publication · ASP-DAC 2027',
+    title: 'Multi-Agent LLM Serving with SSD-Based KV-Cache Offloading',
+    subtitle: 'Yu-Chen Lee, Chih Yen Chen, Ming-Yi Kuo, Yun-Chih Chen',
+    venue: 'Asia and South Pacific Design Automation Conference, Tokyo · Accepted, regular paper (acceptance rate 29.5%)',
+    link: { href: 'https://doi.org/10.1145/3840404.3848362', label: 'DOI: 10.1145/3840404.3848362' },
+    points: [
+      'Sourced and analyzed a month of Claude Code and Codex traces (1,820 sessions, 189K requests), finding that 99% of KV-cache blocks offloaded to SSD were later invalidated by conversation compaction or session termination.',
+      'Built the trace-replay ZNS SSD simulation and evaluation framework, validated within 0.33% of FEMU and 3% of a real vLLM + LMCache deployment, and ran ablations against five prior-work baselines.',
+      'Designed the session-based placement and eviction policy and co-designed deterministic write suppression, cutting system write amplification by 29.2% versus LMCache with no lost reads, and mean avoidable recomputation from 375 to 220 tokens/turn.',
+    ],
   },
   {
+    key: 'engaging-creative-writing',
+    period: 'Feb 2025 — Oct 2026',
+    kind: 'Undergraduate research · NTHU',
+    title: 'Improving Engagement with LLM-Generated Creative Writing through Machine Learning',
+    subtitle: 'Undergraduate Researcher, advised by Prof. Shan-Hung Wu',
+    points: [
+      'Applied SDPO to story writing for the first time (OLMo-3-7B, LoRA) with own/other/no-critique controls, showing stories shrank to 72.1% of base length and the model could not separate praise from criticism.',
+      'Proposed Anchored Polarity Contrast, which contrasts a frozen base model reading the same quote labeled as a flaw versus a strength, and anchors the training target to the base model.',
+      'Preserved story length at 95.9% and lowered the probability of criticized passages in 73% of stories (vs. 48% for SDPO); 95% confidence intervals ruled out regression on GSM8K and HumanEval/MBPP beyond pre-set margins.',
+    ],
+  },
+];
+
+interface ExperienceItem {
+  key: string;
+  period: string;
+  title: string;
+  role: string;
+  location: string;
+  points: string[];
+}
+
+const experienceData: ExperienceItem[] = [
+  {
+    key: 'itri',
+    period: 'Jul 2026 — Present',
+    title: 'Industrial Technology Research Institute (ITRI)',
+    role: 'RD Intern, Information and Communications Research Laboratories',
+    location: 'Hsinchu, Taiwan',
+    points: [
+      'Co-developed agent-teams, a Claude Code plugin in which requirements, architecture, development, QA, and manager AI agents collaborate on one GitHub Projects board under minimal human gating.',
+      "Wrote every agent's role instructions and added a QA browser agent that tests the running app, not the code.",
+      'Co-designed board status and role fields as the sole agent handoff interface and remote branches as a card-claim lock, enforcing merge and QA permissions in code rather than prompts.',
+      'Rebuilt the requester and executor flows from a blank branch, turned a 2-hour setup into a one-command install script for non-engineer project managers, and tested the full workflow on a dashboard project with 768 test cases.',
+    ],
+  },
+  {
+    key: 'meichu',
+    period: 'Nov 2025 — Oct 2026',
+    title: '14th Meichu Hackathon',
+    role: 'Head of Development',
+    location: 'Hsinchu, Taiwan',
+    points: [
+      'Led a 6-person team that shipped 3 services for the 2026 event (an event app used by about 400 participants, staff, and visitors; registration site; blog), turning cross-department requirements into plans and milestones.',
+      'Replaced the LINE-bot participant experience with a React/TypeScript PWA on FastAPI and PostgreSQL, deployed on AWS with Docker, Nginx, and CI/CD, and kept all services running through the event.',
+    ],
+  },
+];
+
+const activitiesData: ActivityItem[] = [
+  {
     title: 'NTHU Blockchain Club x NTHU GDSC',
-    period: '2024 — 2025',
+    period: '2024.9 — 2026.1',
     role: 'Activities Department',
-    description: 'Lead the planning and execution of technical workshops and networking events with industry professionals. Develop timelines and coordinate teams for club activities focused on blockchain technology and software development.',
+    description: 'Organized 2 technical workshops and industry networking events, coordinating speakers, curricula, and teams for club activities focused on blockchain technology and software development.',
   },
   {
     title: 'NYCU Google Developer Student Club',
@@ -176,6 +246,8 @@ const projectTags = (tech: unknown) => {
   return [];
 };
 
+const CV_URL = imageUrl('cv.pdf');
+
 // Tighter rhythm on phones — the desktop spacing stacked up to a needlessly
 // long scroll once every section was in one column.
 const section = 'py-14 md:py-28';
@@ -207,6 +279,9 @@ const Hero: React.FC = () => {
 
         <Reveal delay={400} className="mt-10 flex flex-wrap items-center gap-3">
           <Button onClick={() => navigate('/projects')}>View selected work</Button>
+          <Button variant="ghost" href={CV_URL} external>
+            View CV <span aria-hidden="true">↗</span>
+          </Button>
           <Button variant="ghost" onClick={() => scrollToId('contact')}>
             Say hello
           </Button>
@@ -377,11 +452,99 @@ const Education: React.FC = () => (
   </section>
 );
 
+const BulletList: React.FC<{ points: string[] }> = ({ points }) => (
+  <ul className="mt-4 flex max-w-[68ch] flex-col gap-2.5">
+    {points.map((point) => (
+      <li key={point} className="flex gap-3 text-sm leading-relaxed text-muted">
+        <span aria-hidden="true" className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-line-strong" />
+        <span>{point}</span>
+      </li>
+    ))}
+  </ul>
+);
+
+const Research: React.FC = () => (
+  <section id="research" className={section}>
+    <Container>
+      <SectionHeader
+        label="Research"
+        title={
+          <>
+            Publications and <span className="serif-accent">research</span>.
+          </>
+        }
+      />
+      <ol className="mt-10 border-t border-line">
+        {researchData.map((item, index) => (
+          <Reveal
+            as="li"
+            key={item.key}
+            delay={index * 70}
+            className="grid gap-3 border-b border-line py-8 md:grid-cols-[11rem_1fr] md:gap-8"
+          >
+            <p className="label md:pt-1.5">{item.period}</p>
+            <div>
+              <p className="label">{item.kind}</p>
+              <h3 className="mt-2 text-lg font-semibold leading-snug text-ink">{item.title}</h3>
+              <p className="mt-1 text-sm text-muted">{item.subtitle}</p>
+              {item.venue ? <p className="mt-1 text-xs text-subtle">{item.venue}</p> : null}
+              {item.link ? (
+                <a
+                  href={item.link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-block text-xs text-subtle underline-offset-4 transition-colors duration-[var(--dur)] hover:text-ink hover:underline"
+                >
+                  {item.link.label} ↗
+                </a>
+              ) : null}
+              <BulletList points={item.points} />
+            </div>
+          </Reveal>
+        ))}
+      </ol>
+    </Container>
+  </section>
+);
+
 const Experience: React.FC = () => (
   <section id="experience" className={section}>
     <Container>
       <SectionHeader
-          label="Experience"
+        label="Experience"
+        title={
+          <>
+            Where I've <span className="serif-accent">shipped</span> work.
+          </>
+        }
+      />
+      <ol className="mt-10 border-t border-line">
+        {experienceData.map((item, index) => (
+          <Reveal
+            as="li"
+            key={item.key}
+            delay={index * 70}
+            className="grid gap-3 border-b border-line py-8 md:grid-cols-[11rem_1fr] md:gap-8"
+          >
+            <p className="label md:pt-1.5">{item.period}</p>
+            <div>
+              <h3 className="text-lg font-semibold text-ink">{item.title}</h3>
+              <p className="mt-1 text-sm text-muted">{item.role}</p>
+              <p className="mt-1 text-xs text-subtle">{item.location}</p>
+              <BulletList points={item.points} />
+            </div>
+          </Reveal>
+        ))}
+      </ol>
+    </Container>
+  </section>
+);
+
+const Activities: React.FC = () => (
+  <section id="activities" className={section}>
+    <Container>
+      <SectionHeader
+          label="Activities"
           title={
             <>
               Student <span className="serif-accent">organizations</span> and activities.
@@ -602,10 +765,12 @@ const Home = () => (
     <main className="relative z-10 bg-bg pb-16">
       <Hero />
       <About />
+      <Research />
+      <Experience />
       <WorkPreview />
       <SkillMap />
       <Education />
-      <Experience />
+      <Activities />
       <Explore />
       <Contact />
     </main>
