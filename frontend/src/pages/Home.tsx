@@ -24,7 +24,7 @@ interface EducationItem {
   institution: string;
   degree: string;
   focus: string;
-  note: string;
+  note: string[];
 }
 
 interface ActivityItem {
@@ -112,14 +112,14 @@ const educationData: EducationItem[] = [
     institution: 'National Tsing Hua University',
     degree: 'B.S. in Computer Science',
     focus: 'Computer Science / AI / Systems',
-    note: 'Current academic base for machine learning, computer vision, and software development work.',
+    note: ['GPA: 4.10/4.30', 'Linear Algebra, Computer Architecture, Parallel Programming, Introduction to Database Systems, Storage System Design and Implementation, Introduction to Machine Learning, Deep Learning'],
   },
   {
     year: '2020 — 2023',
     institution: 'National Experimental High School, Hsinchu',
     degree: 'Normal Program',
     focus: 'Science Foundation / Independent Learning',
-    note: 'Built the study habits and technical curiosity that later shaped project-based work.',
+    note: ['Built the study habits and technical curiosity that later shaped project-based work.'],
   },
 ];
 
@@ -131,7 +131,7 @@ interface ResearchItem {
   subtitle: string;
   venue?: string;
   link?: { href: string; label: string };
-  points: string[];
+  story: string[];
 }
 
 const researchData: ResearchItem[] = [
@@ -141,12 +141,10 @@ const researchData: ResearchItem[] = [
     kind: 'Publication · ASP-DAC 2027',
     title: 'Multi-Agent LLM Serving with SSD-Based KV-Cache Offloading',
     subtitle: 'Yu-Chen Lee, Chih Yen Chen, Ming-Yi Kuo, Yun-Chih Chen',
-    venue: 'Asia and South Pacific Design Automation Conference, Tokyo · Accepted, regular paper (acceptance rate 29.5%)',
+    venue: 'Asia and South Pacific Design Automation Conference 2027 · Accepted, regular paper',
     link: { href: 'https://doi.org/10.1145/3840404.3848362', label: 'DOI: 10.1145/3840404.3848362' },
-    points: [
-      'Sourced and analyzed a month of Claude Code and Codex traces (1,820 sessions, 189K requests), finding that 99% of KV-cache blocks offloaded to SSD were later invalidated by conversation compaction or session termination.',
-      'Built the trace-replay ZNS SSD simulation and evaluation framework, validated within 0.33% of FEMU and 3% of a real vLLM + LMCache deployment, and ran ablations against five prior-work baselines.',
-      'Designed the session-based placement and eviction policy and co-designed deterministic write suppression, cutting system write amplification by 29.2% versus LMCache with no lost reads, and mean avoidable recomputation from 375 to 220 tokens/turn.',
+    story: [
+      'Coding agents keep so many long sessions alive that their KV-cache gets offloaded to SSD, and every write wears the flash down. Replaying a month of real Claude Code and Codex traffic, I found that 99% of those writes were never needed again, wiped out by conversation compaction or by sessions ending. Because both are definite events, the system can simply hold data in memory and cancel the write once it knows. I built the replay and evaluation framework and helped design this suppression, which cut write amplification by 29.2% with no lost reads.',
     ],
   },
   {
@@ -154,11 +152,9 @@ const researchData: ResearchItem[] = [
     period: 'Feb 2025 — Oct 2026',
     kind: 'Undergraduate research · NTHU',
     title: 'Improving Engagement with LLM-Generated Creative Writing through Machine Learning',
-    subtitle: 'Undergraduate Researcher, advised by Prof. Shan-Hung Wu',
-    points: [
-      'Applied SDPO to story writing for the first time (OLMo-3-7B, LoRA) with own/other/no-critique controls, showing stories shrank to 72.1% of base length and the model could not separate praise from criticism.',
-      'Proposed Anchored Polarity Contrast, which contrasts a frozen base model reading the same quote labeled as a flaw versus a strength, and anchors the training target to the base model.',
-      'Preserved story length at 95.9% and lowered the probability of criticized passages in 73% of stories (vs. 48% for SDPO); 95% confidence intervals ruled out regression on GSM8K and HumanEval/MBPP beyond pre-set margins.',
+    subtitle: 'NTHU DATALAB, advised by Prof. Shan-Hung Wu',
+    story: [
+      'Stories have no right answer, so I asked whether a writing model could learn straight from readers\' written critiques instead of a single score. Applying SDPO to stories for the first time, my control experiments showed the model only learned that "a critique means write shorter": stories shrank to 72.1% of their length, and it reacted the same way to praise as to criticism. My fix, Anchored Polarity Contrast, has the original model read the same quote labeled once as a flaw and once as a strength, and trains only on the difference. Stories kept 95.9% of their length while criticized passages were pushed down, with no loss in math or coding ability.',
     ],
   },
 ];
@@ -169,7 +165,7 @@ interface ExperienceItem {
   title: string;
   role: string;
   location: string;
-  points: string[];
+  story: string[];
 }
 
 const experienceData: ExperienceItem[] = [
@@ -179,11 +175,8 @@ const experienceData: ExperienceItem[] = [
     title: 'Industrial Technology Research Institute (ITRI)',
     role: 'RD Intern, Information and Communications Research Laboratories',
     location: 'Hsinchu, Taiwan',
-    points: [
-      'Co-developed agent-teams, a Claude Code plugin in which requirements, architecture, development, QA, and manager AI agents collaborate on one GitHub Projects board under minimal human gating.',
-      "Wrote every agent's role instructions and added a QA browser agent that tests the running app, not the code.",
-      'Co-designed board status and role fields as the sole agent handoff interface and remote branches as a card-claim lock, enforcing merge and QA permissions in code rather than prompts.',
-      'Rebuilt the requester and executor flows from a blank branch, turned a 2-hour setup into a one-command install script for non-engineer project managers, and tested the full workflow on a dashboard project with 768 test cases.',
+    story: [
+      'I work on agent-teams, a Claude Code plugin where AI agents for requirements, architecture, development, QA and project management build software together from one GitHub Projects board. I wrote every agent\'s role and added a QA agent that tests the running app in a browser rather than reading the code, and we made the board the only way agents hand off work, so permissions are enforced in code, not prompts. I also turned a two-hour setup into a single install command, so project managers who are not engineers can use it themselves.',
     ],
   },
   {
@@ -192,9 +185,8 @@ const experienceData: ExperienceItem[] = [
     title: '14th Meichu Hackathon',
     role: 'Head of Development',
     location: 'Hsinchu, Taiwan',
-    points: [
-      'Led a 6-person team that shipped 3 services for the 2026 event (an event app used by about 400 participants, staff, and visitors; registration site; blog), turning cross-department requirements into plans and milestones.',
-      'Replaced the LINE-bot participant experience with a React/TypeScript PWA on FastAPI and PostgreSQL, deployed on AWS with Docker, Nginx, and CI/CD, and kept all services running through the event.',
+    story: [
+      'I led a six-person team building the software behind the 2026 event, turning what other departments needed into plans we could ship: an event app, a registration site and a blog. Our biggest change was replacing the old LINE bot with a React web app on FastAPI and AWS, which about 400 participants, staff and visitors used, and all three services stayed up through the whole event.',
     ],
   },
 ];
@@ -401,7 +393,7 @@ interface TimelineEntry {
   period: string;
   title: string;
   subtitle: string;
-  body: string;
+  body: string | string[];
   aside?: string;
 }
 
@@ -419,7 +411,11 @@ const Timeline: React.FC<{ entries: TimelineEntry[] }> = ({ entries }) => (
         <div>
           <h3 className="text-lg font-semibold text-ink">{entry.title}</h3>
           <p className="mt-1 text-sm text-muted">{entry.subtitle}</p>
-          <p className="mt-3 max-w-[62ch] text-sm leading-relaxed text-muted">{entry.body}</p>
+          {Array.isArray(entry.body) ? (
+            <BulletList points={entry.body} />
+          ) : (
+            <p className="mt-3 max-w-[62ch] text-sm leading-relaxed text-muted">{entry.body}</p>
+          )}
           {entry.aside ? <p className="mt-3 text-xs text-subtle">{entry.aside}</p> : null}
         </div>
       </Reveal>
@@ -450,6 +446,16 @@ const Education: React.FC = () => (
       />
     </Container>
   </section>
+);
+
+const Story: React.FC<{ paragraphs: string[] }> = ({ paragraphs }) => (
+  <div className="mt-4 flex max-w-[68ch] flex-col gap-3.5">
+    {paragraphs.map((paragraph) => (
+      <p key={paragraph} className="text-sm leading-relaxed text-muted">
+        {paragraph}
+      </p>
+    ))}
+  </div>
 );
 
 const BulletList: React.FC<{ points: string[] }> = ({ points }) => (
@@ -498,7 +504,7 @@ const Research: React.FC = () => (
                   {item.link.label} ↗
                 </a>
               ) : null}
-              <BulletList points={item.points} />
+              <Story paragraphs={item.story} />
             </div>
           </Reveal>
         ))}
@@ -531,7 +537,7 @@ const Experience: React.FC = () => (
               <h3 className="text-lg font-semibold text-ink">{item.title}</h3>
               <p className="mt-1 text-sm text-muted">{item.role}</p>
               <p className="mt-1 text-xs text-subtle">{item.location}</p>
-              <BulletList points={item.points} />
+              <Story paragraphs={item.story} />
             </div>
           </Reveal>
         ))}
