@@ -696,6 +696,12 @@ const Contact: React.FC = () => {
                 );
               })}
             </div>
+
+            <Reveal delay={contactItems.length * 60} className="mt-8">
+              <Button variant="ghost" href={CV_URL} external>
+                View CV <span aria-hidden="true">↗</span>
+              </Button>
+            </Reveal>
           </div>
 
           <Reveal delay={160}>
@@ -768,9 +774,9 @@ const Home = () => (
       <Research />
       <Experience />
       <WorkPreview />
-      <SkillMap />
       <Education />
       <Activities />
+      <SkillMap />
       <Explore />
       <Contact />
     </main>
