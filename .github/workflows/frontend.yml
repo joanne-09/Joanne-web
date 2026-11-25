@@ -1,6 +1,7 @@
 name: Frontend Workflow
 
 on:
+  workflow_dispatch: # allows a manual "Run workflow" from the Actions tab
   push:
     branches:
       - master # Or your default branch
